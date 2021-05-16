@@ -15,7 +15,7 @@ namespace Grade
     {
 
         const string Host = @"grade";
-        const string Path = @"~dev_rating/api/v1/";
+        const string PathBase = @"~dev_rating/api/v1/";
         string Token;
         static readonly HttpClient client = new HttpClient();
 
@@ -25,11 +25,11 @@ namespace Grade
 		}
 
 
-        public StudentIndex StudentGetDisciplines(int SemesterID)
+        public StudentIndex StudentGetIndex(int SemesterID)
         {
             var newuriB = new UriBuilder("http", Host);
-            newuriB.Path = "student";
-            var query = new NameValueCollection();
+            newuriB.Path = PathBase+"student";
+            var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
             query.Set("SemesterID", SemesterID.ToString());
             newuriB.Query = query.ToString();
@@ -46,11 +46,11 @@ namespace Grade
             }
             return StudentIndexRepsonse.FromJson(response).Response;
         }
-        public StudentIndex StudentGetDisciplines()
+        public StudentIndex StudentGetIndex()
         {
             var newuriB = new UriBuilder("http", Host);
-            newuriB.Path = "~dev_rating/api/v1/student";
-            var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+            newuriB.Path = PathBase+"student";
+            var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
             newuriB.Query = query.ToString();
             var Uri = newuriB.Uri;
@@ -66,8 +66,28 @@ namespace Grade
             }
             return StudentIndexRepsonse.FromJson(response).Response;
 		}
+        public StudentDiscipline StudentGetDiscipline(int ID)
+        {
+            var newuriB = new UriBuilder("http", Host);
+            newuriB.Path = PathBase+"student/discipline/subject";
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query.Set("token", Token);
+            query.Set("id", ID.ToString());
+            newuriB.Query = query.ToString();
+            var Uri = newuriB.Uri;
 
-	}
+            string response = string.Empty;
+            try
+            {
+                response = client.GetStringAsync(Uri).Result;
+            }
+            catch (HttpRequestException)
+            {
+
+            }
+            return StudentDisciplineResponse.FromJson(response).Response;
+        }
+    }
 
     public partial class StudentIndexRepsonse
     {
@@ -94,6 +114,38 @@ namespace Grade
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 	}
+
+    public partial class StudentDisciplineResponse
+    {
+        [JsonProperty("response")]
+        public StudentDiscipline Response { get; set; }
+    }
+
+    public partial class StudentDiscipline
+    {
+        [JsonProperty("Discipline")]
+        public Discipline Discipline { get; set; }
+
+        [JsonProperty("Teachers")]
+        public Teacher[] Teachers { get; set; }
+
+        [JsonProperty("DisciplineMap")]
+        public DisciplineMap DisciplineMap { get; set; }
+
+        [JsonProperty("Submodules")]
+        public Dictionary<string, Submodule> Submodules { get; set; }
+
+        [JsonProperty("ExtraRate")]
+        public long ExtraRate { get; set; }
+
+        [JsonProperty("Semester")]
+        public Semester Semester { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+    }
 
     public partial class Discipline
     {
@@ -214,6 +266,85 @@ namespace Grade
         public string SecondName { get; set; }
     }
 
+    public partial class DisciplineMap
+    {
+        [JsonProperty("Exam")]
+        public long Exam { get; set; }
+
+        [JsonProperty("Bonus")]
+        public long Bonus { get; set; }
+
+        [JsonProperty("Modules")]
+        public Dictionary<string, Module> Modules { get; set; }
+    }
+
+    public partial class Module
+    {
+        [JsonProperty("Title")]
+        public string Title { get; set; }
+
+        [JsonProperty("Submodules")]
+        public long[] Submodules { get; set; }
+    }
+
+    public partial class Semester
+    {
+    }
+
+    public partial class Submodule
+    {
+        [JsonProperty("Title")]
+        public string Title { get; set; }
+
+        [JsonProperty("MaxRate")]
+        public long MaxRate { get; set; }
+
+        [JsonProperty("Rate")]
+        public long? Rate { get; set; }
+
+        [JsonProperty("Date")]
+        public DateTimeOffset? Date { get; set; }
+    }
+
+    public partial class Teacher
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("LastName")]
+        public string LastName { get; set; }
+
+        [JsonProperty("FirstName")]
+        public string FirstName { get; set; }
+
+        [JsonProperty("SecondName")]
+        public string SecondName { get; set; }
+
+        [JsonProperty("JobPositionID")]
+        public long JobPositionId { get; set; }
+
+        [JsonProperty("JobPositionName")]
+        public string JobPositionName { get; set; }
+
+        [JsonProperty("DepID")]
+        public object DepId { get; set; }
+
+        [JsonProperty("DepName")]
+        public object DepName { get; set; }
+
+        [JsonProperty("FacultyID")]
+        public long FacultyId { get; set; }
+
+        [JsonProperty("FacultyAbbr")]
+        public string FacultyAbbr { get; set; }
+
+        [JsonProperty("IsAuthor")]
+        public bool IsAuthor { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+    }
+
     public partial struct TeacherValue
     {
         public TeacherElement[] TeacherElementArray;
@@ -228,9 +359,15 @@ namespace Grade
         public static StudentIndexRepsonse FromJson(string json) => JsonConvert.DeserializeObject<StudentIndexRepsonse>(json, Grade.Converter.Settings);
     }
 
+    public partial class StudentDisciplineResponse
+    {
+        public static StudentDisciplineResponse FromJson(string json) => JsonConvert.DeserializeObject<StudentDisciplineResponse>(json, Grade.Converter.Settings);
+    }
+
     public static class Serialize
     {
         public static string ToJson(this StudentIndexRepsonse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+        public static string ToJson(this StudentDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
     }
 
     internal static class Converter

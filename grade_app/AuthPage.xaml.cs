@@ -32,7 +32,7 @@ namespace grade_app
         {
             if (new Uri(e.Url).Host == newRedirectUri.Host)
             {
-                Navigation.InsertPageBefore(new DisciplinesPage(), this);
+                Navigation.InsertPageBefore(new StudentIndexPage(), this);
                 await Navigation.PopAsync();
             }
         }

@@ -21,7 +21,7 @@ namespace grade_app
                 //Token = "39se9832fh3e78fl23ois33mhfdff34gbuj34897"; //Teacher
 
                 API = new API(Token);
-                MainPage = new NavigationPage(new DisciplinesPage());
+                MainPage = new NavigationPage(new StudentIndexPage());
             }
             else
                 MainPage = new NavigationPage(new MainPage());
