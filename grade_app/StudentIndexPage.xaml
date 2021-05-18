@@ -1,3 +1,35 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="grade_app.StudentIndexPage">
+    <StackLayout>
+        <ListView ItemsSource="{Binding Ditems}"
+                  HasUnevenRows="True" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.RowSpan="1"
+                                   Grid.Column="0"
+                                   Text="{Binding Percent}"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding Name}"/>
+                            <Label Grid.Row="0"
+                                   Grid.Column="2"
+                                   Text="{Binding Rate}"
+                                   FontAttributes="Italic"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>
