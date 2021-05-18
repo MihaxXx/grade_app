@@ -11,30 +11,33 @@ namespace grade_app
 	{
 		StudentIndex studentIndex;
 
-		public List<DisciplineItem> Ditems { get; private set; }
+		public List<DisciplineItem> DisciplineItems { get; private set; }
 		public StudentIndexPage()
 		{
 			InitializeComponent();
 
 			studentIndex = App.API.StudentGetIndex();
 			Title = $"БРС - {SemesterFromDiscipline(studentIndex.Disciplines.First())}";
-			Ditems = new List<DisciplineItem>();
+			DisciplineItems = new List<DisciplineItem>();
 			foreach (var d in studentIndex.Disciplines)
 			{
-				Ditems.Add(new DisciplineItem(d.Id, (d.MaxCurrentRate != 0 ? ((d.Rate==null)? 0: d.Rate) / d.MaxCurrentRate : 0).ToString() + "%", d.SubjectName, $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100"));
+				var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : d.Rate) / (double)d.MaxCurrentRate : 0).Value.ToString("P0");
+				DisciplineItems.Add(new DisciplineItem(d.Id, percent, d.SubjectName, $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100"));
 			}
-
-			/*var layout = new StackLayout { Padding = new Thickness(5, 10) };
-            var label = new Label { Text = App.API.StudentGetIndex().ToString()};
-            //var label = new Label { Text = App.API.StudentGetDiscipline(30962).ToString()};
-            layout.Children.Add(label);
-            this.Content = layout;*/
 
 			//Must be at the end!!!
 			BindingContext = this;
 		}
 
 		private string SemesterFromDiscipline(Discipline discipline) => $"{(discipline.SemesterNum == 1 ? "Осень" : "Весна")} {discipline.SemesterYear}";
+
+		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
+		{
+			((ListView)sender).SelectedItem = null;
+			var item = (DisciplineItem)e.Item;
+			await Navigation.PushAsync(new StudentDisciplinePage(item.ID));
+			//Navigation.InsertPageBefore(new StudentDisciplinePage(item.ID), this);
+		}
 	}
 	public class DisciplineItem
 	{

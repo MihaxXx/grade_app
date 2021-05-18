@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="grade_app.StudentIndexPage">
     <StackLayout>
-        <ListView ItemsSource="{Binding Ditems}"
-                  HasUnevenRows="True" >
+        <ListView ItemsSource="{Binding DisciplineItems}"
+                  HasUnevenRows="False" 
+                  SelectionMode="None"
+                  ItemTapped="OnListItemTapped">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <Grid Padding="10">
+                        <Grid Padding="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="35" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

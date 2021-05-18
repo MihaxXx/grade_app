@@ -27,9 +27,11 @@ namespace Grade
 
         public StudentIndex StudentGetIndex(int SemesterID)
         {
-            var newuriB = new UriBuilder("http", Host);
-            newuriB.Path = PathBase+"student";
-            var query = HttpUtility.ParseQueryString(string.Empty);
+			var newuriB = new UriBuilder("http", Host)
+			{
+				Path = PathBase + "student"
+			};
+			var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
             query.Set("SemesterID", SemesterID.ToString());
             newuriB.Query = query.ToString();
@@ -48,9 +50,11 @@ namespace Grade
         }
         public StudentIndex StudentGetIndex()
         {
-            var newuriB = new UriBuilder("http", Host);
-            newuriB.Path = PathBase+"student";
-            var query = HttpUtility.ParseQueryString(string.Empty);
+			var newuriB = new UriBuilder("http", Host)
+			{
+				Path = PathBase + "student"
+			};
+			var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
             newuriB.Query = query.ToString();
             var Uri = newuriB.Uri;
@@ -66,11 +70,13 @@ namespace Grade
             }
             return StudentIndexRepsonse.FromJson(response).Response;
 		}
-        public StudentDiscipline StudentGetDiscipline(int ID)
+        public StudentDiscipline StudentGetDiscipline(long ID)
         {
-            var newuriB = new UriBuilder("http", Host);
-            newuriB.Path = PathBase+"student/discipline/subject";
-            var query = HttpUtility.ParseQueryString(string.Empty);
+			var newuriB = new UriBuilder("http", Host)
+			{
+				Path = PathBase + "student/discipline/subject"
+			};
+			var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
             query.Set("id", ID.ToString());
             newuriB.Query = query.ToString();
@@ -297,13 +303,13 @@ namespace Grade
         public string Title { get; set; }
 
         [JsonProperty("MaxRate")]
-        public long MaxRate { get; set; }
+        public int? MaxRate { get; set; }
 
         [JsonProperty("Rate")]
-        public long? Rate { get; set; }
+        public int? Rate { get; set; }
 
         [JsonProperty("Date")]
-        public DateTimeOffset? Date { get; set; }
+        public DateTime? Date { get; set; }
     }
 
     public partial class Teacher

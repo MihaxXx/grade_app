@@ -2,4 +2,57 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="grade_app.StudentDisciplinePage">
+    <StackLayout>
+        <ListView ItemsSource="{Binding GroupedSubModules}"
+                  GroupDisplayBinding="{Binding Key}"
+                  IsGroupingEnabled="True"
+                  HasUnevenRows="True"
+                  SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="0" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="3"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Title}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="End"
+                                   Text="{Binding Rate}"/>
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Percent}"/>
+                            <Label Grid.Row="1"
+                                   Grid.Column="2"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding Date}"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout VerticalOptions="FillAndExpand"
+                                     Padding="5"
+                                     BackgroundColor="#0183ce">
+                            <Label Text="{Binding Key}" TextColor="White" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>
