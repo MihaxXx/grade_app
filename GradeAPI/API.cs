@@ -142,7 +142,7 @@ namespace Grade
         public Dictionary<string, Submodule> Submodules { get; set; }
 
         [JsonProperty("ExtraRate")]
-        public long ExtraRate { get; set; }
+        public int ExtraRate { get; set; }
 
         [JsonProperty("Semester")]
         public Semester Semester { get; set; }
@@ -200,13 +200,13 @@ namespace Grade
         public string Degree { get; set; }
 
         [JsonProperty("Lectures")]
-        public long Lectures { get; set; }
+        public int Lectures { get; set; }
 
         [JsonProperty("Practice")]
-        public long Practice { get; set; }
+        public int Practice { get; set; }
 
         [JsonProperty("Labs")]
-        public long Labs { get; set; }
+        public int Labs { get; set; }
 
         [JsonProperty("SemesterID")]
         public long SemesterId { get; set; }
