@@ -116,7 +116,8 @@
                            Margin="5" />
                     <Label Text="{Binding disciplineInfo.ResultText}"
                            Margin="5,0" />
-                    <Grid Padding="0">
+                    <Grid Padding="0"
+                          IsVisible="{Binding disciplineInfo.IsExtraRate}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -145,6 +146,7 @@
                                Text="{Binding disciplineInfo.ExtraRate.Date}" />
                     </Grid>
                     <Label Text="{Binding disciplineInfo.MiddleTotalRate}"
+                           IsVisible="{Binding disciplineInfo.IsExam}"
                            BackgroundColor="DarkBlue"
                            TextColor="White"
                            FontAttributes="Bold"
@@ -152,17 +154,20 @@
                            HorizontalTextAlignment="Center"
                            Margin="5" />
                     <Label Text="{Binding disciplineInfo.ResultHeader2}"
+                           IsVisible="{Binding disciplineInfo.IsExam}"
                            HorizontalOptions="Fill"
                            HorizontalTextAlignment="Start"
                            FontSize="Medium"
                            Margin="5,0" />
                     <Label Text="{Binding disciplineInfo.ResultSubHeader2}"
+                           IsVisible="{Binding disciplineInfo.IsExamOrBonusOrExtraRate}"
                            BackgroundColor="Green"
                            TextColor="White"
                            HorizontalOptions="Fill"
                            HorizontalTextAlignment="Center"
                            Margin="5" />
-                    <Grid Padding="0">
+                    <Grid Padding="0"
+                          IsVisible="{Binding studentDiscipline.Discipline.IsBonus}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -190,7 +195,8 @@
                                HorizontalTextAlignment="Start"
                                Text="{Binding disciplineInfo.Bonus.Date}" />
                     </Grid>
-                    <Grid Padding="0">
+                    <Grid Padding="0"
+                          IsVisible="{Binding disciplineInfo.IsExam}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />

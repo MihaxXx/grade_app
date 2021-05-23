@@ -28,7 +28,6 @@ namespace grade_app
 			int? SemesterMaxRate = 0;
 
 			studentDiscipline = App.API.StudentGetDiscipline(id);
-			//Title = studentDiscipline.Discipline.SubjectName;
 			SubModuleItems = new List<SubModuleItem>();
 			foreach (var m in studentDiscipline.DisciplineMap.Modules)
 			{
@@ -57,8 +56,11 @@ namespace grade_app
 				disciplineInfo.Teachers = string.Join('\n', studentDiscipline.Teachers.Select(t => t.Name));
 				disciplineInfo.StudyLoad = DisciplineInfo.StudyLoadToText(studentDiscipline.Discipline.Lectures, studentDiscipline.Discipline.Practice, studentDiscipline.Discipline.Labs);
 
-				var IsExam = studentDiscipline.Discipline.Type == "exam";
-				if (IsExam)
+				disciplineInfo.IsExam = studentDiscipline.Discipline.Type == "exam";
+				disciplineInfo.IsBonus = studentDiscipline.Discipline.IsBonus;
+				disciplineInfo.IsExtraRate = studentDiscipline.ExtraRate > 0;
+				disciplineInfo.IsExamOrBonusOrExtraRate = disciplineInfo.IsExam || disciplineInfo.IsBonus || disciplineInfo.IsExtraRate;
+				if (disciplineInfo.IsExam)
 				{
 					disciplineInfo.ResultHeader1 = "Допуск к экзамену";
 					var Admission = 38 - (SemesterRate + studentDiscipline.ExtraRate);
@@ -66,14 +68,13 @@ namespace grade_app
 					disciplineInfo.ResultText = Admission > 0 ? 
 						$"Для допуска к экзамену Вам необходимо получить еще { Admission } баллов.":
 						"Поздравляем, заработанных Вами баллов достаточно для получения допуска к экзамену!";
-					//((StackLayout)this.Content).Children;
 					disciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, studentDiscipline.ExtraRate, null);
 					disciplineInfo.MiddleTotalRate = $"Промежуточный итог: { SemesterRate + studentDiscipline.ExtraRate } / { SemesterMaxRate }";
 					disciplineInfo.ResultHeader2 = "Экзамен";
 					disciplineInfo.ResultSubHeader2 = $"Экзамен по курсу «{ studentDiscipline.Discipline.SubjectName }»";
 					long BonusID = -1;
 					Submodule Bonus = null;
-					if (studentDiscipline.Discipline.IsBonus)
+					if (disciplineInfo.IsBonus)
 					{
 						BonusID = studentDiscipline.DisciplineMap.Bonus;
 						Bonus = studentDiscipline.Submodules[BonusID.ToString()];
@@ -87,7 +88,25 @@ namespace grade_app
 				}
 				else
 				{
-
+					disciplineInfo.ResultHeader1 = "Зачет";
+					var Admission = 60 - (SemesterRate + studentDiscipline.ExtraRate);
+					//TODO: Fix num ending
+					disciplineInfo.ResultText = Admission > 0 ?
+						$"Для получения зачета необходимо набрать ещё { Admission } баллов." :
+						$"Поздравляем, Вы получили зачет по курсу «{ studentDiscipline.Discipline.SubjectName }»!";
+					disciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, studentDiscipline.ExtraRate, null);
+					disciplineInfo.ResultSubHeader2 = $"Зачет по курсу «{ studentDiscipline.Discipline.SubjectName }»";
+					
+					long BonusID = -1;
+					Submodule Bonus = null;
+					if (disciplineInfo.IsBonus)
+					{
+						BonusID = studentDiscipline.DisciplineMap.Bonus;
+						Bonus = studentDiscipline.Submodules[BonusID.ToString()];
+						disciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
+					}
+					var Rating = SemesterRate + studentDiscipline.ExtraRate + (studentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0);
+					disciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
 				}
 				
 			};
@@ -154,6 +173,10 @@ namespace grade_app
 			}
 			return res;
 		}
+		public bool IsExam { get; set; }
+		public bool IsBonus { get; set; }
+		public bool IsExtraRate { get; set; }
+		public bool IsExamOrBonusOrExtraRate { get; set; }
 		/// <summary>
 		/// List Header
 		/// </summary>
