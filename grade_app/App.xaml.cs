@@ -10,6 +10,7 @@ namespace grade_app
         public static bool _isLoggedIn = true;
         public static string Token;
         public static Grade.API API;
+        public static Role role;
 
         public App()
         {
@@ -18,9 +19,11 @@ namespace grade_app
             if (_isLoggedIn)
             {
                 Token = "5a99d0da-de38-4c7c-99ad-1d749ee50eb8"; //Student
+                role = Role.Student;
                 //Token = "39se9832fh3e78fl23ois33mhfdff34gbuj34897"; //Teacher
+                //role = Role.Teacher;
 
-                API = new API(Token);
+                API = new API(Token, role);
                 MainPage = new NavigationPage(new StudentIndexPage());
             }
             else

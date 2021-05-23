@@ -26,8 +26,7 @@
                                    Text="{Binding Name}"/>
                             <Label Grid.Row="0"
                                    Grid.Column="2"
-                                   Text="{Binding Rate}"
-                                   FontAttributes="Italic"/>
+                                   Text="{Binding Rate}"/>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

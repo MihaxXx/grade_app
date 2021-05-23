@@ -11,29 +11,34 @@ using System.Web;
 
 namespace Grade
 {
+    public enum Role { Student, Teacher };
     public class API
     {
 
         const string Host = @"grade";
-        const string PathBase = @"~dev_rating/api/v1/";
+        public static Role role;
+        readonly string PathBase = @"~dev_rating/api/v1/";
         string Token;
         static readonly HttpClient client = new HttpClient();
 
-        public API(string token)
+        public API(string token, Role _role)
 		{
 			Token = token;
+            role = _role;
+            PathBase += (_role == Role.Student ? "student" :"teacher") + "/";
 		}
 
 
-        public StudentIndex StudentGetIndex(int SemesterID)
+        public StudentIndex StudentGetIndex(long SemesterID=-1)
         {
 			var newuriB = new UriBuilder("http", Host)
 			{
-				Path = PathBase + "student"
+				Path = PathBase
 			};
 			var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
-            query.Set("SemesterID", SemesterID.ToString());
+            if (SemesterID!=-1)
+                query.Set("SemesterID", SemesterID.ToString());
             newuriB.Query = query.ToString();
             var Uri = newuriB.Uri;
 
@@ -48,33 +53,12 @@ namespace Grade
             }
             return StudentIndexRepsonse.FromJson(response).Response;
         }
-        public StudentIndex StudentGetIndex()
-        {
-			var newuriB = new UriBuilder("http", Host)
-			{
-				Path = PathBase + "student"
-			};
-			var query = HttpUtility.ParseQueryString(string.Empty);
-            query.Set("token", Token);
-            newuriB.Query = query.ToString();
-            var Uri = newuriB.Uri;
 
-            string response = string.Empty;
-            try
-            {
-                response = client.GetStringAsync(Uri).Result;
-            }
-            catch (HttpRequestException)
-            {
-               
-            }
-            return StudentIndexRepsonse.FromJson(response).Response;
-		}
         public StudentDiscipline StudentGetDiscipline(long ID)
         {
 			var newuriB = new UriBuilder("http", Host)
 			{
-				Path = PathBase + "student/discipline/subject"
+				Path = PathBase + "discipline/subject"
 			};
 			var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
@@ -92,6 +76,28 @@ namespace Grade
 
             }
             return StudentDisciplineResponse.FromJson(response).Response;
+        }
+        public List<Semester> GetSemesterList()
+		{
+            var newuriB = new UriBuilder("http", Host)
+            {
+                Path = PathBase + "semester_list"
+            };
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query.Set("token", Token);
+            newuriB.Query = query.ToString();
+            var Uri = newuriB.Uri;
+
+            string response = string.Empty;
+            try
+            {
+                response = client.GetStringAsync(Uri).Result;
+            }
+            catch (HttpRequestException)
+            {
+
+            }
+            return SemesterListResponse.FromJson(response).Response.Values.ToList();
         }
     }
 
@@ -151,6 +157,24 @@ namespace Grade
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+    }
+
+    public partial class SemesterListResponse
+    {
+        [JsonProperty("response")]
+        public Dictionary<string, Semester> Response { get; set; }
+    }
+
+    public partial class Semester
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("Year")]
+        public int Year { get; set; }
+
+        [JsonProperty("Num")]
+        public int Num { get; set; }
     }
 
     public partial class Discipline
@@ -293,9 +317,9 @@ namespace Grade
         public long[] Submodules { get; set; }
     }
 
-    public partial class Semester
+    /*public partial class Semester
     {
-    }
+    }*/
 
     public partial class Submodule
     {
@@ -351,6 +375,7 @@ namespace Grade
         public string Name { get; set; }
     }
 
+
     public partial struct TeacherValue
     {
         public TeacherElement[] TeacherElementArray;
@@ -370,10 +395,16 @@ namespace Grade
         public static StudentDisciplineResponse FromJson(string json) => JsonConvert.DeserializeObject<StudentDisciplineResponse>(json, Grade.Converter.Settings);
     }
 
+    public partial class SemesterListResponse
+    {
+        public static SemesterListResponse FromJson(string json) => JsonConvert.DeserializeObject<SemesterListResponse>(json, Grade.Converter.Settings);
+    }
+
     public static class Serialize
     {
         public static string ToJson(this StudentIndexRepsonse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+        public static string ToJson(this SemesterListResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
     }
 
     internal static class Converter
