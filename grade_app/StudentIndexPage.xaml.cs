@@ -33,7 +33,7 @@ namespace grade_app
 			{
 				ToolbarItem item = new ToolbarItem
 				{
-					Text = $"{(sem.Num == 1 ? "Осень" : "Весна")} {sem.Year}",
+					Text = $"{(sem.Num == 1 ? "Осень" : "Весна")} {(sem.Num==1?sem.Year:sem.Year+1)}",
 					Order = ToolbarItemOrder.Secondary,
 					Priority = (int)(SemesterList.Count - sem.Id + 1),
 					CommandParameter = sem.Id,
@@ -56,7 +56,7 @@ namespace grade_app
 			}
 		}
 
-		private string SemesterFromDiscipline(Discipline discipline) => $"{(discipline.SemesterNum == 1 ? "Осень" : "Весна")} {discipline.SemesterYear}";
+		private string SemesterFromDiscipline(Discipline discipline) => $"{(discipline.SemesterNum == 1 ? "Осень" : "Весна")} {(discipline.SemesterNum == 1 ? discipline.SemesterYear : discipline.SemesterYear + 1)}";
 
 		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
 		{
