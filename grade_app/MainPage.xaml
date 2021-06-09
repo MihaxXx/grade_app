@@ -1,8 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:d="http://xamarin.com/schemas/2014/forms/design" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="grade_app.MainPage"
              Title="Grade">
-    <StackLayout>
-        <Entry Placeholder="Login@sfedu.ru" x:Name="login"/>
-        <Button Text="Enter with OpenID.sfedu.ru" Clicked="Enter_btnClicked"/>
+    <StackLayout Spacing="0">
+        <Label Text="Role"
+               FontSize="Medium">
+        </Label>
+        <Picker x:Name="UserRole"
+                Title="Select a role">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Student</x:String>
+                    <x:String>Teacher</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+            <Picker.SelectedIndex>0</Picker.SelectedIndex>
+        </Picker>
+        <Label Text="Email"
+               FontSize="Medium">
+        </Label>
+        <Entry Placeholder="login@sfedu.ru" x:Name="login"/>
+        <Button Text="Enter with OAuth" Clicked="Enter_btnClicked"/>
     </StackLayout>
 </ContentPage>

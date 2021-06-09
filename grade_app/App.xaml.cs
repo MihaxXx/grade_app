@@ -7,7 +7,7 @@ namespace grade_app
 {
     public partial class App : Application
     {
-        public static bool _isLoggedIn = true;
+        public static bool _isLoggedIn;// = true;
         public static string Token;
         public static Grade.API API;
         public static Role role;
@@ -18,16 +18,19 @@ namespace grade_app
 
             if (_isLoggedIn)
             {
-                Token = "5a99d0da-de38-4c7c-99ad-1d749ee50eb8"; //Student
-                role = Role.Student;
-                //Token = "39se9832fh3e78fl23ois33mhfdff34gbuj34897"; //Teacher
-                //role = Role.Teacher;
+                InitUser("b89c7c3a-d570-42bc-8b49-285655133a1f", Role.Student);
+                //InitUser("39se9832fh3e78fl23ois33mhfdff34gbuj34897", Role.Teacher);
 
-                API = new API(Token, role);
                 MainPage = new NavigationPage(new StudentIndexPage());
             }
             else
                 MainPage = new NavigationPage(new MainPage());
+        }
+        public static void InitUser(string _token,Role _role)
+		{
+            Token = _token;
+            role = _role;
+            API = new API(Token, role);
         }
 
         protected override void OnStart()

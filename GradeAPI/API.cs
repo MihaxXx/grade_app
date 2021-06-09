@@ -14,10 +14,14 @@ namespace Grade
     public enum Role { Student, Teacher };
     public class API
     {
-
-        const string Host = @"grade";
         public static Role role;
+#if DEBUG
+        public const string Host = @"192.168.88.16";
         readonly string PathBase = @"~dev_rating/api/v1/";
+#else
+        public const string Host = @"grade.sfedu.ru";
+        readonly string PathBase = @"api/v1/";
+#endif
         string Token;
         static readonly HttpClient client = new HttpClient();
 
