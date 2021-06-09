@@ -32,9 +32,9 @@ namespace grade_app
                 else if (PassedRedirect == 1)
                 {
 #if DEBUG
-                    ((WebView)sender).Source = "http://grade.sfedu.ru/~dev_rating/student/authtokenget";
+                    ((WebView)sender).Source = $"http://grade.sfedu.ru/~dev_rating/{ (state == "student" ? "student" : "teacher")}/authtokenget";
 #else
-                    ((WebView)sender).Source = "https://grade.sfedu.ru/student/authtokenget";
+                    ((WebView)sender).Source = $"https://grade.sfedu.ru/{ (state == "student" ? "student" : "teacher")}/authtokenget";
 #endif
                 }
 

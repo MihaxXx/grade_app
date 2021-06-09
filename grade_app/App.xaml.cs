@@ -19,7 +19,7 @@ namespace grade_app
             if (_isLoggedIn)
             {
                 InitUser("b89c7c3a-d570-42bc-8b49-285655133a1f", Role.Student);
-                //InitUser("39se9832fh3e78fl23ois33mhfdff34gbuj34897", Role.Teacher);
+                //InitUser("a506c94a-d28d-48fb-9361-96bcd3b8356d", Role.Teacher);
 
                 MainPage = new NavigationPage(new StudentIndexPage());
             }
