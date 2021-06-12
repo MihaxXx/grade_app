@@ -24,12 +24,13 @@ namespace grade_app
             if (e.Url.StartsWith("http://grade.sfedu.ru"))
             {
                 Title = "Grade.sfedu.ru Auth";
-                if (PassedRedirect == 0)
+                if (e.Url.Contains("oauthfinish"))
                 {
                     var stateIdx = e.Url.IndexOf("state=")+6;
                     state = e.Url.Substring(stateIdx, e.Url.IndexOf("&", stateIdx) - stateIdx);
+                    PassedRedirect++;
                 }
-                else if (PassedRedirect == 1)
+                else if (PassedRedirect > 0 && !e.Url.EndsWith("authtokenget"))
                 {
 #if DEBUG
                     ((WebView)sender).Source = $"http://grade.sfedu.ru/~dev_rating/{ (state == "student" ? "student" : "teacher")}/authtokenget";
@@ -37,10 +38,7 @@ namespace grade_app
                     ((WebView)sender).Source = $"https://grade.sfedu.ru/{ (state == "student" ? "student" : "teacher")}/authtokenget";
 #endif
                 }
-
-                PassedRedirect++;
             }
-
         }
 
 		async void webView_Navigated(object sender, WebNavigatedEventArgs e)
