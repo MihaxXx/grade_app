@@ -168,6 +168,72 @@ namespace Grade
         [JsonProperty("response")]
         public Dictionary<string, Semester> Response { get; set; }
     }
+    public partial class TeacherIndexResponse
+    {
+        [JsonProperty("response")]
+        public TeacherIndex Response { get; set; }
+    }
+
+    public partial class TeacherIndex
+    {
+        [JsonProperty("Subjects")]
+        public Dictionary<string, Subject> Subjects { get; set; }
+
+        [JsonProperty("Teachers")]
+        public Dictionary<string, Dictionary<string, Teacher>> Teachers { get; set; }
+
+        [JsonProperty("Groups")]
+        public Dictionary<string, string[]> Groups { get; set; }
+
+        [JsonProperty("DisciplineCreationISAllowed")]
+        public bool DisciplineCreationIsAllowed { get; set; }
+
+        [JsonProperty("EMailChanged")]
+        public bool EMailChanged { get; set; }
+    }
+
+    public partial class Welcome10
+    {
+        [JsonProperty("response")]
+        public Response Response { get; set; }
+    }
+
+    public partial class Response
+    {
+        [JsonProperty("Discipline")]
+        public Discipline Discipline { get; set; }
+
+        [JsonProperty("Modules")]
+        public Dictionary<string, Module> Modules { get; set; }
+
+        [JsonProperty("Groups")]
+        public Dictionary<string, Group> Groups { get; set; }
+
+        [JsonProperty("Students")]
+        public Dictionary<string, Student[]> Students { get; set; }
+
+        [JsonProperty("Rates")]
+        public Dictionary<string, Dictionary<string, long>> Rates { get; set; }
+
+        [JsonProperty("Exams")]
+        public Dictionary<string, Dictionary<string, Exam>> Exams { get; set; }
+    }
+
+
+    public partial class Subject
+    {
+        [JsonProperty("SubjectName")]
+        public string SubjectName { get; set; }
+
+        [JsonProperty("GradeNum")]
+        public long? GradeNum { get; set; }
+
+        [JsonProperty("Degree")]
+        public string Degree { get; set; }
+
+        [JsonProperty("Disciplines")]
+        public Discipline[] Disciplines { get; set; }
+    }
 
     public partial class Semester
     {
@@ -227,6 +293,15 @@ namespace Grade
         [JsonProperty("Degree")]
         public string Degree { get; set; }
 
+        [JsonProperty("GroupID")]
+        public object GroupId { get; set; }
+
+        [JsonProperty("GroupNum")]
+        public object GroupNum { get; set; }
+
+        [JsonProperty("GroupName")]
+        public object GroupName { get; set; }
+
         [JsonProperty("Lectures")]
         public int Lectures { get; set; }
 
@@ -280,6 +355,22 @@ namespace Grade
 
         [JsonProperty("GlobalName")]
         public string GlobalName { get; set; }
+
+        [JsonProperty("GlobalID")]
+        public long? GlobalId { get; set; }
+
+        [JsonProperty("IsFrozen")]
+        public bool IsFrozen { get; set; }
+
+        [JsonProperty("Frozen")]
+        public bool Frozen { get; set; }
+
+        [JsonProperty("AutoJournal")]
+        public bool AutoJournal { get; set; }
+
+        [JsonProperty("LocalizedExamType")]
+        public string LocalizedExamType { get; set; }
+
     }
 
     public partial class TeacherElement
@@ -321,10 +412,6 @@ namespace Grade
         public long[] Submodules { get; set; }
     }
 
-    /*public partial class Semester
-    {
-    }*/
-
     public partial class Submodule
     {
         [JsonProperty("Title")]
@@ -338,6 +425,84 @@ namespace Grade
 
         [JsonProperty("Date")]
         public DateTime? Date { get; set; }
+    }
+
+    public partial class ModuleT
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Type")]
+        public ModuleType Type { get; set; }
+
+        [JsonProperty("Submodules")]
+        public SubmoduleT[] Submodules { get; set; }
+
+        [JsonProperty("MaxRate")]
+        public long MaxRate { get; set; }
+    }
+
+    public partial class SubmoduleT
+    {
+        [JsonProperty("ModuleID")]
+        public long ModuleId { get; set; }
+
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Rate")]
+        public long Rate { get; set; }
+
+        [JsonProperty("Type")]
+        public SubModuleType Type { get; set; }
+
+        [JsonProperty("MilestoneMask")]
+        public long MilestoneMask { get; set; }
+    }
+
+    public partial class Student
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("RecordBookID")]
+        public long RecordBookId { get; set; }
+
+        [JsonProperty("LastName")]
+        public string LastName { get; set; }
+
+        [JsonProperty("FirstName")]
+        public string FirstName { get; set; }
+
+        [JsonProperty("SecondName")]
+        public string SecondName { get; set; }
+
+        [JsonProperty("GradeID")]
+        public long GradeId { get; set; }
+
+        [JsonProperty("GradeNum")]
+        public long GradeNum { get; set; }
+
+        [JsonProperty("Degree")]
+        public Degree Degree { get; set; }
+
+        [JsonProperty("GroupID")]
+        public long GroupId { get; set; }
+
+        [JsonProperty("GroupNum")]
+        public long GroupNum { get; set; }
+
+        [JsonProperty("IsAttached")]
+        public bool IsAttached { get; set; }
+
+        [JsonProperty("SubgroupID")]
+        public object SubgroupId { get; set; }
     }
 
     public partial class Teacher
@@ -379,6 +544,62 @@ namespace Grade
         public string Name { get; set; }
     }
 
+    public partial class Exam
+    {
+        [JsonProperty("Rate")]
+        public long? Rate { get; set; }
+
+        [JsonProperty("Absence")]
+        public bool Absence { get; set; }
+
+        [JsonProperty("AutoPass")]
+        public bool AutoPass { get; set; }
+    }
+
+    public partial class Group
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("GroupNum")]
+        public long GroupNum { get; set; }
+
+        [JsonProperty("GradeID")]
+        public long GradeId { get; set; }
+
+        [JsonProperty("GradeNum")]
+        public long GradeNum { get; set; }
+
+        [JsonProperty("Degree")]
+        public string Degree { get; set; }
+
+        [JsonProperty("SpecID")]
+        public long SpecId { get; set; }
+
+        [JsonProperty("SpecName")]
+        public string SpecName { get; set; }
+
+        [JsonProperty("SpecAbbr")]
+        public string SpecAbbr { get; set; }
+
+        [JsonProperty("SpecCode")]
+        public string SpecCode { get; set; }
+
+        [JsonProperty("SpecYear")]
+        public object SpecYear { get; set; }
+
+        [JsonProperty("SpecFaculty")]
+        public string SpecFaculty { get; set; }
+
+        [JsonProperty("FormID")]
+        public string FormId { get; set; }
+    }
+
+    public enum Degree { Bachelor, Master, Specialist, Postgraduate };
+
+    public enum SubModuleType { CurrentControl, LandmarkControl };
+
+    public enum ModuleType { Exam, Extra, Bonus, Regular };
 
     public partial struct TeacherValue
     {
@@ -403,12 +624,26 @@ namespace Grade
     {
         public static SemesterListResponse FromJson(string json) => JsonConvert.DeserializeObject<SemesterListResponse>(json, Grade.Converter.Settings);
     }
+    public partial class TeacherIndexResponse
+    {
+        public static TeacherIndexResponse FromJson(string json) => JsonConvert.DeserializeObject<TeacherIndexResponse>(json, Grade.Converter.Settings);
+    }
+
+    public partial class Welcome10
+    {
+        public static Welcome10 FromJson(string json) => JsonConvert.DeserializeObject<Welcome10>(json, Grade.Converter.Settings);
+    }
+
+
 
     public static class Serialize
     {
         public static string ToJson(this StudentIndexRepsonse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this SemesterListResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+        public static string ToJson(this TeacherIndexResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+        public static string ToJson(this Welcome10 self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+
     }
 
     internal static class Converter
@@ -420,6 +655,9 @@ namespace Grade
             Converters =
             {
                 TeacherValueConverter.Singleton,
+                DegreeConverter.Singleton,
+                SubModuleTypeConverter.Singleton,
+                ModuleTypeConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
         };
@@ -491,5 +729,147 @@ namespace Grade
         }
 
         public static readonly TeacherValueConverter Singleton = new TeacherValueConverter();
+    }
+    internal class DegreeConverter : JsonConverter
+    {
+        public override bool CanConvert(Type t) => t == typeof(Degree) || t == typeof(Degree?);
+
+        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null) return null;
+            var value = serializer.Deserialize<string>(reader);
+            switch (value)
+            {
+                case "bachelor":
+                    return Degree.Bachelor;
+                case "master":
+                    return Degree.Master;
+                case "specialist":
+                    return Degree.Specialist;
+                case "postgraduate":
+                    return Degree.Postgraduate;
+            }
+            throw new Exception("Cannot unmarshal type Degree");
+        }
+
+        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        {
+            if (untypedValue == null)
+            {
+                serializer.Serialize(writer, null);
+                return;
+            }
+            var value = (Degree)untypedValue;
+            switch (value)
+            {
+                case Degree.Bachelor:
+                    serializer.Serialize(writer, "bachelor");
+                    return;
+                case Degree.Master:
+                    serializer.Serialize(writer, "master");
+                    return;
+                case Degree.Specialist:
+                    serializer.Serialize(writer, "specialist");
+                    return;
+                case Degree.Postgraduate:
+                    serializer.Serialize(writer, "postgraduate");
+                    return;
+            }
+            throw new Exception("Cannot marshal type Degree");
+        }
+
+        public static readonly DegreeConverter Singleton = new DegreeConverter();
+    }
+
+    internal class SubModuleTypeConverter : JsonConverter
+    {
+        public override bool CanConvert(Type t) => t == typeof(SubModuleType) || t == typeof(SubModuleType?);
+
+        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null) return null;
+            var value = serializer.Deserialize<string>(reader);
+            switch (value)
+            {
+                case "CurrentControl":
+                    return SubModuleType.CurrentControl;
+                case "LandmarkControl":
+                    return SubModuleType.LandmarkControl;
+            }
+            throw new Exception("Cannot unmarshal type SubModuleType");
+        }
+
+        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        {
+            if (untypedValue == null)
+            {
+                serializer.Serialize(writer, null);
+                return;
+            }
+            var value = (SubModuleType)untypedValue;
+            switch (value)
+            {
+                case SubModuleType.CurrentControl:
+                    serializer.Serialize(writer, "CurrentControl");
+                    return;
+                case SubModuleType.LandmarkControl:
+                    serializer.Serialize(writer, "LandmarkControl");
+                    return;
+            }
+            throw new Exception("Cannot marshal type SubModuleType");
+        }
+
+        public static readonly SubModuleTypeConverter Singleton = new SubModuleTypeConverter();
+    }
+
+    internal class ModuleTypeConverter : JsonConverter
+    {
+        public override bool CanConvert(Type t) => t == typeof(ModuleType) || t == typeof(ModuleType?);
+
+        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null) return null;
+            var value = serializer.Deserialize<string>(reader);
+            switch (value)
+            {
+                case "exam":
+                    return ModuleType.Exam;
+                case "extra":
+                    return ModuleType.Extra;
+                case "bonus":
+                    return ModuleType.Bonus;
+                case "regular":
+                    return ModuleType.Regular;
+            }
+            throw new Exception("Cannot unmarshal type ModuleType");
+        }
+
+        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        {
+            if (untypedValue == null)
+            {
+                serializer.Serialize(writer, null);
+                return;
+            }
+            var value = (ModuleType)untypedValue;
+            switch (value)
+            {
+                case ModuleType.Exam:
+                    serializer.Serialize(writer, "exam");
+                    return;
+                case ModuleType.Extra:
+                    serializer.Serialize(writer, "extra");
+                    return;
+                case ModuleType.Bonus:
+                    serializer.Serialize(writer, "bonus");
+                    return;
+                case ModuleType.Regular:
+                    serializer.Serialize(writer, "regular");
+                    return;
+            }
+            throw new Exception("Cannot marshal type ModuleType");
+        }
+
+        public static readonly ModuleTypeConverter Singleton = new ModuleTypeConverter();
     }
 }
