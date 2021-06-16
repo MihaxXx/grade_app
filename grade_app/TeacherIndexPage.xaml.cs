@@ -19,7 +19,8 @@ namespace grade_app
 		List<Semester> SemesterList { get; set; }
 
 		public long CurrentSemID { get; set; }
-		public ObservableCollection<IGrouping<string, DisciplineItem>> GroupedDisciplineItems { get; private set; } = new ObservableCollection<IGrouping<string, DisciplineItem>>();
+		//public ObservableCollection<IGrouping<string, DisciplineItem>> GroupedDisciplineItems { get; private set; } = new ObservableCollection<IGrouping<string, DisciplineItem>>();
+		public ObservableCollection<SubjectGroup> GroupedDisciplineItems1 { get; private set; } = new ObservableCollection<SubjectGroup>();
 
 		public TeacherIndexPage()
 		{
@@ -53,21 +54,26 @@ namespace grade_app
 			teacherIndex = App.API.TeacherGetIndex(SemesterID);
 			CurrentSemID = SemesterID;
 			Title = $"БРС - {SemesterList.Find(s=> s.Id == CurrentSemID)}";
-			GroupedDisciplineItems.Clear();
+			//GroupedDisciplineItems.Clear();
+			GroupedDisciplineItems1.Clear();
 			var DisciplineItems = new List<DisciplineItem>();
 			foreach (var s in teacherIndex.Subjects)
+			{
+				var group = new SubjectGroup($"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс");
 				foreach (var d in s.Value.Disciplines)
 				{
-					DisciplineItems.Add(new DisciplineItem(
-							$"{s.Value.SubjectName} | {s.Value.Degree}, {s.Value.GradeNum} курс",
+					group.Add(new DisciplineItem(
+							$"{s.Value.SubjectName}  \n{s.Value.Degree}, {s.Value.GradeNum} курс",
 							d.Id,
 							string.Join('\n', teacherIndex.Groups[d.Id.ToString()]),
 							d.TypeToString(),
-							string.Join('\n', teacherIndex.Groups[d.Id.ToString()])
+							string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4))
 						));
 				}
-			foreach (var g in DisciplineItems.GroupBy(d => d.Name))
-				GroupedDisciplineItems.Add(g);
+				GroupedDisciplineItems1.Add(group);
+			}
+			/*foreach (var g in DisciplineItems.GroupBy(d => d.Name))
+				GroupedDisciplineItems.Add(g);*/
 			//GroupedDisciplineItems = new ObservableCollection<IGrouping<string, DisciplineItem>>(DisciplineItems.GroupBy(d => d.Name));
 		}
 
@@ -98,6 +104,17 @@ namespace grade_app
 			public string Groups { get; set; }
 			public string Type { get; set; }
 			public string Teachers { get; set; }
+		}
+		public class SubjectGroup :List<DisciplineItem>
+		{
+			public string Name { get; set; }
+			//TODO: Output as 2nd column, not row
+			public string DegreeCourse;
+			public SubjectGroup(string name)
+			{
+				Name = name;
+			}
+			public static IList<SubjectGroup> All { private set; get; }
 		}
 	}
 }

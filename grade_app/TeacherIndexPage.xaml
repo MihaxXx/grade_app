@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="grade_app.TeacherIndexPage">
     <StackLayout>
-        <ListView ItemsSource="{Binding GroupedDisciplineItems}"
-                  GroupDisplayBinding="{Binding Key}"
+        <ListView ItemsSource="{Binding GroupedDisciplineItems1}"
+                  GroupDisplayBinding="{Binding Name}"
                   IsGroupingEnabled="True"
                   HasUnevenRows="True"
                   SelectionMode="None"
@@ -14,13 +14,13 @@
                     <ViewCell>
                         <Grid Padding="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="35" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="2*" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0"
                                    Grid.Column="0"
@@ -30,10 +30,12 @@
                                    Text="{Binding Groups}" />
                             <Label Grid.Row="0"
                                    Grid.Column="2"
-                                   Text="{Binding Type}" />
+                                   Text="{Binding Type}"
+                                   HorizontalTextAlignment="Center"/>
                             <Label Grid.Row="0"
                                    Grid.Column="3"
-                                   Text="{Binding Teachers}" />
+                                   Text="{Binding Teachers}" 
+                                   HorizontalTextAlignment="Center"/>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
@@ -43,7 +45,7 @@
                     <ViewCell>
                         <StackLayout VerticalOptions="FillAndExpand"
                                      Padding="5">
-                            <Label Text="{Binding Key}"
+                            <Label Text="{Binding Name}"
                                    HorizontalTextAlignment="Start" />
                         </StackLayout>
                     </ViewCell>

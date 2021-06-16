@@ -555,6 +555,7 @@ namespace Grade
 
         [JsonProperty("SecondName")]
         public string SecondName { get; set; }
+        public string ShortName() => $"{LastName} {FirstName[0]}. {SecondName[0]}.";
 
         [JsonProperty("JobPositionID")]
         public long JobPositionId { get; set; }
