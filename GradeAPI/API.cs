@@ -269,7 +269,12 @@ namespace Grade
 
         [JsonProperty("Num")]
         public int Num { get; set; }
-    }
+
+		public override string ToString()
+		{
+			return $"{(Num == 1 ? "Осень" : "Весна")} {(Num == 1 ? Year : Year + 1)}";
+		}
+	}
 
     public partial class Discipline
     {
@@ -284,6 +289,14 @@ namespace Grade
 
         [JsonProperty("Type")]
         public string Type { get; set; }
+
+        public string TypeToString() => Type switch
+        {
+            "exam"              => "Экзамен",
+            "credit"            => "Зачет",
+            "grading_credit"    => "Дифф. зачет",
+            _                   => Type,
+        };
 
         [JsonProperty("Subtype")]
         public object Subtype { get; set; }

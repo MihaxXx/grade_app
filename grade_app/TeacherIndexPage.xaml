@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="grade_app.TeacherIndexPage">
+    <StackLayout>
+        <ListView ItemsSource="{Binding GroupedDisciplineItems}"
+                  GroupDisplayBinding="{Binding Key}"
+                  IsGroupingEnabled="True"
+                  HasUnevenRows="True"
+                  SelectionMode="None"
+                  ItemTapped="OnListItemTapped">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{Binding ID}"/>
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding Groups}" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="2"
+                                   Text="{Binding Type}" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="3"
+                                   Text="{Binding Teachers}" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout VerticalOptions="FillAndExpand"
+                                     Padding="5">
+                            <Label Text="{Binding Key}"
+                                   HorizontalTextAlignment="Start" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

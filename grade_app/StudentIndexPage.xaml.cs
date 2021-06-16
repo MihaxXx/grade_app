@@ -46,6 +46,7 @@ namespace grade_app
 		private void LoadDisciplines(long SemesterID)
 		{
 			studentIndex = App.API.StudentGetIndex(SemesterID);
+			//TODO: Refactor
 			CurrentSemID = studentIndex.Disciplines.First().SemesterId;
 			Title = $"БРС - {SemesterFromDiscipline(studentIndex.Disciplines.First())}";
 			DisciplineItems.Clear();
