@@ -67,23 +67,48 @@ namespace Grade
             var args = new Dictionary<string, string>();
             if (SemesterID != -1)
                 args.Add("SemesterID", SemesterID.ToString());
-            return StudentIndexRepsonse.FromJson(Request(args,"")).Response;
+            return StudentIndexResponse.FromJson(Request(args,"")).Response;
         }
 
         public StudentDiscipline StudentGetDiscipline(long ID)
         {
-            var args = new Dictionary<string, string>();
-            args.Add("id", ID.ToString());
-            return StudentDisciplineResponse.FromJson(Request(args, "discipline/subject")).Response;
+			var args = new Dictionary<string, string>
+			{
+				{ "id", ID.ToString() }
+			};
+			return StudentDisciplineResponse.FromJson(Request(args, "discipline/subject")).Response;
         }
         public List<Semester> GetSemesterList()
 		{
             var args = new Dictionary<string, string>();
             return SemesterListResponse.FromJson(Request(args, "semester_list")).Response.Values.ToList();
         }
+        public TeacherIndex TeacherGetIndex(long SemesterID = -1)
+        {
+            var args = new Dictionary<string, string>();
+            if (SemesterID != -1)
+                args.Add("SemesterID", SemesterID.ToString());
+            return TeacherIndexResponse.FromJson(Request(args, "")).Response;
+        }
+        public TeacherDiscipline TeacherGetDiscipline(long ID)
+        {
+			var args = new Dictionary<string, string>
+			{
+				{ "id", ID.ToString() }
+			};
+			return TeacherDisciplineResponse.FromJson(Request(args, "discipline/rating")).Response;
+        }
+        public StudentJournal StudentGetDisciplineJournal(long ID)
+        {
+            var args = new Dictionary<string, string>
+            {
+                { "id", ID.ToString() }
+            };
+            return StudentJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
+        }
     }
 
-    public partial class StudentIndexRepsonse
+    public partial class StudentIndexResponse
     {
         [JsonProperty("response")]
         public StudentIndex Response { get; set; }
@@ -622,9 +647,9 @@ namespace Grade
         public static implicit operator TeacherValue(Dictionary<string, TeacherElement> TeacherElementMap) => new TeacherValue { TeacherElementMap = TeacherElementMap };
     }
 
-    public partial class StudentIndexRepsonse
+    public partial class StudentIndexResponse
     {
-        public static StudentIndexRepsonse FromJson(string json) => JsonConvert.DeserializeObject<StudentIndexRepsonse>(json, Grade.Converter.Settings);
+        public static StudentIndexResponse FromJson(string json) => JsonConvert.DeserializeObject<StudentIndexResponse>(json, Grade.Converter.Settings);
     }
 
     public partial class StudentDisciplineResponse
@@ -654,7 +679,7 @@ namespace Grade
 
     public static class Serialize
     {
-        public static string ToJson(this StudentIndexRepsonse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+        public static string ToJson(this StudentIndexResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this SemesterListResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this TeacherIndexResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
