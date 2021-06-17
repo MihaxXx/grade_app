@@ -13,7 +13,7 @@ namespace grade_app
         public AuthPage(string name, string userrole)
         {
             InitializeComponent();
-#if (DEBUG_DEV_RATING || RELEASE_DEV_RATING) 
+#if DEV_RATING 
             webView.Source = $"https://login.microsoftonline.com/sfedu.ru/oauth2/v2.0/authorize?response_type=code&client_id=b88a652d-a4f2-4fb2-a953-05e6ee024a59&redirect_uri=https%3A%2F%2Fdev.rating.mmcs.sfedu.ru%2F%7Edev_rating%2Fhandler%2Fsign%2Foauthfinish&scope=offline_access+email+profile+openid+User.Read+Directory.Read.All&state={userrole}&login_hint={name}%40sfedu.ru";
 #else
             webView.Source = $"https://login.microsoftonline.com/sfedu.ru/oauth2/v2.0/authorize?response_type=code&client_id=413637be-3e0d-48a0-a257-5e01c3d6e5f1&redirect_uri=https%3A%2F%2Fgrade.sfedu.ru%2Fhandler%2Fsign%2Foauthfinish&scope=offline_access+email+profile+openid+User.Read+Directory.Read.All&state={userrole}&login_hint={name}%40sfedu.ru";
@@ -21,15 +21,17 @@ namespace grade_app
         }
         async void webviewNavigating(object sender, WebNavigatingEventArgs e)
         {
-#if (DEBUG_DEV_RATING || RELEASE_DEV_RATING)
+#if DEV_RATING
             string Host = "dev.rating.mmcs.sfedu.ru";
 #else
             string Host = "grade.sfedu.ru";
 #endif
-#if DEBUG
+
+#if LOCAL
             if (e.Url.StartsWith("https://"+Host))
                 ((WebView)sender).Source = e.Url.Replace("https://" + Host, $"http://{Host}/~dev_rating");
-
+#endif
+#if LOCAL
             if (e.Url.StartsWith("http://" + Host))
 #else
             if (e.Url.StartsWith("https://" + Host))
@@ -44,10 +46,10 @@ namespace grade_app
                 }
                 else if (PassedRedirect > 0 && !e.Url.EndsWith("authtokenget"))
                 {
-#if DEBUG
-                    ((WebView)sender).Source = $"http://{Host}/~dev_rating/{ (state == "student" ? "student" : "teacher")}/authtokenget";
-#elif (DEBUG_DEV_RATING || RELEASE_DEV_RATING)
+#if DEV_RATING
                     ((WebView)sender).Source = $"https://{Host}/~dev_rating/{ (state == "student" ? "student" : "teacher")}/authtokenget";
+#elif LOCAL
+                    ((WebView)sender).Source = $"http://{Host}/~dev_rating/{ (state == "student" ? "student" : "teacher")}/authtokenget";
 #else
                     ((WebView)sender).Source = $"https://{Host}/{ (state == "student" ? "student" : "teacher")}/authtokenget";
 #endif

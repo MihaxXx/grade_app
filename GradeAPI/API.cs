@@ -15,11 +15,11 @@ namespace Grade
     public class API
     {
         public static Role role;
-#if DEBUG
-        public const string Host = @"192.168.88.16";
-        readonly string PathBase = @"~dev_rating/api/v1/";
-#elif (DEBUG_DEV_RATING || RELEASE_DEV_RATING)
+#if DEV_RATING
         public const string Host = @"dev.rating.mmcs.sfedu.ru";
+        readonly string PathBase = @"~dev_rating/api/v1/";
+#elif LOCAL
+        public const string Host = @"192.168.88.16";
         readonly string PathBase = @"~dev_rating/api/v1/";
 #else
         public const string Host = @"grade.sfedu.ru";
@@ -38,7 +38,7 @@ namespace Grade
         public string Request(Dictionary<string,string> args, string relPath)
 		{
             var newuriB = new UriBuilder(
-#if DEBUG
+#if LOCAL
                 "http"
 #else
                 "https"
