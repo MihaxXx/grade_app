@@ -18,6 +18,9 @@ namespace Grade
 #if DEBUG
         public const string Host = @"192.168.88.16";
         readonly string PathBase = @"~dev_rating/api/v1/";
+#elif (DEBUG_DEV_RATING || RELEASE_DEV_RATING)
+        public const string Host = @"dev.rating.mmcs.sfedu.ru";
+        readonly string PathBase = @"~dev_rating/api/v1/";
 #else
         public const string Host = @"grade.sfedu.ru";
         readonly string PathBase = @"api/v1/";

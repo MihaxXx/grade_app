@@ -7,7 +7,7 @@ namespace grade_app
 {
     public partial class App : Application
     {
-        public static bool _isLoggedIn; //= true;
+        public static bool _isLoggedIn;// = true;
         public static string Token;
         public static Grade.API API;
         public static Role role;
@@ -20,8 +20,10 @@ namespace grade_app
             {
                 //InitUser("b89c7c3a-d570-42bc-8b49-285655133a1f", Role.Student);
                 //InitUser("a506c94a-d28d-48fb-9361-96bcd3b8356d", Role.Teacher);
-
-                MainPage = new NavigationPage(new StudentIndexPage());
+                if(role == Role.Student)
+                    MainPage = new NavigationPage(new StudentIndexPage());
+                else
+                    MainPage = new NavigationPage(new TeacherIndexPage());
             }
             else
                 MainPage = new NavigationPage(new MainPage());
