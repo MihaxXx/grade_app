@@ -397,7 +397,7 @@ namespace Grade
         public string GlobalName { get; set; }
 
         [JsonProperty("GlobalID")]
-        public string? GlobalId { get; set; }
+        public string GlobalId { get; set; }
 
         [JsonProperty("IsFrozen")]
         public bool IsFrozen { get; set; }
