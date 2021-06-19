@@ -1,71 +1,127 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="grade_app.StudentDisciplinePage"
-             Title="{Binding StudentDiscipline.Discipline.SubjectName}">
-    <StackLayout>
-        <ListView ItemsSource="{Binding GroupedSubModules}"
-                  GroupDisplayBinding="{Binding Key}"
-                  IsGroupingEnabled="True"
-                  HasUnevenRows="True"
-                  SelectionMode="None">
-            <ListView.Header>
-                <StackLayout>
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0"
-                           Grid.Column="0"
-                           HorizontalTextAlignment="Start"
-                           Text="Форма аттестации:" />
-                    <Label Grid.Row="0"
-                           Grid.Column="1"
-                           HorizontalTextAlignment="Start"
-                           Text="{Binding DisciplineInfo.Type}" />
-                    <Label Grid.Row="1"
-                           Grid.Column="0"
-                           HorizontalTextAlignment="Start"
-                           Text="Семестр:" />
-                    <Label Grid.Row="1"
-                           Grid.Column="1"
-                           HorizontalTextAlignment="Start"
-                           Text="{Binding DisciplineInfo.SemesterName}" />
-                    <Label Grid.Row="2"
-                           Grid.Column="0"
-                           HorizontalTextAlignment="Start"
-                           Text="Преподаватели:" />
-                    <Label Grid.Row="2"
-                           Grid.Column="1"
-                           HorizontalTextAlignment="Start"
-                           Text="{Binding DisciplineInfo.Teachers}" />
-                    <Label Grid.Row="3"
-                           Grid.Column="0"
-                           HorizontalTextAlignment="Start"
-                           Text="Учебная нагрузка:" />
-                    <Label Grid.Row="3"
-                           Grid.Column="1"
-                           HorizontalTextAlignment="Start"
-                           Text="{Binding DisciplineInfo.StudyLoad}" />
-                </Grid>
-                <Label Text="Баллы за семестр"
-                       HorizontalOptions="Fill"
-                       HorizontalTextAlignment="Start"
-                       FontSize="Medium" 
-                       Margin="5"/>
-                </StackLayout>
-            </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid Padding="0" Margin="5">
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="grade_app.StudentDisciplinePage"
+            xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            Title="{Binding StudentDiscipline.Discipline.SubjectName}"
+            BarBackgroundColor="Gainsboro">
+    <ContentPage Title="Баллы">
+        <StackLayout>
+            <ListView ItemsSource="{Binding GroupedSubModules}"
+                      GroupDisplayBinding="{Binding Key}"
+                      IsGroupingEnabled="True"
+                      HasUnevenRows="True"
+                      SelectionMode="None">
+                <ListView.Header>
+                    <StackLayout>
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Форма аттестации:" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding DisciplineInfo.Type}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Семестр:" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding DisciplineInfo.SemesterName}" />
+                            <Label Grid.Row="2"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Преподаватели:" />
+                            <Label Grid.Row="2"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding DisciplineInfo.Teachers}" />
+                            <Label Grid.Row="3"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Учебная нагрузка:" />
+                            <Label Grid.Row="3"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding DisciplineInfo.StudyLoad}" />
+                        </Grid>
+                        <Label Text="Баллы за семестр"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Start"
+                               FontSize="Medium" 
+                               Margin="5"/>
+                    </StackLayout>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="0" Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="3"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       HorizontalTextAlignment="End"
+                                       Text="{Binding Rate}"/>
+                                <Label Grid.Row="1"
+                                       Grid.Column="1"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding Percent}"/>
+                                <Label Grid.Row="1"
+                                       Grid.Column="2"
+                                       HorizontalTextAlignment="Start"
+                                       Text="{Binding Date}"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout VerticalOptions="FillAndExpand"
+                                         Padding="5"
+                                         BackgroundColor="#0183ce">
+                                <Label Text="{Binding Key}" TextColor="White" HorizontalTextAlignment="Center"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
+                <ListView.Footer>
+                    <StackLayout Spacing="0">
+                        <Label Text="{Binding DisciplineInfo.ResultHeader1}"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Start"
+                               FontSize="Medium"
+                               Margin="5" />
+                        <Label Text="{Binding DisciplineInfo.ResultText}"
+                               Margin="5,0" />
+                        <Grid Padding="0"
+                              IsVisible="{Binding DisciplineInfo.IsExtraRate}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -79,160 +135,144 @@
                                    Grid.Column="0"
                                    Grid.ColumnSpan="3"
                                    HorizontalTextAlignment="Center"
-                                   Text="{Binding Title}" />
+                                   Text="{Binding DisciplineInfo.ExtraRate.Title}" />
                             <Label Grid.Row="1"
                                    Grid.Column="0"
                                    HorizontalTextAlignment="End"
-                                   Text="{Binding Rate}"/>
+                                   Text="{Binding DisciplineInfo.ExtraRate.Rate}" />
                             <Label Grid.Row="1"
                                    Grid.Column="1"
                                    HorizontalTextAlignment="Center"
-                                   Text="{Binding Percent}"/>
+                                   Text="{Binding DisciplineInfo.ExtraRate.Percent}" />
                             <Label Grid.Row="1"
                                    Grid.Column="2"
                                    HorizontalTextAlignment="Start"
-                                   Text="{Binding Date}"/>
+                                   Text="{Binding DisciplineInfo.ExtraRate.Date}" />
+                        </Grid>
+                        <Label Text="{Binding DisciplineInfo.MiddleTotalRate}"
+                               IsVisible="{Binding DisciplineInfo.IsExam}"
+                               BackgroundColor="DarkBlue"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Center"
+                               Margin="5" />
+                        <Label Text="{Binding DisciplineInfo.ResultHeader2}"
+                               IsVisible="{Binding DisciplineInfo.IsExam}"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Start"
+                               FontSize="Medium"
+                               Margin="5,0" />
+                        <Label Text="{Binding DisciplineInfo.ResultSubHeader2}"
+                               IsVisible="{Binding DisciplineInfo.IsExamOrBonusOrExtraRate}"
+                               BackgroundColor="Green"
+                               TextColor="White"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Center"
+                               Margin="5" />
+                        <Grid Padding="0"
+                              IsVisible="{Binding StudentDiscipline.Discipline.IsBonus}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="3"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding DisciplineInfo.Bonus.Title}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="End"
+                                   Text="{Binding DisciplineInfo.Bonus.Rate}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding DisciplineInfo.Bonus.Percent}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="2"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding DisciplineInfo.Bonus.Date}" />
+                        </Grid>
+                        <Grid Padding="0"
+                              IsVisible="{Binding DisciplineInfo.IsExam}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="3"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding DisciplineInfo.Exam.Title}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="End"
+                                   Text="{Binding DisciplineInfo.Exam.Rate}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding DisciplineInfo.Exam.Percent}" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="2"
+                                   HorizontalTextAlignment="Start"
+                                   Text="{Binding DisciplineInfo.Exam.Date}" />
+                        </Grid>
+                        <Label Text="{Binding DisciplineInfo.FinalTotalRate}"
+                               BackgroundColor="DarkBlue"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Center"
+                               Margin="5" />
+                    </StackLayout>
+                </ListView.Footer>
+            </ListView>
+        </StackLayout>
+    </ContentPage>
+    <ContentPage Title="Посещения">
+        <ListView ItemsSource="{Binding StudentJournal}"
+                  HasUnevenRows="False"
+                  SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10,0"
+                              Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding LessonDate, StringFormat='{0:d}'}" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding LessonType}" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="2"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Attended}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.GroupHeaderTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout VerticalOptions="FillAndExpand"
-                                     Padding="5"
-                                     BackgroundColor="#0183ce">
-                            <Label Text="{Binding Key}" TextColor="White" HorizontalTextAlignment="Center"/>
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.GroupHeaderTemplate>
-            <ListView.Footer>
-                <StackLayout Spacing="0">
-                    <Label Text="{Binding DisciplineInfo.ResultHeader1}"
-                           HorizontalOptions="Fill"
-                           HorizontalTextAlignment="Start"
-                           FontSize="Medium"
-                           Margin="5" />
-                    <Label Text="{Binding DisciplineInfo.ResultText}"
-                           Margin="5,0" />
-                    <Grid Padding="0"
-                          IsVisible="{Binding DisciplineInfo.IsExtraRate}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="3"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding DisciplineInfo.ExtraRate.Title}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="0"
-                               HorizontalTextAlignment="End"
-                               Text="{Binding DisciplineInfo.ExtraRate.Rate}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="1"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding DisciplineInfo.ExtraRate.Percent}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="2"
-                               HorizontalTextAlignment="Start"
-                               Text="{Binding DisciplineInfo.ExtraRate.Date}" />
-                    </Grid>
-                    <Label Text="{Binding DisciplineInfo.MiddleTotalRate}"
-                           IsVisible="{Binding DisciplineInfo.IsExam}"
-                           BackgroundColor="DarkBlue"
-                           TextColor="White"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Fill"
-                           HorizontalTextAlignment="Center"
-                           Margin="5" />
-                    <Label Text="{Binding DisciplineInfo.ResultHeader2}"
-                           IsVisible="{Binding DisciplineInfo.IsExam}"
-                           HorizontalOptions="Fill"
-                           HorizontalTextAlignment="Start"
-                           FontSize="Medium"
-                           Margin="5,0" />
-                    <Label Text="{Binding DisciplineInfo.ResultSubHeader2}"
-                           IsVisible="{Binding DisciplineInfo.IsExamOrBonusOrExtraRate}"
-                           BackgroundColor="Green"
-                           TextColor="White"
-                           HorizontalOptions="Fill"
-                           HorizontalTextAlignment="Center"
-                           Margin="5" />
-                    <Grid Padding="0"
-                          IsVisible="{Binding StudentDiscipline.Discipline.IsBonus}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="3"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding DisciplineInfo.Bonus.Title}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="0"
-                               HorizontalTextAlignment="End"
-                               Text="{Binding DisciplineInfo.Bonus.Rate}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="1"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding DisciplineInfo.Bonus.Percent}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="2"
-                               HorizontalTextAlignment="Start"
-                               Text="{Binding DisciplineInfo.Bonus.Date}" />
-                    </Grid>
-                    <Grid Padding="0"
-                          IsVisible="{Binding DisciplineInfo.IsExam}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="3"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding DisciplineInfo.Exam.Title}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="0"
-                               HorizontalTextAlignment="End"
-                               Text="{Binding DisciplineInfo.Exam.Rate}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="1"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding DisciplineInfo.Exam.Percent}" />
-                        <Label Grid.Row="1"
-                               Grid.Column="2"
-                               HorizontalTextAlignment="Start"
-                               Text="{Binding DisciplineInfo.Exam.Date}" />
-                    </Grid>
-                    <Label Text="{Binding DisciplineInfo.FinalTotalRate}"
-                           BackgroundColor="DarkBlue"
-                           TextColor="White"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Fill"
-                           HorizontalTextAlignment="Center"
-                           Margin="5" />
-                </StackLayout>
-            </ListView.Footer>
         </ListView>
-    </StackLayout>
-</ContentPage>
+    </ContentPage>
+</TabbedPage>
