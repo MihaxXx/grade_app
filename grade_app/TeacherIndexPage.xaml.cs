@@ -57,20 +57,28 @@ namespace grade_app
 			//GroupedDisciplineItems.Clear();
 			GroupedDisciplineItems1.Clear();
 			var DisciplineItems = new List<DisciplineItem>();
-			foreach (var s in teacherIndex.Subjects)
+			if (teacherIndex.Subjects != null)
 			{
-				var group = new SubjectGroup($"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс");
-				foreach (var d in s.Value.Disciplines)
+				EmptyListText.IsVisible = false;
+				foreach (var s in teacherIndex.Subjects)
 				{
-					group.Add(new DisciplineItem(
-							$"{s.Value.SubjectName}  \n{s.Value.Degree}, {s.Value.GradeNum} курс",
-							d.Id,
-							string.Join('\n', teacherIndex.Groups[d.Id.ToString()]),
-							d.TypeToString(),
-							string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4))
-						));
+					var group = new SubjectGroup($"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс");
+					foreach (var d in s.Value.Disciplines)
+					{
+						group.Add(new DisciplineItem(
+								$"{s.Value.SubjectName}  \n{s.Value.Degree}, {s.Value.GradeNum} курс",
+								d.Id,
+								string.Join('\n', teacherIndex.Groups[d.Id.ToString()]),
+								d.TypeToString(),
+								string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4))
+							));
+					}
+					GroupedDisciplineItems1.Add(group);
 				}
-				GroupedDisciplineItems1.Add(group);
+			}
+			else
+			{
+				EmptyListText.IsVisible = true;
 			}
 			/*foreach (var g in DisciplineItems.GroupBy(d => d.Name))
 				GroupedDisciplineItems.Add(g);*/
