@@ -12,7 +12,6 @@ using Xamarin.Forms.Xaml;
 
 namespace grade_app
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TeacherIndexPage : ContentPage
 	{
 		TeacherIndex teacherIndex;

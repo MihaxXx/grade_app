@@ -25,7 +25,7 @@ namespace Grade
         public const string Host = @"grade.sfedu.ru";
         readonly string PathBase = @"api/v1/";
 #endif
-        string Token;
+		readonly string Token;
         static readonly HttpClient client = new HttpClient();
 
         public API(string token, Role _role)
@@ -729,13 +729,11 @@ namespace Grade
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            long l;
-            if (Int64.TryParse(value, out l))
-            {
-                return l;
-            }
-            throw new Exception("Cannot unmarshal type long");
+			if (long.TryParse(serializer.Deserialize<string>(reader), out long l))
+			{
+				return l;
+			}
+			throw new Exception("Cannot unmarshal type long");
         }
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
@@ -797,19 +795,15 @@ namespace Grade
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            switch (value)
-            {
-                case "bachelor":
-                    return Degree.Bachelor;
-                case "master":
-                    return Degree.Master;
-                case "specialist":
-                    return Degree.Specialist;
-                case "postgraduate":
-                    return Degree.Postgraduate;
-            }
-            throw new Exception("Cannot unmarshal type Degree");
-        }
+			return value switch
+			{
+				"bachelor" => Degree.Bachelor,
+				"master" => Degree.Master,
+				"specialist" => Degree.Specialist,
+				"postgraduate" => Degree.Postgraduate,
+				_ => throw new Exception("Cannot unmarshal type Degree"),
+			};
+		}
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
@@ -848,15 +842,13 @@ namespace Grade
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            switch (value)
-            {
-                case "CurrentControl":
-                    return SubModuleType.CurrentControl;
-                case "LandmarkControl":
-                    return SubModuleType.LandmarkControl;
-            }
-            throw new Exception("Cannot unmarshal type SubModuleType");
-        }
+			return value switch
+			{
+				"CurrentControl" => SubModuleType.CurrentControl,
+				"LandmarkControl" => SubModuleType.LandmarkControl,
+				_ => throw new Exception("Cannot unmarshal type SubModuleType"),
+			};
+		}
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
@@ -889,19 +881,15 @@ namespace Grade
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            switch (value)
-            {
-                case "exam":
-                    return ModuleType.Exam;
-                case "extra":
-                    return ModuleType.Extra;
-                case "bonus":
-                    return ModuleType.Bonus;
-                case "regular":
-                    return ModuleType.Regular;
-            }
-            throw new Exception("Cannot unmarshal type ModuleType");
-        }
+			return value switch
+			{
+				"exam" => ModuleType.Exam,
+				"extra" => ModuleType.Extra,
+				"bonus" => ModuleType.Bonus,
+				"regular" => ModuleType.Regular,
+				_ => throw new Exception("Cannot unmarshal type ModuleType"),
+			};
+		}
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
