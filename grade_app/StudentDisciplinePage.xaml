@@ -4,9 +4,9 @@
             x:Class="grade_app.StudentDisciplinePage"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
             android:TabbedPage.ToolbarPlacement="Bottom"
-            Title="{Binding StudentDiscipline.Discipline.SubjectName}"
-            BarBackgroundColor="Gainsboro">
-    <ContentPage Title="Баллы">
+            Title="{Binding StudentDiscipline.Discipline.SubjectName}">
+    <ContentPage Title="Баллы"
+                 IconImageSource="{OnPlatform iOS=baseline_assignment_black_24pt, Android=ic_assignment_black_24dp.xml}">
         <StackLayout>
             <ListView ItemsSource="{Binding GroupedSubModules}"
                       GroupDisplayBinding="{Binding Key}"
@@ -240,7 +240,8 @@
             </ListView>
         </StackLayout>
     </ContentPage>
-    <ContentPage Title="Посещения">
+    <ContentPage Title="Посещения"
+                 IconImageSource="{OnPlatform iOS=baseline_date_range_black_24pt, Android=ic_date_range_black_24dp.xml}">
         <ListView ItemsSource="{Binding StudentJournal}"
                   HasUnevenRows="False"
                   SelectionMode="None">
