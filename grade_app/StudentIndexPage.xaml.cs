@@ -54,7 +54,7 @@ namespace grade_app
 				EmptyListText.IsVisible = false;
 				foreach (var d in studentIndex.Disciplines)
 				{
-					var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : d.Rate) / (double)d.MaxCurrentRate : 0).Value.ToString("P0");
+					var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : Math.Min((int)d.Rate, 100)) / (double)d.MaxCurrentRate : 0).ToString("P0");
 					DisciplineItems.Add(new DisciplineItem(d.Id, percent, d.SubjectName, $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100"));
 				}
 			}
