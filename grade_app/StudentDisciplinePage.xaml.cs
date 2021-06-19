@@ -13,11 +13,11 @@ namespace grade_app
 	//[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class StudentDisciplinePage : ContentPage
 	{
-		public StudentDiscipline studentDiscipline { get; private set; }
+		public StudentDiscipline StudentDiscipline { get; private set; }
 
 		public List<SubModuleItem> SubModuleItems { get; private set; }
 
-		public DisciplineInfo disciplineInfo { get; private set; }
+		public DisciplineInfo DisciplineInfo { get; private set; }
 
 		public IEnumerable<IGrouping<string, SubModuleItem>> GroupedSubModules { get; private set; }
 		public StudentDisciplinePage(long id)
@@ -27,13 +27,13 @@ namespace grade_app
 			int? SemesterRate = 0;
 			int? SemesterMaxRate = 0;
 
-			studentDiscipline = App.API.StudentGetDiscipline(id);
+			StudentDiscipline = App.API.StudentGetDiscipline(id);
 			SubModuleItems = new List<SubModuleItem>();
-			foreach (var m in studentDiscipline.DisciplineMap.Modules)
+			foreach (var m in StudentDiscipline.DisciplineMap.Modules)
 			{
 				foreach (var smID in m.Value.Submodules)
 				{
-					var smVal = studentDiscipline.Submodules[smID.ToString()];
+					var smVal = StudentDiscipline.Submodules[smID.ToString()];
 					SubModuleItems.Add(new SubModuleItem(smID, long.Parse(m.Key), m.Value.Title, smVal.Title, smVal.MaxRate, smVal.Rate, smVal.Date));
 
 					SemesterRate += (smVal.Rate == null? 0 : smVal.Rate);
@@ -42,71 +42,71 @@ namespace grade_app
 			}
 			GroupedSubModules = SubModuleItems.GroupBy(sm => sm.ModuleTitle);
 
-			disciplineInfo = new DisciplineInfo();
+			DisciplineInfo = new DisciplineInfo();
 			{
-				disciplineInfo.Type = studentDiscipline.Discipline.Type switch
+				DisciplineInfo.Type = StudentDiscipline.Discipline.Type switch
 				{
 					"exam" => "Экзамен",
 					"credit" => "Зачет",
 					"grading_credit" => "Дифф. зачет",
-					_ => studentDiscipline.Discipline.Type,
+					_ => StudentDiscipline.Discipline.Type,
 				};
-				var year = studentDiscipline.Discipline.SemesterYear;
-				disciplineInfo.SemesterName = $"{(studentDiscipline.Discipline.SemesterNum == 1 ? "Осенний" : "Весенний")} семестр {year}/{year + 1} учебного года";
-				disciplineInfo.Teachers = string.Join('\n', studentDiscipline.Teachers.Select(t => t.Name));
-				disciplineInfo.StudyLoad = DisciplineInfo.StudyLoadToText(studentDiscipline.Discipline.Lectures, studentDiscipline.Discipline.Practice, studentDiscipline.Discipline.Labs);
+				var year = StudentDiscipline.Discipline.SemesterYear;
+				DisciplineInfo.SemesterName = $"{(StudentDiscipline.Discipline.SemesterNum == 1 ? "Осенний" : "Весенний")} семестр {year}/{year + 1} учебного года";
+				DisciplineInfo.Teachers = string.Join('\n', StudentDiscipline.Teachers.Select(t => t.Name));
+				DisciplineInfo.StudyLoad = DisciplineInfo.StudyLoadToText(StudentDiscipline.Discipline.Lectures, StudentDiscipline.Discipline.Practice, StudentDiscipline.Discipline.Labs);
 
-				disciplineInfo.IsExam = studentDiscipline.Discipline.Type == "exam";
-				disciplineInfo.IsBonus = studentDiscipline.Discipline.IsBonus;
-				disciplineInfo.IsExtraRate = studentDiscipline.ExtraRate > 0;
-				disciplineInfo.IsExamOrBonusOrExtraRate = disciplineInfo.IsExam || disciplineInfo.IsBonus || disciplineInfo.IsExtraRate;
-				if (disciplineInfo.IsExam)
+				DisciplineInfo.IsExam = StudentDiscipline.Discipline.Type == "exam";
+				DisciplineInfo.IsBonus = StudentDiscipline.Discipline.IsBonus;
+				DisciplineInfo.IsExtraRate = StudentDiscipline.ExtraRate > 0;
+				DisciplineInfo.IsExamOrBonusOrExtraRate = DisciplineInfo.IsExam || DisciplineInfo.IsBonus || DisciplineInfo.IsExtraRate;
+				if (DisciplineInfo.IsExam)
 				{
-					disciplineInfo.ResultHeader1 = "Допуск к экзамену";
-					var Admission = 38 - (SemesterRate + studentDiscipline.ExtraRate);
+					DisciplineInfo.ResultHeader1 = "Допуск к экзамену";
+					var Admission = 38 - (SemesterRate + StudentDiscipline.ExtraRate);
 					//TODO: Fix num ending
-					disciplineInfo.ResultText = Admission > 0 ? 
+					DisciplineInfo.ResultText = Admission > 0 ? 
 						$"Для допуска к экзамену Вам необходимо получить еще { Admission } баллов.":
 						"Поздравляем, заработанных Вами баллов достаточно для получения допуска к экзамену!";
-					disciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, studentDiscipline.ExtraRate, null);
-					disciplineInfo.MiddleTotalRate = $"Промежуточный итог: { SemesterRate + studentDiscipline.ExtraRate } / { SemesterMaxRate }";
-					disciplineInfo.ResultHeader2 = "Экзамен";
-					disciplineInfo.ResultSubHeader2 = $"Экзамен по курсу «{ studentDiscipline.Discipline.SubjectName }»";
+					DisciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, StudentDiscipline.ExtraRate, null);
+					DisciplineInfo.MiddleTotalRate = $"Промежуточный итог: { SemesterRate + StudentDiscipline.ExtraRate } / { SemesterMaxRate }";
+					DisciplineInfo.ResultHeader2 = "Экзамен";
+					DisciplineInfo.ResultSubHeader2 = $"Экзамен по курсу «{ StudentDiscipline.Discipline.SubjectName }»";
 					long BonusID = -1;
 					Submodule Bonus = null;
-					if (disciplineInfo.IsBonus)
+					if (DisciplineInfo.IsBonus)
 					{
-						BonusID = studentDiscipline.DisciplineMap.Bonus;
-						Bonus = studentDiscipline.Submodules[BonusID.ToString()];
-						disciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
+						BonusID = StudentDiscipline.DisciplineMap.Bonus;
+						Bonus = StudentDiscipline.Submodules[BonusID.ToString()];
+						DisciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
 					}
-					var ExamID = studentDiscipline.DisciplineMap.Exam;
-					var Exam = studentDiscipline.Submodules[ExamID.ToString()];
-					disciplineInfo.Exam = new SubModuleItem(ExamID, -1, "", $"Экзамен по курсу «{ studentDiscipline.Discipline.SubjectName }»", Exam.MaxRate, Exam.Rate, Exam.Date);
-					var Rating = SemesterRate + studentDiscipline.ExtraRate + (studentDiscipline.Discipline.IsBonus && Bonus!=null && Bonus.Rate != null ? Bonus.Rate:0) + (Exam.Rate!=null? Exam.Rate:0);
-					disciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
+					var ExamID = StudentDiscipline.DisciplineMap.Exam;
+					var Exam = StudentDiscipline.Submodules[ExamID.ToString()];
+					DisciplineInfo.Exam = new SubModuleItem(ExamID, -1, "", $"Экзамен по курсу «{ StudentDiscipline.Discipline.SubjectName }»", Exam.MaxRate, Exam.Rate, Exam.Date);
+					var Rating = SemesterRate + StudentDiscipline.ExtraRate + (StudentDiscipline.Discipline.IsBonus && Bonus!=null && Bonus.Rate != null ? Bonus.Rate:0) + (Exam.Rate!=null? Exam.Rate:0);
+					DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
 				}
 				else
 				{
-					disciplineInfo.ResultHeader1 = "Зачет";
-					var Admission = 60 - (SemesterRate + studentDiscipline.ExtraRate);
+					DisciplineInfo.ResultHeader1 = "Зачет";
+					var Admission = 60 - (SemesterRate + StudentDiscipline.ExtraRate);
 					//TODO: Fix num ending
-					disciplineInfo.ResultText = Admission > 0 ?
+					DisciplineInfo.ResultText = Admission > 0 ?
 						$"Для получения зачета необходимо набрать ещё { Admission } баллов." :
-						$"Поздравляем, Вы получили зачет по курсу «{ studentDiscipline.Discipline.SubjectName }»!";
-					disciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, studentDiscipline.ExtraRate, null);
-					disciplineInfo.ResultSubHeader2 = $"Зачет по курсу «{ studentDiscipline.Discipline.SubjectName }»";
+						$"Поздравляем, Вы получили зачет по курсу «{ StudentDiscipline.Discipline.SubjectName }»!";
+					DisciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, StudentDiscipline.ExtraRate, null);
+					DisciplineInfo.ResultSubHeader2 = $"Зачет по курсу «{ StudentDiscipline.Discipline.SubjectName }»";
 					
 					long BonusID = -1;
 					Submodule Bonus = null;
-					if (disciplineInfo.IsBonus)
+					if (DisciplineInfo.IsBonus)
 					{
-						BonusID = studentDiscipline.DisciplineMap.Bonus;
-						Bonus = studentDiscipline.Submodules[BonusID.ToString()];
-						disciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
+						BonusID = StudentDiscipline.DisciplineMap.Bonus;
+						Bonus = StudentDiscipline.Submodules[BonusID.ToString()];
+						DisciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
 					}
-					var Rating = SemesterRate + studentDiscipline.ExtraRate + (studentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0);
-					disciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
+					var Rating = SemesterRate + StudentDiscipline.ExtraRate + (StudentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0);
+					DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
 				}
 				
 			};
@@ -123,8 +123,8 @@ namespace grade_app
 			ModuleID = moduleID;
 			ModuleTitle = moduleTitle;
 			Title = title;
-			Rate = $"{(rate.HasValue ? rate.Value : 0)}/{(maxRate.HasValue ? maxRate.Value : 0)}";
-			Percent = ((double)(rate.HasValue ? rate.Value : 0) / (maxRate.HasValue ? maxRate.Value : 0)).ToString("P0");
+			Rate = $"{(rate ?? 0)}/{(maxRate ?? 0)}";
+			Percent = ((double)(rate ?? 0) / (maxRate ?? 0)).ToString("P0");
 			Date = date.HasValue ? date.Value.ToString("d") : "—";
 		}
 

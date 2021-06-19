@@ -14,12 +14,12 @@ namespace grade_app
         {
             InitializeComponent();
 #if DEV_RATING 
-            webView.Source = $"https://login.microsoftonline.com/sfedu.ru/oauth2/v2.0/authorize?response_type=code&client_id=b88a652d-a4f2-4fb2-a953-05e6ee024a59&redirect_uri=https%3A%2F%2Fdev.rating.mmcs.sfedu.ru%2F%7Edev_rating%2Fhandler%2Fsign%2Foauthfinish&scope=offline_access+email+profile+openid+User.Read+Directory.Read.All&state={userrole}&login_hint={name}%40sfedu.ru";
+            WebView.Source = $"https://login.microsoftonline.com/sfedu.ru/oauth2/v2.0/authorize?response_type=code&client_id=b88a652d-a4f2-4fb2-a953-05e6ee024a59&redirect_uri=https%3A%2F%2Fdev.rating.mmcs.sfedu.ru%2F%7Edev_rating%2Fhandler%2Fsign%2Foauthfinish&scope=offline_access+email+profile+openid+User.Read+Directory.Read.All&state={userrole}&login_hint={name}%40sfedu.ru";
 #else
-            webView.Source = $"https://login.microsoftonline.com/sfedu.ru/oauth2/v2.0/authorize?response_type=code&client_id=413637be-3e0d-48a0-a257-5e01c3d6e5f1&redirect_uri=https%3A%2F%2Fgrade.sfedu.ru%2Fhandler%2Fsign%2Foauthfinish&scope=offline_access+email+profile+openid+User.Read+Directory.Read.All&state={userrole}&login_hint={name}%40sfedu.ru";
+            WebView.Source = $"https://login.microsoftonline.com/sfedu.ru/oauth2/v2.0/authorize?response_type=code&client_id=413637be-3e0d-48a0-a257-5e01c3d6e5f1&redirect_uri=https%3A%2F%2Fgrade.sfedu.ru%2Fhandler%2Fsign%2Foauthfinish&scope=offline_access+email+profile+openid+User.Read+Directory.Read.All&state={userrole}&login_hint={name}%40sfedu.ru";
 #endif
         }
-        async void webviewNavigating(object sender, WebNavigatingEventArgs e)
+        void WebviewNavigating(object sender, WebNavigatingEventArgs e)
         {
 #if DEV_RATING
             string Host = "dev.rating.mmcs.sfedu.ru";
@@ -41,7 +41,7 @@ namespace grade_app
                 if (e.Url.Contains("oauthfinish"))
                 {
                     var stateIdx = e.Url.IndexOf("state=")+6;
-                    state = e.Url.Substring(stateIdx, e.Url.IndexOf("&", stateIdx) - stateIdx);
+                    state = e.Url[stateIdx..e.Url.IndexOf("&", stateIdx)];
                     PassedRedirect++;
                 }
                 else if (PassedRedirect > 0 && !e.Url.EndsWith("authtokenget"))
@@ -57,7 +57,7 @@ namespace grade_app
             }
         }
 
-		async void webView_Navigated(object sender, WebNavigatedEventArgs e)
+		async void WebViewNavigated(object sender, WebNavigatedEventArgs e)
 		{
             if (e.Url.EndsWith("authtokenget"))
             {

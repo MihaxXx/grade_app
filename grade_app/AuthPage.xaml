@@ -2,6 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="grade_app.AuthPage"
              Title="OAuth">
     <StackLayout>
-        <WebView x:Name="webView" WidthRequest="1000" HeightRequest="1000" Navigating="webviewNavigating" Navigated="webView_Navigated"/>
+        <WebView x:Name="WebView" WidthRequest="1000" HeightRequest="1000" Navigating="WebviewNavigating" Navigated="WebViewNavigated"/>
     </StackLayout>
 </ContentPage>
