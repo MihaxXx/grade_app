@@ -20,8 +20,8 @@ namespace grade_app
 		{
 			InitializeComponent();
 
-			LoadDisciplines(-1);
 			LoadSemesters();
+			LoadDisciplines(SemesterList.Max(s => s.Id));
 			//Must be at the end!!!
 			BindingContext = this;
 		}
@@ -33,7 +33,7 @@ namespace grade_app
 			{
 				ToolbarItem item = new ToolbarItem
 				{
-					Text = $"{(sem.Num == 1 ? "Осень" : "Весна")} {(sem.Num==1?sem.Year:sem.Year+1)}",
+					Text = sem.ToString(),
 					Order = ToolbarItemOrder.Secondary,
 					Priority = (int)(SemesterList.Count - sem.Id + 1),
 					CommandParameter = sem.Id,
@@ -46,19 +46,23 @@ namespace grade_app
 		private void LoadDisciplines(long SemesterID)
 		{
 			studentIndex = App.API.StudentGetIndex(SemesterID);
-			//TODO: Refactor
-			CurrentSemID = studentIndex.Disciplines.First().SemesterId;
-			Title = $"БРС - {SemesterFromDiscipline(studentIndex.Disciplines.First())}";
+			CurrentSemID = SemesterID;
+			Title = $"БРС - {SemesterList.Find(s => s.Id == CurrentSemID)}";
 			DisciplineItems.Clear();
-			foreach (var d in studentIndex.Disciplines)
+			if (studentIndex.Disciplines.Length != 0)
 			{
-				var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : d.Rate) / (double)d.MaxCurrentRate : 0).Value.ToString("P0");
-				DisciplineItems.Add(new DisciplineItem(d.Id, percent, d.SubjectName, $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100"));
+				EmptyListText.IsVisible = false;
+				foreach (var d in studentIndex.Disciplines)
+				{
+					var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : d.Rate) / (double)d.MaxCurrentRate : 0).Value.ToString("P0");
+					DisciplineItems.Add(new DisciplineItem(d.Id, percent, d.SubjectName, $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100"));
+				}
+			}
+			else
+			{
+				EmptyListText.IsVisible = true;
 			}
 		}
-
-		private string SemesterFromDiscipline(Discipline discipline) => $"{(discipline.SemesterNum == 1 ? "Осень" : "Весна")} {(discipline.SemesterNum == 1 ? discipline.SemesterYear : discipline.SemesterYear + 1)}";
-
 		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
 		{
 			((ListView)sender).SelectedItem = null;
