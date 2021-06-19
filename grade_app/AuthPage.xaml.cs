@@ -64,7 +64,10 @@ namespace grade_app
                 var token = await((WebView)sender).EvaluateJavaScriptAsync("document.body.getElementsByTagName('p')[0].innerText");
                 App.InitUser(token, state == "student" ? Role.Student : Role.Teacher);
                 //await Navigation.PushAsync(new StudentIndexPage());
-                Navigation.InsertPageBefore(new StudentIndexPage(), this);
+                if (App.role == Role.Student)
+                    Navigation.InsertPageBefore(new StudentIndexPage(), this);
+                else
+                    Navigation.InsertPageBefore(new TeacherIndexPage(), this);
                 await Navigation.PopAsync();
             }
         }
