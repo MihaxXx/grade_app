@@ -12,11 +12,11 @@
                     Title="Выберите контрольное мероприятие"
                     ItemsSource="{Binding subModulePickerItems}"
                     ItemDisplayBinding="{Binding Name}"
-                    SelectedIndex="0" />
+                    SelectedIndexChanged="SubmodulePicker_SelectedIndexChanged"/>
             <ListView ItemsSource="{Binding GroupedStudentItems}"
                       GroupDisplayBinding="{Binding Name}"
                       IsGroupingEnabled="True"
-                      HasUnevenRows="False"
+                      HasUnevenRows="True"
                       SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>

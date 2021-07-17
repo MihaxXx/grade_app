@@ -50,7 +50,9 @@ namespace grade_app
 							student.ShortName(),
 							student.Id,
 							TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
-								new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
+								TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(smi.ID) ?
+									new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
+									0 :
 								null,
 							smi.MaxRate));
 					GroupedStudentItems.Add(disGroup);
@@ -74,6 +76,11 @@ namespace grade_app
 					subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate));
 			SubmodulePicker.ItemsSource = subModulePickerItems;
 			SubmodulePicker.SelectedIndex = 0;
+		}
+
+		private void SubmodulePicker_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			FillStudentsList();
 		}
 	}
 
