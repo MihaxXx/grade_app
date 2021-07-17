@@ -58,15 +58,6 @@ namespace grade_app
 					GroupedStudentItems.Add(disGroup);
 				}
 			}
-			/*var Students = TeacherDiscipline.Students.Values.SelectMany(item => item);
-			studentSubmoduleItems = Students.Select(s =>
-			new StudentSubmoduleItem(
-				s.ShortName(),
-				s.Id,
-				TeacherDiscipline.Rates.ContainsKey(s.RecordBookId) ?
-					new int?(TeacherDiscipline.Rates[s.RecordBookId][smi.ID]) :
-					null,
-				smi.MaxRate)).ToList();*/
 		}
 
 		private void FillSubModulePicker()

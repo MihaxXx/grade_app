@@ -18,7 +18,6 @@ namespace grade_app
 		List<Semester> SemesterList { get; set; }
 
 		public long CurrentSemID { get; set; }
-		//public ObservableCollection<IGrouping<string, DisciplineItem>> GroupedDisciplineItems { get; private set; } = new ObservableCollection<IGrouping<string, DisciplineItem>>();
 		public ObservableCollection<SubjectGroup> GroupedDisciplineItems1 { get; private set; } = new ObservableCollection<SubjectGroup>();
 
 		public TeacherIndexPage()
@@ -53,9 +52,7 @@ namespace grade_app
 			teacherIndex = App.API.TeacherGetIndex(SemesterID);
 			CurrentSemID = SemesterID;
 			Title = $"БРС - {SemesterList.Find(s=> s.Id == CurrentSemID)}";
-			//GroupedDisciplineItems.Clear();
 			GroupedDisciplineItems1.Clear();
-			//var DisciplineItems = new List<DisciplineItem>();
 			if (teacherIndex.Subjects != null)
 			{
 				EmptyListText.IsVisible = false;
@@ -79,9 +76,6 @@ namespace grade_app
 			{
 				EmptyListText.IsVisible = true;
 			}
-			/*foreach (var g in DisciplineItems.GroupBy(d => d.Name))
-				GroupedDisciplineItems.Add(g);*/
-			//GroupedDisciplineItems = new ObservableCollection<IGrouping<string, DisciplineItem>>(DisciplineItems.GroupBy(d => d.Name));
 		}
 
 		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
