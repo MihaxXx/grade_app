@@ -210,7 +210,7 @@ namespace Grade
         public Discipline Discipline { get; set; }
 
         [JsonProperty("Modules")]
-        public Dictionary<string, Module> Modules { get; set; }
+        public Dictionary<string, ModuleT> Modules { get; set; }
 
         [JsonProperty("Groups")]
         public Dictionary<string, Group> Groups { get; set; }
@@ -218,8 +218,9 @@ namespace Grade
         [JsonProperty("Students")]
         public Dictionary<string, Student[]> Students { get; set; }
 
+        //RecordBookID to<SubModule ID, rate>
         [JsonProperty("Rates")]
-        public Dictionary<string, Dictionary<string, long>> Rates { get; set; }
+        public Dictionary<long, Dictionary<long, int>> Rates { get; set; }
 
         [JsonProperty("Exams")]
         public Dictionary<string, Dictionary<string, Exam>> Exams { get; set; }
@@ -497,7 +498,7 @@ namespace Grade
         public string Name { get; set; }
 
         [JsonProperty("Rate")]
-        public long Rate { get; set; }
+        public int Rate { get; set; }
 
         [JsonProperty("Type")]
         public SubModuleType Type { get; set; }
@@ -522,6 +523,8 @@ namespace Grade
 
         [JsonProperty("SecondName")]
         public string SecondName { get; set; }
+
+        public string ShortName() => $"{LastName} {FirstName}";
 
         [JsonProperty("GradeID")]
         public long GradeId { get; set; }
