@@ -13,7 +13,9 @@
                     ItemsSource="{Binding subModulePickerItems}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndex="0" />
-            <ListView ItemsSource="{Binding studentSubmoduleItems}"
+            <ListView ItemsSource="{Binding GroupedStudentItems}"
+                      GroupDisplayBinding="{Binding Name}"
+                      IsGroupingEnabled="True"
                       HasUnevenRows="False"
                       SelectionMode="None">
                 <ListView.ItemTemplate>
@@ -39,7 +41,7 @@
                                        Keyboard="Numeric"
                                        MaxLength="3"
                                        HorizontalTextAlignment="End"
-                                       Text="{Binding Rate}"/>
+                                       Text="{Binding Rate}" />
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        VerticalTextAlignment="Center"

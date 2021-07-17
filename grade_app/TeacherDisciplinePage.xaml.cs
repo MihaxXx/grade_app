@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,13 +11,16 @@ using Xamarin.Forms.Xaml;
 
 namespace grade_app
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TeacherDisciplinePage : TabbedPage
 	{
 		public TeacherDiscipline TeacherDiscipline { get; private set; }
 		public long CurrentSubModuleID { get; set; }
 		public List<SubModulePickerItem> subModulePickerItems { get; private set; } = new List<SubModulePickerItem>();
 		public List<StudentSubmoduleItem> studentSubmoduleItems { get; private set; } = new List<StudentSubmoduleItem>();
+
+		public ObservableCollection<DisGroup> GroupedStudentItems { get; private set; } = new ObservableCollection<DisGroup>();
+
+
 		public TeacherDisciplinePage(long id)
 		{
 			InitializeComponent();
@@ -32,7 +36,27 @@ namespace grade_app
 		private void FillStudentsList()
 		{
 			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
-			var Students = TeacherDiscipline.Students.Values.SelectMany(item => item);
+
+			GroupedStudentItems.Clear();
+			var studentSubmodules = new List<StudentSubmoduleItem>();
+			if(TeacherDiscipline.Students!= null)
+			{
+				foreach(var group in TeacherDiscipline.Students)
+				{
+					var groupInfo = TeacherDiscipline.Groups[group.Key];
+					var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
+					foreach (var student in group.Value)
+						disGroup.Add(new StudentSubmoduleItem(
+							student.ShortName(),
+							student.Id,
+							TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+								new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
+								null,
+							smi.MaxRate));
+					GroupedStudentItems.Add(disGroup);
+				}
+			}
+			/*var Students = TeacherDiscipline.Students.Values.SelectMany(item => item);
 			studentSubmoduleItems = Students.Select(s =>
 			new StudentSubmoduleItem(
 				s.ShortName(),
@@ -40,7 +64,7 @@ namespace grade_app
 				TeacherDiscipline.Rates.ContainsKey(s.RecordBookId) ?
 					new int?(TeacherDiscipline.Rates[s.RecordBookId][smi.ID]) :
 					null,
-				smi.MaxRate)).ToList();
+				smi.MaxRate)).ToList();*/
 		}
 
 		private void FillSubModulePicker()
@@ -83,5 +107,14 @@ namespace grade_app
 		public long ModuleID { get; set; }
 		public long ID { get; set; }
 		public int MaxRate { get; set; }
+	}
+	public class DisGroup :List<StudentSubmoduleItem>
+	{
+		public string Name { get; set; }
+		public DisGroup(string name)
+		{
+			Name = name;
+		}
+		public static IList<DisGroup> All { private set; get; }
 	}
 }

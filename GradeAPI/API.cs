@@ -636,7 +636,22 @@ namespace Grade
         public string SpecFaculty { get; set; }
 
         [JsonProperty("FormID")]
-        public string FormId { get; set; }
+		public string FormId { get; set; }
+
+        public string Name()
+        {
+            string res;
+            if (Degree == "master")
+                res = $"Магистратура, { GradeNum } год";
+            else if (Degree == "specialist")
+                res = $"Специалитет, { GradeNum  } курс";
+            else if (Degree == "postgraduate")
+                res = $"Аспирантура, {  GradeNum  } год";
+            else
+                res =  $"{ GradeNum } курс";
+            res += $" { GroupNum } группа";
+            return res;
+        }
     }
 
     public partial class Journal

@@ -55,7 +55,7 @@ namespace grade_app
 			Title = $"БРС - {SemesterList.Find(s=> s.Id == CurrentSemID)}";
 			//GroupedDisciplineItems.Clear();
 			GroupedDisciplineItems1.Clear();
-			var DisciplineItems = new List<DisciplineItem>();
+			//var DisciplineItems = new List<DisciplineItem>();
 			if (teacherIndex.Subjects != null)
 			{
 				EmptyListText.IsVisible = false;
