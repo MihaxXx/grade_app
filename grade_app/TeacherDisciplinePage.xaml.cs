@@ -14,6 +14,7 @@ namespace grade_app
 	public partial class TeacherDisciplinePage : TabbedPage
 	{
 		public TeacherDiscipline TeacherDiscipline { get; private set; }
+		public long CurrentSubModuleID { get; set; }
 		public List<SubModulePickerItem> subModulePickerItems { get; private set; } = new List<SubModulePickerItem>();
 		public List<StudentSubmoduleItem> studentSubmoduleItems { get; private set; } = new List<StudentSubmoduleItem>();
 		public TeacherDisciplinePage(long id)
@@ -21,19 +22,34 @@ namespace grade_app
 			InitializeComponent();
 
 			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
+			FillSubModulePicker();
+			FillStudentsList();
+
+			//Must be at the end!!!
+			BindingContext = this;
+		}
+
+		private void FillStudentsList()
+		{
+			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
+			var Students = TeacherDiscipline.Students.Values.SelectMany(item => item);
+			studentSubmoduleItems = Students.Select(s =>
+			new StudentSubmoduleItem(
+				s.ShortName(),
+				s.Id,
+				TeacherDiscipline.Rates.ContainsKey(s.RecordBookId) ?
+					new int?(TeacherDiscipline.Rates[s.RecordBookId][smi.ID]) :
+					null,
+				smi.MaxRate)).ToList();
+		}
+
+		private void FillSubModulePicker()
+		{
 			foreach (var m in TeacherDiscipline.Modules)
 				foreach (var sm in m.Value.Submodules)
 					subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate));
 			SubmodulePicker.ItemsSource = subModulePickerItems;
 			SubmodulePicker.SelectedIndex = 0;
-
-			var Students = TeacherDiscipline.Students.Values.SelectMany(item => item);
-			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
-			studentSubmoduleItems = Students.Select(s =>
-			new StudentSubmoduleItem(s.ShortName(), s.Id,TeacherDiscipline.Rates.ContainsKey(s.RecordBookId)? new int? (TeacherDiscipline.Rates[s.RecordBookId][smi.ID]) : null, smi.MaxRate)).ToList();
-
-			//Must be at the end!!!
-			BindingContext = this;
 		}
 	}
 
