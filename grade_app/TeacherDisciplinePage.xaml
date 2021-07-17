@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="grade_app.TeacherDisciplinePage"
+            xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            Title="{Binding TeacherDiscipline.Discipline.SubjectName}">
+    <ContentPage Title="Баллы"
+                 IconImageSource="{OnPlatform iOS=baseline_assignment_black_24pt, Android=ic_assignment_black_24dp.xml}">
+        <StackLayout>
+            <Picker x:Name="SubmodulePicker"
+                    Title="Выберите контрольное мероприятие"
+                    ItemsSource="{Binding subModulePickerItems}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedIndex="0" />
+            <ListView ItemsSource="{Binding studentSubmoduleItems}"
+                      HasUnevenRows="False"
+                      SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10,0"
+                                  Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       HorizontalTextAlignment="Start"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding Name}" />
+                                <Entry Grid.Row="0"
+                                       Grid.Column="1"
+                                       Keyboard="Numeric"
+                                       MaxLength="3"
+                                       HorizontalTextAlignment="End"
+                                       Text="{Binding Rate}"/>
+                                <Label Grid.Row="0"
+                                       Grid.Column="2"
+                                       VerticalTextAlignment="Center"
+                                       Text="{Binding MaxRate, StringFormat='/{0}'}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage>
+    <ContentPage Title="Посещения"
+                 IconImageSource="{OnPlatform iOS=baseline_date_range_black_24pt, Android=ic_date_range_black_24dp.xml}">
+        <StackLayout>
+            <Picker x:Name="LessonPicker"
+                    Title="Выберите занятие"
+                    ItemsSource="{Binding ???}"
+                    SelectedIndex="0" />
+            <ListView ItemsSource="{Binding ???}"
+                      HasUnevenRows="False"
+                      SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10,0"
+                                  Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding LessonDate, StringFormat='{0:d}'}" />
+                                <Label Grid.Row="0"
+                                       Grid.Column="1"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding LessonType}" />
+                                <Label Grid.Row="0"
+                                       Grid.Column="2"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding AttendedSymbol}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage>
+</TabbedPage>

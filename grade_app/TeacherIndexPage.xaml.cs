@@ -88,7 +88,7 @@ namespace grade_app
 		{
 			((ListView)sender).SelectedItem = null;
 			var item = (DisciplineItem)e.Item;
-			//await Navigation.PushAsync(new StudentDisciplinePage(item.ID));
+			await Navigation.PushAsync(new TeacherDisciplinePage(item.ID));
 		}
 		void OnToolbarItemClicked(object sender, EventArgs e)
 		{
