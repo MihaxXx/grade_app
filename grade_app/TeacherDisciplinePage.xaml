@@ -50,6 +50,17 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout VerticalOptions="FillAndExpand"
+                                         Padding="0">
+                                <Label Text="{Binding Name}" 
+                                       HorizontalTextAlignment="Center" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
             </ListView>
         </StackLayout>
     </ContentPage>
