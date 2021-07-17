@@ -646,6 +646,8 @@ namespace Grade
 
         [JsonProperty("Attended")]
         public bool Attended { get; set; }
+
+        public char AttendedSymbol { get => Attended == true ? '+' : '-'; }
     }
 
     public enum Degree { Bachelor, Master, Specialist, Postgraduate };

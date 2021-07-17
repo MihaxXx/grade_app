@@ -269,7 +269,7 @@
                             <Label Grid.Row="0"
                                    Grid.Column="2"
                                    HorizontalTextAlignment="Center"
-                                   Text="{Binding Attended}" />
+                                   Text="{Binding AttendedSymbol}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
