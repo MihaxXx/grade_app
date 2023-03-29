@@ -25,18 +25,18 @@ namespace Grade
         public const string Host = @"grade.sfedu.ru";
         readonly string PathBase = @"api/v1/";
 #endif
-		readonly string Token;
+        readonly string Token;
         static readonly HttpClient client = new HttpClient();
 
         public API(string token, Role _role)
-		{
-			Token = token;
+        {
+            Token = token;
             role = _role;
-            PathBase += (_role == Role.Student ? "student" :"teacher") + "/";
-		}
+            PathBase += (_role == Role.Student ? "student" : "teacher") + "/";
+        }
 
-        public string Request(Dictionary<string,string> args, string relPath)
-		{
+        public string Request(Dictionary<string, string> args, string relPath)
+        {
             var newuriB = new UriBuilder(
 #if LOCAL
                 "http"
@@ -44,12 +44,12 @@ namespace Grade
                 "https"
 #endif
                 , Host)
-			{
-				Path = PathBase + relPath
+            {
+                Path = PathBase + relPath
             };
-			var query = HttpUtility.ParseQueryString(string.Empty);
+            var query = HttpUtility.ParseQueryString(string.Empty);
             query.Set("token", Token);
-            foreach(var arg in args)
+            foreach (var arg in args)
                 query.Set(arg.Key, arg.Value);
             newuriB.Query = query.ToString();
             var Uri = newuriB.Uri;
@@ -64,25 +64,25 @@ namespace Grade
                 //TODO
             }
             return response;
-		}
-        public StudentIndex StudentGetIndex(long SemesterID=-1)
+        }
+        public StudentIndex StudentGetIndex(long SemesterID = -1)
         {
             var args = new Dictionary<string, string>();
             if (SemesterID != -1)
                 args.Add("SemesterID", SemesterID.ToString());
-            return StudentIndexResponse.FromJson(Request(args,"")).Response;
+            return StudentIndexResponse.FromJson(Request(args, "")).Response;
         }
 
         public StudentDiscipline StudentGetDiscipline(long ID)
         {
-			var args = new Dictionary<string, string>
-			{
-				{ "id", ID.ToString() }
-			};
-			return StudentDisciplineResponse.FromJson(Request(args, "discipline/subject")).Response;
+            var args = new Dictionary<string, string>
+            {
+                { "id", ID.ToString() }
+            };
+            return StudentDisciplineResponse.FromJson(Request(args, "discipline/subject")).Response;
         }
         public List<Semester> GetSemesterList()
-		{
+        {
             var args = new Dictionary<string, string>();
             return SemesterListResponse.FromJson(Request(args, "semester_list")).Response.Values.ToList();
         }
@@ -95,11 +95,11 @@ namespace Grade
         }
         public TeacherDiscipline TeacherGetDiscipline(long ID)
         {
-			var args = new Dictionary<string, string>
-			{
-				{ "id", ID.ToString() }
-			};
-			return TeacherDisciplineResponse.FromJson(Request(args, "discipline/rating")).Response;
+            var args = new Dictionary<string, string>
+            {
+                { "id", ID.ToString() }
+            };
+            return TeacherDisciplineResponse.FromJson(Request(args, "discipline/rating")).Response;
         }
         public StudentJournal StudentGetDisciplineJournal(long ID)
         {
@@ -108,6 +108,14 @@ namespace Grade
                 { "id", ID.ToString() }
             };
             return StudentJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
+        }
+
+        public TeacherJournal TeacherGetDisciplineJournal(long ID) { 
+        var args = new Dictionary<string, string>
+            {
+                { "id", ID.ToString() }
+            };
+            return TeacherJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
         }
     }
 
@@ -246,6 +254,37 @@ namespace Grade
         [JsonProperty("Journal")]
         public Journal[] Journal { get; set; }
     }
+
+    public partial class TeacherJournalResponse
+    {
+        [JsonProperty("response")]
+        public TeacherJournal Response { get; set; }
+    }
+
+    public partial class TeacherJournal
+    {
+        [JsonProperty("Discipline")]
+        public Discipline Discipline { get; set; }
+
+        [JsonProperty("Lessons")]
+        public Lesson[] Lessons { get; set; }
+
+        [JsonProperty("Groups")]
+        public System.Collections.Generic.Dictionary<string, Group> Groups { get; set; }
+
+        [JsonProperty("Subgroups")]
+        public System.Collections.Generic.Dictionary<string, Subgroup> Subgroups { get; set; }
+
+        [JsonProperty("Students")]
+        public System.Collections.Generic.Dictionary<string, Student[]> Students { get; set; }
+
+        [JsonProperty("LessonTypes")]
+        public LessonType[] LessonTypes { get; set; }
+
+        [JsonProperty("Attendance")]
+        public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, long>> Attendance { get; set; }
+    }
+
 
 
     public partial class Subject
@@ -668,6 +707,48 @@ namespace Grade
         public char AttendedSymbol { get => Attended == true ? '+' : '-'; }
     }
 
+    public partial class LessonType
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("LessonType")]
+        public string Type { get; set; }
+    }
+
+    public partial class Lesson
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("LessonDate")]
+        public DateTime LessonDate { get; set; }
+
+        [JsonProperty("LessonType")]
+        public long LessonType { get; set; }
+
+        [JsonProperty("LessonName")]
+        public string LessonName { get; set; }
+
+        [JsonProperty("SubgroupID")]
+        public object SubgroupId { get; set; }
+    }
+
+    public partial class Subgroup
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("Title")]
+        public string Title { get; set; }
+
+        [JsonProperty("TeacherID")]
+        public long TeacherId { get; set; }
+
+        [JsonProperty("DisciplineID")]
+        public long DisciplineId { get; set; }
+    }
+
     public enum Degree { Bachelor, Master, Specialist, Postgraduate };
 
     public enum SubModuleType { CurrentControl, LandmarkControl };
@@ -712,6 +793,11 @@ namespace Grade
         public static StudentJournalResponse FromJson(string json) => JsonConvert.DeserializeObject<StudentJournalResponse>(json, Grade.Converter.Settings);
     }
 
+    public partial class TeacherJournalResponse
+    {
+        public static TeacherJournalResponse FromJson(string json) => JsonConvert.DeserializeObject<TeacherJournalResponse>(json, Grade.Converter.Settings);
+    }
+
 
 
     public static class Serialize
@@ -722,6 +808,7 @@ namespace Grade
         public static string ToJson(this TeacherIndexResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this TeacherDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+        public static string ToJson(this TeacherJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
 
     }
 
