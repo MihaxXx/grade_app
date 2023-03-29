@@ -39,22 +39,33 @@ namespace grade_app
 
 			GroupedStudentItems.Clear();
 			var studentSubmodules = new List<StudentSubmoduleItem>();
-			if(TeacherDiscipline.Students!= null)
+			var MaxExtraRate = TeacherDiscipline.Discipline.Type == "exam" ? 38 : 60;
+			if (TeacherDiscipline.Students != null)
 			{
-				foreach(var group in TeacherDiscipline.Students)
+				foreach (var group in TeacherDiscipline.Students)
 				{
 					var groupInfo = TeacherDiscipline.Groups[group.Key];
 					var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
 					foreach (var student in group.Value)
-						disGroup.Add(new StudentSubmoduleItem(
-							student.ShortName(),
-							student.Id,
-							TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+					{
+						var Rate = TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
 								TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(smi.ID) ?
 									new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
 									0 :
-								null,
-							smi.MaxRate));
+								null;
+						var SemesterRate = TeacherDiscipline.Modules.Where(m => m.Value.Type == ModuleType.Regular).Sum(m =>
+						TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+								m.Value.Submodules.Sum(sm => 
+								TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(sm.Id) ?
+								new int?(TeacherDiscipline.Rates[student.RecordBookId][sm.Id]) : 0) : 0);
+						disGroup.Add(new StudentSubmoduleItem(
+							student.ShortName(),
+							student.Id,
+							Rate,
+							//TODO: In case of ModuleType.Extra should be MaxExtraRate - SemesterRate - PreviousSubModulesFromExtraModule, current version will lie maxrate on second extra submodule
+							//TODO: Also, In case of ModuleType.Extra would be better to display - instead of 0 on non-positive results (when extra rates is unnecessary) 
+							smi.moduleType == ModuleType.Extra ? Math.Max(MaxExtraRate - SemesterRate.Value, 0) : smi.MaxRate));
+					}
 					GroupedStudentItems.Add(disGroup);
 				}
 			}
@@ -62,9 +73,31 @@ namespace grade_app
 
 		private void FillSubModulePicker()
 		{
+			//TODO: check module type, workaround non-regular modules submodules names
 			foreach (var m in TeacherDiscipline.Modules)
-				foreach (var sm in m.Value.Submodules)
-					subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate));
+				for (int i = 0; i < m.Value.Submodules.Length; i++)
+				{
+					SubmoduleT sm = m.Value.Submodules[i];
+					switch (m.Value.Type)
+					{
+						case ModuleType.Exam:
+							if (i == 0)
+								subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name} - Основная сдача", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+							else
+								subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name} - Пересдача {i}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+							break;
+						case ModuleType.Extra:
+							subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name}{(m.Value.Submodules.Length > 1 ? " " + (i + 1).ToString() : "")}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+							break;
+						case ModuleType.Bonus:
+							subModulePickerItems.Add(new SubModulePickerItem(m.Value.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+							break;
+						case ModuleType.Regular:
+							subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+							break;
+					}
+				}
+
 			SubmodulePicker.ItemsSource = subModulePickerItems;
 			SubmodulePicker.SelectedIndex = 0;
 		}
@@ -93,20 +126,22 @@ namespace grade_app
 	}
 	public class SubModulePickerItem
 	{
-		public SubModulePickerItem(string name, long moduleID, long iD, int maxRate)
+		public SubModulePickerItem(string name, long moduleID, long iD, int maxRate, ModuleType moduleType)
 		{
 			Name = name;
 			ModuleID = moduleID;
 			ID = iD;
 			MaxRate = maxRate;
+			this.moduleType = moduleType;
 		}
 
 		public string Name { get; set; }
 		public long ModuleID { get; set; }
 		public long ID { get; set; }
 		public int MaxRate { get; set; }
+		public ModuleType moduleType { get; set; }
 	}
-	public class DisGroup :List<StudentSubmoduleItem>
+	public class DisGroup : List<StudentSubmoduleItem>
 	{
 		public string Name { get; set; }
 		public DisGroup(string name)
