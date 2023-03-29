@@ -35,7 +35,9 @@
                                        Grid.Column="0"
                                        HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Name}" />
+                                       Text="{Binding Name}" 
+                                       FontSize="Medium"
+                                       TextColor="Black"/>
                                 <Entry Grid.Row="0"
                                        Grid.Column="1"
                                        Keyboard="Numeric"
@@ -45,7 +47,9 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding MaxRate, StringFormat='/{0}'}" />
+                                       Text="{Binding MaxRate, StringFormat='/{0}'}"
+                                       FontSize="Medium"
+                                       TextColor="Black"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
@@ -56,7 +60,9 @@
                             <StackLayout VerticalOptions="FillAndExpand"
                                          Padding="0">
                                 <Label Text="{Binding Name}" 
-                                       HorizontalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="Medium"
+                                       TextColor="Black"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

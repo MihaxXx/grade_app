@@ -49,7 +49,9 @@
                         <StackLayout VerticalOptions="FillAndExpand"
                                      Padding="5">
                             <Label Text="{Binding Name}"
-                                   HorizontalTextAlignment="Start" />
+                                   HorizontalTextAlignment="Start"
+                                   FontSize="Medium"
+                                   TextColor="Black"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
