@@ -125,5 +125,12 @@
                 </ListView.GroupHeaderTemplate>
             </ListView>
         </StackLayout>
+        <ContentPage.ToolbarItems>
+            <ToolbarItem 
+                Order="Primary"
+                Priority="0"
+                IconImageSource="{OnPlatform iOS=baseline_add_circle_white_24pt, Android=baseline_add_circle_24.xml}"
+                Clicked="ToolbarItem_Clicked"/>
+        </ContentPage.ToolbarItems>
     </ContentPage>
 </TabbedPage>
