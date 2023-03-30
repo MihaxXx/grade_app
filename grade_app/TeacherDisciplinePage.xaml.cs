@@ -14,11 +14,12 @@ namespace grade_app
 	public partial class TeacherDisciplinePage : TabbedPage
 	{
 		public TeacherDiscipline TeacherDiscipline { get; private set; }
-		public long CurrentSubModuleID { get; set; }
 		public List<SubModulePickerItem> subModulePickerItems { get; private set; } = new List<SubModulePickerItem>();
-		public List<StudentSubmoduleItem> studentSubmoduleItems { get; private set; } = new List<StudentSubmoduleItem>();
-
 		public ObservableCollection<DisGroup> GroupedStudentItems { get; private set; } = new ObservableCollection<DisGroup>();
+
+		public TeacherJournal TeacherJournal { get; private set; }
+		public List<LessonPickerItem> LessonPickerItems { get; private set; } = new List<LessonPickerItem>();
+		public ObservableCollection<DisJourGroup> GroupedJournalStudentItems { get; private set; } = new ObservableCollection<DisJourGroup>();
 
 
 		public TeacherDisciplinePage(long id)
@@ -28,6 +29,10 @@ namespace grade_app
 			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
 			FillSubModulePicker();
 			FillStudentsList();
+
+			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
+			FillLessonPicker();
+			FillJournalStudentsList();
 
 			//Must be at the end!!!
 			BindingContext = this;
@@ -106,6 +111,49 @@ namespace grade_app
 		{
 			FillStudentsList();
 		}
+
+		private void FillLessonPicker()
+		{
+			foreach (var l in TeacherJournal.Lessons)
+				LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type} ({l.LessonName})",
+					TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
+
+			LessonPicker.ItemsSource = LessonPickerItems;
+			LessonPicker.SelectedIndex = 0;
+		}
+
+		private void FillJournalStudentsList()
+		{
+			var li = (LessonPickerItem)LessonPicker.SelectedItem;
+
+			GroupedJournalStudentItems.Clear();
+			var studentLessons = new List<StudentJournalItem>();
+			if (TeacherJournal.Students != null)
+			{
+				//TODO: respect subgroup information
+				foreach (var group in TeacherJournal.Students)
+				{
+					var groupInfo = TeacherJournal.Groups[group.Key];
+					var disGroup = new DisJourGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
+					foreach (var student in group.Value)
+					{
+						disGroup.Add(new StudentJournalItem(student.ShortName(),student.Id,
+							TeacherJournal.Attendance!= null && TeacherJournal.Attendance.ContainsKey(student.RecordBookId)?
+								TeacherJournal.Attendance[student.RecordBookId].ContainsKey(li.ID)?
+									new bool?(TeacherJournal.Attendance[student.RecordBookId][li.ID]>0) : 
+									false :
+								null
+							));
+					}
+					GroupedJournalStudentItems.Add(disGroup);
+				}
+			}
+		}
+
+		private void LessonPicker_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			FillJournalStudentsList();
+		}
 	}
 
 	public class StudentSubmoduleItem
@@ -149,5 +197,44 @@ namespace grade_app
 			Name = name;
 		}
 		public static IList<DisGroup> All { private set; get; }
+	}
+	public class StudentJournalItem
+	{
+		public StudentJournalItem(string name, long id, bool? attendance)
+		{
+			Name = name;
+			Id = id;
+			Attendance = attendance;
+		}
+
+		public string Name { get; set; }
+		public long Id { get; set; }
+		public bool? Attendance { get; set; }
+	}
+
+	public class LessonPickerItem
+	{
+		public LessonPickerItem(string name, string type, long iD, DateTime date)
+		{
+			Name = name;
+			Type = type;
+			ID = iD;
+			Date = date;
+		}
+
+		public string Name { get; set; }
+		public string Type { get; set; }
+		public long ID { get; set; }
+		public DateTime Date { get; set; }
+	}
+
+	public class DisJourGroup : List<StudentJournalItem>
+	{
+		public string Name { get; set; }
+		public DisJourGroup(string name)
+		{
+			Name = name;
+		}
+		public static IList<DisJourGroup> All { private set; get; }
 	}
 }

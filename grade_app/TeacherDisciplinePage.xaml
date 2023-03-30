@@ -3,6 +3,8 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             x:Class="grade_app.TeacherDisciplinePage"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+            xmlns:grade_app="clr-namespace:grade_app"
+            x:DataType="grade_app:TeacherDisciplinePage"
             android:TabbedPage.ToolbarPlacement="Bottom"
             Title="{Binding TeacherDiscipline.Discipline.SubjectName}">
     <ContentPage Title="Баллы"
@@ -19,7 +21,7 @@
                       HasUnevenRows="True"
                       SelectionMode="None">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="grade_app:StudentSubmoduleItem">
                         <ViewCell>
                             <Grid Padding="10,0"
                                   Margin="5">
@@ -55,7 +57,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.GroupHeaderTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="grade_app:DisGroup">
                         <ViewCell>
                             <StackLayout VerticalOptions="FillAndExpand"
                                          Padding="0">
@@ -75,13 +77,16 @@
         <StackLayout>
             <Picker x:Name="LessonPicker"
                     Title="Выберите занятие"
-                    ItemsSource="{Binding ???}"
-                    SelectedIndex="0" />
-            <ListView ItemsSource="{Binding ???}"
-                      HasUnevenRows="False"
+                    ItemsSource="{Binding LessonPickerItems}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedIndexChanged="LessonPicker_SelectedIndexChanged"/>
+            <ListView ItemsSource="{Binding GroupedJournalStudentItems}"
+                      GroupDisplayBinding="{Binding Name}"
+                      IsGroupingEnabled="True"
+                      HasUnevenRows="True"
                       SelectionMode="None">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="grade_app:StudentJournalItem">
                         <ViewCell>
                             <Grid Padding="10,0"
                                   Margin="5">
@@ -89,26 +94,35 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
-                                       HorizontalTextAlignment="Center"
-                                       Text="{Binding LessonDate, StringFormat='{0:d}'}" />
-                                <Label Grid.Row="0"
+                                       HorizontalTextAlignment="Start"
+                                       Text="{Binding Name}"
+                                       FontSize="Medium"
+                                       TextColor="Black"/>
+                                <CheckBox Grid.Row="0"
                                        Grid.Column="1"
-                                       HorizontalTextAlignment="Center"
-                                       Text="{Binding LessonType}" />
-                                <Label Grid.Row="0"
-                                       Grid.Column="2"
-                                       HorizontalTextAlignment="Center"
-                                       Text="{Binding AttendedSymbol}" />
+                                       IsChecked="{Binding Attendance}" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate x:DataType="grade_app:DisJourGroup">
+                        <ViewCell>
+                            <StackLayout VerticalOptions="FillAndExpand"
+                                         Padding="0">
+                                <Label Text="{Binding Name}"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="Medium"
+                                       TextColor="Black" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
             </ListView>
         </StackLayout>
     </ContentPage>
