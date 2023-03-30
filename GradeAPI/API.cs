@@ -282,7 +282,7 @@ namespace Grade
         public LessonType[] LessonTypes { get; set; }
 
         [JsonProperty("Attendance")]
-        public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, long>> Attendance { get; set; }
+        public System.Collections.Generic.Dictionary<long, System.Collections.Generic.Dictionary<long, long>> Attendance { get; set; }
     }
 
 
