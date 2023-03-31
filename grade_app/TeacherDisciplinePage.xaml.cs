@@ -41,70 +41,86 @@ namespace grade_app
 		private void FillStudentsList()
 		{
 			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
-
 			GroupedStudentItems.Clear();
-			var studentSubmodules = new List<StudentSubmoduleItem>();
-			var MaxExtraRate = TeacherDiscipline.Discipline.Type == "exam" ? 38 : 60;
-			if (TeacherDiscipline.Students != null)
+
+			try
 			{
-				foreach (var group in TeacherDiscipline.Students)
+				var studentSubmodules = new List<StudentSubmoduleItem>();
+				var MaxExtraRate = TeacherDiscipline.Discipline.Type == "exam" ? 38 : 60;
+				if (smi != null && TeacherDiscipline != null && TeacherDiscipline.Students != null)
 				{
-					var groupInfo = TeacherDiscipline.Groups[group.Key];
-					var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
-					foreach (var student in group.Value)
+					foreach (var group in TeacherDiscipline.Students)
 					{
-						var Rate = TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
-								TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(smi.ID) ?
-									new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
-									0 :
-								null;
-						var SemesterRate = TeacherDiscipline.Modules.Where(m => m.Value.Type == ModuleType.Regular).Sum(m =>
-						TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
-								m.Value.Submodules.Sum(sm => 
-								TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(sm.Id) ?
-								new int?(TeacherDiscipline.Rates[student.RecordBookId][sm.Id]) : 0) : 0);
-						disGroup.Add(new StudentSubmoduleItem(
-							student.ShortName(),
-							student.Id,
-							Rate,
-							//TODO: In case of ModuleType.Extra should be MaxExtraRate - SemesterRate - PreviousSubModulesFromExtraModule, current version will lie maxrate on second extra submodule
-							//TODO: Also, In case of ModuleType.Extra would be better to display - instead of 0 on non-positive results (when extra rates is unnecessary) 
-							smi.moduleType == ModuleType.Extra ? Math.Max(MaxExtraRate - SemesterRate.Value, 0) : smi.MaxRate));
+						var groupInfo = TeacherDiscipline.Groups[group.Key];
+						var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
+						foreach (var student in group.Value)
+						{
+							var Rate = TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+									TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(smi.ID) ?
+										new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
+										0 :
+									null;
+							var SemesterRate = TeacherDiscipline.Modules.Where(m => m.Value.Type == ModuleType.Regular).Sum(m =>
+							TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+									m.Value.Submodules.Sum(sm =>
+									TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(sm.Id) ?
+									new int?(TeacherDiscipline.Rates[student.RecordBookId][sm.Id]) : 0) : 0);
+							disGroup.Add(new StudentSubmoduleItem(
+								student.ShortName(),
+								student.Id,
+								Rate,
+								//TODO: In case of ModuleType.Extra should be MaxExtraRate - SemesterRate - PreviousSubModulesFromExtraModule, current version will lie maxrate on second extra submodule
+								//TODO: Also, In case of ModuleType.Extra would be better to display - instead of 0 on non-positive results (when extra rates is unnecessary) 
+								smi.moduleType == ModuleType.Extra ? Math.Max(MaxExtraRate - SemesterRate.Value, 0) : smi.MaxRate));
+						}
+						GroupedStudentItems.Add(disGroup);
 					}
-					GroupedStudentItems.Add(disGroup);
 				}
+			}
+			catch(NullReferenceException e)
+			{
+				Console.WriteLine("Error: " + e.Message);
 			}
 		}
 
 		private void FillSubModulePicker()
 		{
-			//TODO: check module type, workaround non-regular modules submodules names
-			foreach (var m in TeacherDiscipline.Modules)
-				for (int i = 0; i < m.Value.Submodules.Length; i++)
-				{
-					SubmoduleT sm = m.Value.Submodules[i];
-					switch (m.Value.Type)
+			try
+			{
+				if (TeacherDiscipline == null || TeacherDiscipline.Modules == null)
+					return;
+				//TODO: check module type, workaround non-regular modules submodules names
+				foreach (var m in TeacherDiscipline.Modules)
+					for (int i = 0; i < m.Value.Submodules.Length; i++)
 					{
-						case ModuleType.Exam:
-							if (i == 0)
-								subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name} - Основная сдача", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
-							else
-								subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name} - Пересдача {i}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
-							break;
-						case ModuleType.Extra:
-							subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name}{(m.Value.Submodules.Length > 1 ? " " + (i + 1).ToString() : "")}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
-							break;
-						case ModuleType.Bonus:
-							subModulePickerItems.Add(new SubModulePickerItem(m.Value.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
-							break;
-						case ModuleType.Regular:
-							subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
-							break;
+						SubmoduleT sm = m.Value.Submodules[i];
+						switch (m.Value.Type)
+						{
+							case ModuleType.Exam:
+								if (i == 0)
+									subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name} - Основная сдача", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+								else
+									subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name} - Пересдача {i}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+								break;
+							case ModuleType.Extra:
+								subModulePickerItems.Add(new SubModulePickerItem($"{m.Value.Name}{(m.Value.Submodules.Length > 1 ? " " + (i + 1).ToString() : "")}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+								break;
+							case ModuleType.Bonus:
+								subModulePickerItems.Add(new SubModulePickerItem(m.Value.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+								break;
+							case ModuleType.Regular:
+								subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+								break;
+						}
 					}
-				}
 
-			SubmodulePicker.ItemsSource = subModulePickerItems;
-			SubmodulePicker.SelectedIndex = 0;
+				SubmodulePicker.ItemsSource = subModulePickerItems;
+				SubmodulePicker.SelectedIndex = 0;
+			}
+			catch (NullReferenceException e)
+			{
+				Console.WriteLine("Error: " + e.Message);
+			}
 		}
 
 		private void SubmodulePicker_SelectedIndexChanged(object sender, EventArgs e)
@@ -114,39 +130,55 @@ namespace grade_app
 
 		private void FillLessonPicker()
 		{
-			foreach (var l in TeacherJournal.Lessons)
-				LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type} ({l.LessonName})",
-					TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
+			try
+			{
+				if (TeacherJournal.Lessons == null)
+					return;
+				foreach (var l in TeacherJournal.Lessons)
+					LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type} ({l.LessonName})",
+						TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
 
-			LessonPicker.ItemsSource = LessonPickerItems;
-			LessonPicker.SelectedIndex = 0;
+				LessonPicker.ItemsSource = LessonPickerItems;
+				LessonPicker.SelectedIndex = 0;
+			}
+			catch (NullReferenceException e)
+			{
+				Console.WriteLine("Error: " + e.Message);
+			}
 		}
 
 		private void FillJournalStudentsList()
 		{
 			var li = (LessonPickerItem)LessonPicker.SelectedItem;
-
 			GroupedJournalStudentItems.Clear();
-			var studentLessons = new List<StudentJournalItem>();
-			if (TeacherJournal.Students != null)
+
+			try
 			{
-				//TODO: respect subgroup information
-				foreach (var group in TeacherJournal.Students)
+				var studentLessons = new List<StudentJournalItem>();
+				if (li != null && TeacherJournal.Students != null)
 				{
-					var groupInfo = TeacherJournal.Groups[group.Key];
-					var disGroup = new DisJourGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
-					foreach (var student in group.Value)
+					//TODO: respect subgroup information
+					foreach (var group in TeacherJournal.Students)
 					{
-						disGroup.Add(new StudentJournalItem(student.ShortName(),student.Id,
-							TeacherJournal.Attendance!= null && TeacherJournal.Attendance.ContainsKey(student.RecordBookId)?
-								TeacherJournal.Attendance[student.RecordBookId].ContainsKey(li.ID)?
-									new bool?(TeacherJournal.Attendance[student.RecordBookId][li.ID]>0) : 
-									false :
-								null
-							));
+						var groupInfo = TeacherJournal.Groups[group.Key];
+						var disGroup = new DisJourGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
+						foreach (var student in group.Value)
+						{
+							disGroup.Add(new StudentJournalItem(student.ShortName(), student.Id,
+								TeacherJournal.Attendance != null && TeacherJournal.Attendance.ContainsKey(student.RecordBookId) ?
+									TeacherJournal.Attendance[student.RecordBookId].ContainsKey(li.ID) ?
+										new bool?(TeacherJournal.Attendance[student.RecordBookId][li.ID] > 0) :
+										false :
+									null
+								));
+						}
+						GroupedJournalStudentItems.Add(disGroup);
 					}
-					GroupedJournalStudentItems.Add(disGroup);
 				}
+			}
+			catch(NullReferenceException e)
+			{
+				Console.WriteLine("Error: " + e.Message);
 			}
 		}
 
