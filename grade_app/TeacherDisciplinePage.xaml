@@ -10,16 +10,25 @@
     <ContentPage Title="Баллы"
                  IconImageSource="{OnPlatform iOS=baseline_assignment_black_24pt, Android=ic_assignment_black_24dp.xml}">
         <StackLayout>
+            <Label x:Name="WarningLabel" 
+                   IsVisible="False"
+                   FontSize="Medium"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#a94442"
+                   BackgroundColor="#f2dede"/>
             <Picker x:Name="SubmodulePicker"
                     Title="Выберите контрольное мероприятие"
                     ItemsSource="{Binding subModulePickerItems}"
                     ItemDisplayBinding="{Binding Name}"
-                    SelectedIndexChanged="SubmodulePicker_SelectedIndexChanged"/>
-            <ListView ItemsSource="{Binding GroupedStudentItems}"
+                    SelectedIndexChanged="SubmodulePicker_SelectedIndexChanged"
+                    IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}" />
+            <ListView x:Name="StudentSubmoduleList"
+                      ItemsSource="{Binding GroupedStudentItems}"
                       GroupDisplayBinding="{Binding Name}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
-                      SelectionMode="None">
+                      SelectionMode="None"
+                      IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="grade_app:StudentSubmoduleItem">
                         <ViewCell>
@@ -43,9 +52,13 @@
                                 <Entry Grid.Row="0"
                                        Grid.Column="1"
                                        Keyboard="Numeric"
+                                       ReturnType="Done"
                                        MaxLength="3"
                                        HorizontalTextAlignment="End"
-                                       Text="{Binding Rate}" />
+                                       Text="{Binding Rate}"
+                                       Focused="Entry_Focused"
+                                       Unfocused="Entry_Unfocused"
+                                       IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=DisciplineNotFrozen}"/>
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        VerticalTextAlignment="Center"

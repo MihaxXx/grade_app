@@ -17,6 +17,8 @@ namespace grade_app
 		public List<SubModulePickerItem> subModulePickerItems { get; private set; } = new List<SubModulePickerItem>();
 		public ObservableCollection<DisGroup> GroupedStudentItems { get; private set; } = new ObservableCollection<DisGroup>();
 
+		public bool DisciplineNotFrozen { get; private set; }
+
 		public TeacherJournal TeacherJournal { get; private set; }
 		public List<LessonPickerItem> LessonPickerItems { get; private set; } = new List<LessonPickerItem>();
 		public ObservableCollection<DisJourGroup> GroupedJournalStudentItems { get; private set; } = new ObservableCollection<DisJourGroup>();
@@ -27,8 +29,19 @@ namespace grade_app
 			InitializeComponent();
 
 			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
+			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen;
 			FillSubModulePicker();
 			FillStudentsList();
+			if(!TeacherDiscipline.Discipline.IsMapCreated)
+			{
+				WarningLabel.Text = "Для дисциплины не создана учебная карта";
+				WarningLabel.IsVisible = true;
+			}
+			if(TeacherDiscipline.Discipline.Frozen)
+			{
+				WarningLabel.Text = "Дисциплина подписана, выставление баллов невозможно";
+				WarningLabel.IsVisible = true;
+			}
 
 			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
 			FillLessonPicker();
@@ -191,6 +204,16 @@ namespace grade_app
 		{
 
 		}
+
+		private void Entry_Unfocused(object sender, FocusEventArgs e)
+		{
+			var val = (sender as Entry).Parent.Parent.BindingContext as StudentSubmoduleItem;
+		}
+
+		private void Entry_Focused(object sender, FocusEventArgs e)
+		{
+			(sender as Entry).CursorPosition = (sender as Entry).Text.Length;
+		}
 	}
 
 	public class StudentSubmoduleItem
@@ -207,7 +230,6 @@ namespace grade_app
 		public long Id { get; set; }
 		public int? Rate { get; set; }
 		public int MaxRate { get; set; }
-
 	}
 	public class SubModulePickerItem
 	{

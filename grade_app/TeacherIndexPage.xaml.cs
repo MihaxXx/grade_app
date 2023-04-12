@@ -65,7 +65,7 @@ namespace grade_app
 								$"{s.Value.SubjectName}  \n{s.Value.Degree}, {s.Value.GradeNum} курс",
 								d.Id,
 								string.Join('\n', teacherIndex.Groups[d.Id.ToString()]),
-								d.TypeToString(),
+								d.TypeToString() + (d.Frozen ? "\n подписано" : ""),
 								string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4))
 							));
 					}
