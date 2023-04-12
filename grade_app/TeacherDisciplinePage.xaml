@@ -24,6 +24,7 @@
                     IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}" />
             <ListView x:Name="StudentSubmoduleList"
                       ItemsSource="{Binding GroupedStudentItems}"
+                      CachingStrategy="RecycleElement"
                       GroupDisplayBinding="{Binding Name}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
