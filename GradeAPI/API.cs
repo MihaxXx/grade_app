@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Threading.Tasks;
 using System.Web;
+using System.Net.Http.Headers;
 
 namespace Grade
 {
@@ -64,6 +65,41 @@ namespace Grade
                 //TODO
             }
             return response;
+        }
+
+        public string Post(Dictionary<string, string> args, string relPath)
+        {
+            var newuriB = new UriBuilder(
+#if LOCAL
+                "http"
+#else
+                "https"
+#endif
+                , Host)
+            {
+                Path = PathBase + relPath
+            };
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query.Set("token", Token);
+            /*foreach (var arg in args)
+                query.Set(arg.Key, arg.Value);*/
+            newuriB.Query = query.ToString();
+            var content = new FormUrlEncodedContent(args);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            /*content.Headers.*/
+            var Uri = newuriB.Uri;
+
+            string result = "";
+            try
+            {
+                var response = client.PostAsync(Uri, content).Result;
+                result = response.Content.ReadAsStringAsync().Result;
+            }
+            catch (HttpRequestException)
+            {
+                //TODO
+            }
+            return result;
         }
         public StudentIndex StudentGetIndex(long SemesterID = -1)
         {
