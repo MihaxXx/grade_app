@@ -153,7 +153,20 @@ namespace Grade
             };
             return TeacherJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
         }
-    }
+
+		public (bool, string) TeacherPostSetRate(long recordBookID, long disciplineID, long submoduleID, int rate)
+		{
+			var args = new Dictionary<string, string>
+			{
+				{ nameof(recordBookID),recordBookID.ToString() },
+				{ nameof(disciplineID), disciplineID.ToString() },
+				{ nameof(submoduleID), submoduleID.ToString() },
+				{ nameof(rate), rate.ToString() }
+			};
+			var res = PostRequestResponse.FromJson(Post(args, "set_rate")).Response;
+			return (res.Success, res.Message);
+		}
+	}
 
     public partial class StudentIndexResponse
     {
@@ -321,6 +334,20 @@ namespace Grade
         public System.Collections.Generic.Dictionary<long, System.Collections.Generic.Dictionary<long, long>> Attendance { get; set; }
     }
 
+    public partial class PostRequestResponse
+    {
+        [JsonProperty("response")]
+        public PostRequest Response { get; set; }
+    }
+
+    public partial class PostRequest
+    {
+        [JsonProperty("success")]
+        public bool Success { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+    }
 
 
     public partial class Subject
@@ -833,8 +860,10 @@ namespace Grade
     {
         public static TeacherJournalResponse FromJson(string json) => JsonConvert.DeserializeObject<TeacherJournalResponse>(json, Grade.Converter.Settings);
     }
-
-
+        public partial class PostRequestResponse
+    {
+        public static PostRequestResponse FromJson(string json) => JsonConvert.DeserializeObject<PostRequestResponse>(json, Grade.Converter.Settings);
+    }
 
     public static class Serialize
     {
@@ -845,7 +874,7 @@ namespace Grade
         public static string ToJson(this TeacherDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this TeacherJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
-
+        public static string ToJson(this PostRequestResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
     }
 
     internal static class Converter

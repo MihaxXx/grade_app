@@ -80,7 +80,7 @@ namespace grade_app
 									new int?(TeacherDiscipline.Rates[student.RecordBookId][sm.Id]) : 0) : 0);
 							disGroup.Add(new StudentSubmoduleItem(
 								student.ShortName(),
-								student.Id,
+								student.RecordBookId,
 								Rate,
 								//TODO: In case of ModuleType.Extra should be MaxExtraRate - SemesterRate - PreviousSubModulesFromExtraModule, current version will lie maxrate on second extra submodule
 								//TODO: Also, In case of ModuleType.Extra would be better to display - instead of 0 on non-positive results (when extra rates is unnecessary) 
@@ -207,27 +207,39 @@ namespace grade_app
 
 		private void Entry_Unfocused(object sender, FocusEventArgs e)
 		{
-			var val = (sender as Entry).Parent.Parent.BindingContext as StudentSubmoduleItem;
+			var student = (sender as Entry).Parent.Parent.BindingContext as StudentSubmoduleItem;
+			var submodule = (SubModulePickerItem)SubmodulePicker.SelectedItem;
+			if (!student.Rate.HasValue || student.Rate > student.MaxRate)
+			{
+				(sender as Entry).BackgroundColor = Color.FromHex("#a94442");
+				return;
+			}
+			(sender as Entry).BackgroundColor = Color.Default;
+			var res = App.API.TeacherPostSetRate(student.RecordBookId, TeacherDiscipline.Discipline.Id, submodule.ID, student.Rate.Value);
+			if(res.Item1 == false)
+			{
+				DisplayAlert("SetRate error", res.Item2, "OK");
+			}
 		}
 
 		private void Entry_Focused(object sender, FocusEventArgs e)
 		{
-			(sender as Entry).CursorPosition = (sender as Entry).Text.Length;
+			(sender as Entry).CursorPosition = (sender as Entry).Text?.Length ?? 0;
 		}
 	}
 
 	public class StudentSubmoduleItem
 	{
-		public StudentSubmoduleItem(string name, long id, int? rate, int maxRate)
+		public StudentSubmoduleItem(string name, long recordBookId, int? rate, int maxRate)
 		{
 			Name = name;
-			Id = id;
+			RecordBookId = recordBookId;
 			Rate = rate;
 			MaxRate = maxRate;
 		}
 
 		public string Name { get; set; }
-		public long Id { get; set; }
+		public long RecordBookId { get; set; }
 		public int? Rate { get; set; }
 		public int MaxRate { get; set; }
 	}
