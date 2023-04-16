@@ -179,6 +179,20 @@ namespace Grade
             var res = PostRequestResponse.FromJson(Post(args, "set_attendance")).Response;
             return (res.Success, res.Message);
         }
+
+        public (bool, string) TeacherPostCreateLesson(long disciplineID, DateTime date, LessonType lessonType, Subgroup lessonSubgroup = null)
+        {
+            var args = new Dictionary<string, string>
+            {
+                { nameof(disciplineID), disciplineID.ToString() },
+                { nameof(date), date.ToString("yyyy-M-d") },
+                { nameof(lessonType), lessonType.Id.ToString() }
+            };
+            if (lessonSubgroup != null)
+                args.Add(nameof(lessonSubgroup), lessonSubgroup.Id.ToString());
+            var res = PostRequestResponse.FromJson(Post(args, "create_lesson")).Response;
+            return (res.Success, res.Message);
+        }
     }
 
     public partial class StudentIndexResponse
