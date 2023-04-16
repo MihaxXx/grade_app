@@ -14,13 +14,13 @@ namespace grade_app
 	public partial class TeacherDisciplinePage : TabbedPage
 	{
 		public TeacherDiscipline TeacherDiscipline { get; private set; }
-		public List<SubModulePickerItem> subModulePickerItems { get; private set; } = new List<SubModulePickerItem>();
+		public ObservableCollection<SubModulePickerItem> subModulePickerItems { get; private set; } = new ObservableCollection<SubModulePickerItem>();
 		public ObservableCollection<DisGroup> GroupedStudentItems { get; private set; } = new ObservableCollection<DisGroup>();
 
 		public bool DisciplineNotFrozen { get; private set; }
 
 		public TeacherJournal TeacherJournal { get; private set; }
-		public List<LessonPickerItem> LessonPickerItems { get; private set; } = new List<LessonPickerItem>();
+		public ObservableCollection<LessonPickerItem> LessonPickerItems { get; private set; } = new ObservableCollection<LessonPickerItem>();
 		public ObservableCollection<DisJourGroup> GroupedJournalStudentItems { get; private set; } = new ObservableCollection<DisJourGroup>();
 
 
@@ -126,10 +126,6 @@ namespace grade_app
 								break;
 						}
 					}
-				/// Setting to null and back to needed collection works around XF bug with Picker unsubscribing from collection updates
-				/// https://github.com/xamarin/Xamarin.Forms/issues/4077
-				/// https://stackoverflow.com/questions/52796368/picker-not-updating-when-itemssource-changed
-				SubmodulePicker.ItemsSource = null;
 				SubmodulePicker.ItemsSource = subModulePickerItems;
 				SubmodulePicker.SelectedIndex = 0;
 			}
@@ -155,10 +151,6 @@ namespace grade_app
 				foreach (var l in TeacherJournal.Lessons.Where(les => !OldLessonItems.Contains(les.Id)))
 					LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type} ({l.LessonName})",
 						TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
-				/// Setting to null and back to needed collection works around XF bug with Picker unsubscribing from collection updates
-				/// https://github.com/xamarin/Xamarin.Forms/issues/4077
-				/// https://stackoverflow.com/questions/52796368/picker-not-updating-when-itemssource-changed
-				LessonPicker.ItemsSource = null;
 				LessonPicker.ItemsSource = LessonPickerItems;
 				LessonPicker.SelectedIndex = OldLessonItems.Count() > 0 ? LessonPickerItems.Count - 1 : 0;
 			}
