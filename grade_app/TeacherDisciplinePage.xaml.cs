@@ -177,7 +177,7 @@ namespace grade_app
 						var disGroup = new DisJourGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
 						foreach (var student in group.Value)
 						{
-							disGroup.Add(new StudentJournalItem(student.ShortName(), student.Id,
+							disGroup.Add(new StudentJournalItem(student.ShortName(), student.RecordBookId,
 								TeacherJournal.Attendance != null && TeacherJournal.Attendance.ContainsKey(student.RecordBookId) ?
 									TeacherJournal.Attendance[student.RecordBookId].ContainsKey(li.ID) ?
 										new bool?(TeacherJournal.Attendance[student.RecordBookId][li.ID] > 0) :
@@ -226,6 +226,19 @@ namespace grade_app
 		{
 			(sender as Entry).CursorPosition = (sender as Entry).Text?.Length ?? 0;
 		}
+
+		private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+		{
+			var student = (sender as CheckBox).Parent.Parent.BindingContext as StudentJournalItem;
+			var lesson = LessonPicker.SelectedItem as LessonPickerItem;
+			if (lesson == null || !student.Attendance.HasValue)
+				return;
+			var res = App.API.TeacherPostSetAttendance(lesson.ID, student.RecordBookId, student.Attendance.Value);
+			if (res.Item1 == false)
+			{
+				DisplayAlert("SetRate error", res.Item2, "OK");
+			}
+		}
 	}
 
 	public class StudentSubmoduleItem
@@ -271,15 +284,15 @@ namespace grade_app
 	}
 	public class StudentJournalItem
 	{
-		public StudentJournalItem(string name, long id, bool? attendance)
+		public StudentJournalItem(string name, long recordBookId, bool? attendance)
 		{
 			Name = name;
-			Id = id;
+			RecordBookId = recordBookId;
 			Attendance = attendance;
 		}
 
 		public string Name { get; set; }
-		public long Id { get; set; }
+		public long RecordBookId { get; set; }
 		public bool? Attendance { get; set; }
 	}
 

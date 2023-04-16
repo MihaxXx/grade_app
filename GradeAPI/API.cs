@@ -146,27 +146,40 @@ namespace Grade
             return StudentJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
         }
 
-        public TeacherJournal TeacherGetDisciplineJournal(long ID) { 
-        var args = new Dictionary<string, string>
+        public TeacherJournal TeacherGetDisciplineJournal(long ID)
+        {
+            var args = new Dictionary<string, string>
             {
                 { "id", ID.ToString() }
             };
             return TeacherJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
         }
 
-		public (bool, string) TeacherPostSetRate(long recordBookID, long disciplineID, long submoduleID, int rate)
-		{
-			var args = new Dictionary<string, string>
-			{
-				{ nameof(recordBookID),recordBookID.ToString() },
-				{ nameof(disciplineID), disciplineID.ToString() },
-				{ nameof(submoduleID), submoduleID.ToString() },
-				{ nameof(rate), rate.ToString() }
-			};
-			var res = PostRequestResponse.FromJson(Post(args, "set_rate")).Response;
-			return (res.Success, res.Message);
-		}
-	}
+        public (bool, string) TeacherPostSetRate(long recordBookID, long disciplineID, long submoduleID, int rate)
+        {
+            var args = new Dictionary<string, string>
+            {
+                { nameof(recordBookID),recordBookID.ToString() },
+                { nameof(disciplineID), disciplineID.ToString() },
+                { nameof(submoduleID), submoduleID.ToString() },
+                { nameof(rate), rate.ToString() }
+            };
+            var res = PostRequestResponse.FromJson(Post(args, "set_rate")).Response;
+            return (res.Success, res.Message);
+        }
+
+        public (bool, string) TeacherPostSetAttendance(long lessonID, long recordBookID, bool attendance)
+        {
+            var args = new Dictionary<string, string>
+            {
+                { nameof(lessonID),lessonID.ToString() },
+                { nameof(recordBookID), recordBookID.ToString() },
+                { nameof(attendance), (attendance? 1 : 0).ToString() }
+            };
+            var res = PostRequestResponse.FromJson(Post(args, "set_attendance")).Response;
+            return (res.Success, res.Message);
+        }
+    }
 
     public partial class StudentIndexResponse
     {
