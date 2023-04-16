@@ -202,32 +202,46 @@ namespace grade_app
 
 		async private void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
-			var item = (sender as ToolbarItem);
-			if (item.AutomationId == "add_lesson")
+			try
 			{
-				string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, TeacherJournal.LessonTypes.Select(lt => lt.Type).ToArray());
-				var res = App.API.TeacherPostCreateLesson(TeacherJournal.Discipline.Id, DateTime.Today, TeacherJournal.LessonTypes.First(lt => lt.Type == action));
-				if (res.Item1 == false)
+				var item = sender as ToolbarItem;
+				if (item.AutomationId == "add_lesson")
 				{
-					await DisplayAlert("CreateLesson error", res.Item2, "OK");
+					string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, TeacherJournal.LessonTypes.Select(lt => lt.Type).ToArray());
+					var res = App.API.TeacherPostCreateLesson(TeacherJournal.Discipline.Id, DateTime.Today, TeacherJournal.LessonTypes.First(lt => lt.Type == action));
+					if (res.Item1 == false)
+					{
+						await DisplayAlert("CreateLesson error", res.Item2, "OK");
+					}
 				}
+			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
 
 		private void Entry_Unfocused(object sender, FocusEventArgs e)
 		{
-			var student = (sender as Entry).Parent.Parent.BindingContext as StudentSubmoduleItem;
-			var submodule = (SubModulePickerItem)SubmodulePicker.SelectedItem;
-			if (!student.Rate.HasValue || student.Rate > student.MaxRate)
+			try
 			{
-				(sender as Entry).BackgroundColor = Color.FromHex("#a94442");
-				return;
+				var student = (sender as Entry).Parent.Parent.BindingContext as StudentSubmoduleItem;
+				var submodule = (SubModulePickerItem)SubmodulePicker.SelectedItem;
+				if (!student.Rate.HasValue || student.Rate > student.MaxRate)
+				{
+					(sender as Entry).BackgroundColor = Color.FromHex("#a94442");
+					return;
+				}
+				(sender as Entry).BackgroundColor = Color.Default;
+				var res = App.API.TeacherPostSetRate(student.RecordBookId, TeacherDiscipline.Discipline.Id, submodule.ID, student.Rate.Value);
+				if (res.Item1 == false)
+				{
+					DisplayAlert("SetRate error", res.Item2, "OK");
+				}
 			}
-			(sender as Entry).BackgroundColor = Color.Default;
-			var res = App.API.TeacherPostSetRate(student.RecordBookId, TeacherDiscipline.Discipline.Id, submodule.ID, student.Rate.Value);
-			if(res.Item1 == false)
+			catch(NullReferenceException ex)
 			{
-				DisplayAlert("SetRate error", res.Item2, "OK");
+				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
 
@@ -238,18 +252,25 @@ namespace grade_app
 
 		private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
 		{
-			var student = (sender as CheckBox).Parent.Parent.BindingContext as StudentJournalItem;
-			if(student != null && student.Attendance.HasValue && student.Attendance.Value != e.Value)
+			try
 			{
-				student.Attendance = e.Value;
-				var lesson = LessonPicker.SelectedItem as LessonPickerItem;
-				if (lesson == null || !student.Attendance.HasValue)
-					return;
-				var res = App.API.TeacherPostSetAttendance(lesson.ID, student.RecordBookId, student.Attendance.Value);
-				if (res.Item1 == false)
+				var student = (sender as CheckBox).Parent.Parent.BindingContext as StudentJournalItem;
+				if (student != null && student.Attendance.HasValue && student.Attendance.Value != e.Value)
 				{
-					DisplayAlert("SetAttendance error", res.Item2, "OK");
+					student.Attendance = e.Value;
+					var lesson = LessonPicker.SelectedItem as LessonPickerItem;
+					if (lesson == null || !student.Attendance.HasValue)
+						return;
+					var res = App.API.TeacherPostSetAttendance(lesson.ID, student.RecordBookId, student.Attendance.Value);
+					if (res.Item1 == false)
+					{
+						DisplayAlert("SetAttendance error", res.Item2, "OK");
+					}
 				}
+			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
 	}
