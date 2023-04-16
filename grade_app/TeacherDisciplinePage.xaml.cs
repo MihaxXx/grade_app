@@ -146,7 +146,7 @@ namespace grade_app
 
 				var OldLessonItems = LessonPickerItems.Select(l => l.ID).ToArray();
 				foreach (var l in TeacherJournal.Lessons.Where(les => !OldLessonItems.Contains(les.Id)))
-					LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type} ({l.LessonName})",
+					LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type}{(l.LessonName.Length > 0 ? "(" + l.LessonName + ")" : "")}",
 						TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
 				LessonPicker.ItemsSource = LessonPickerItems;
 				LessonPicker.SelectedIndex = OldLessonItems.Count() > 0 ? LessonPickerItems.Count - 1 : 0;
@@ -257,7 +257,7 @@ namespace grade_app
 			try
 			{
 				var student = (sender as CheckBox).Parent.Parent.BindingContext as StudentJournalItem;
-				if (student != null && student.Attendance.HasValue && student.Attendance.Value != e.Value)
+				if (student != null && (student.Attendance ?? false) != e.Value)
 				{
 					student.Attendance = e.Value;
 					var lesson = LessonPicker.SelectedItem as LessonPickerItem;
