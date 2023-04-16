@@ -145,7 +145,8 @@
                 Order="Primary"
                 Priority="0"
                 IconImageSource="{OnPlatform iOS=baseline_add_circle_white_24pt, Android=baseline_add_circle_24.xml}"
-                Clicked="ToolbarItem_Clicked"/>
+                Clicked="ToolbarItem_Clicked"
+                AutomationId="add_lesson"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
 </TabbedPage>

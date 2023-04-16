@@ -200,9 +200,18 @@ namespace grade_app
 			FillJournalStudentsList();
 		}
 
-		private void ToolbarItem_Clicked(object sender, EventArgs e)
+		async private void ToolbarItem_Clicked(object sender, EventArgs e)
 		{
-
+			var item = (sender as ToolbarItem);
+			if (item.AutomationId == "add_lesson")
+			{
+				string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, TeacherJournal.LessonTypes.Select(lt => lt.Type).ToArray());
+				var res = App.API.TeacherPostCreateLesson(TeacherJournal.Discipline.Id, DateTime.Today, TeacherJournal.LessonTypes.First(lt => lt.Type == action));
+				if (res.Item1 == false)
+				{
+					await DisplayAlert("CreateLesson error", res.Item2, "OK");
+				}
+			}
 		}
 
 		private void Entry_Unfocused(object sender, FocusEventArgs e)
