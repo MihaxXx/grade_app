@@ -205,15 +205,18 @@ namespace grade_app
 				if (item.AutomationId == "add_lesson")
 				{
 					string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, TeacherJournal.LessonTypes.Select(lt => lt.Type).ToArray());
-					var res = App.API.TeacherPostCreateLesson(TeacherJournal.Discipline.Id, DateTime.Today, TeacherJournal.LessonTypes.First(lt => lt.Type == action));
-					if (res.Item1 == false)
+					if (action != "Отмена")
 					{
-						await DisplayAlert("CreateLesson error", res.Item2, "OK");
-					}
-					else
-					{
-						TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
-						FillLessonPicker();
+						var res = App.API.TeacherPostCreateLesson(TeacherJournal.Discipline.Id, DateTime.Today, TeacherJournal.LessonTypes.First(lt => lt.Type == action));
+						if (res.Item1 == false)
+						{
+							await DisplayAlert("CreateLesson error", res.Item2, "OK");
+						}
+						else
+						{
+							TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
+							FillLessonPicker();
+						}
 					}
 				}
 			}
