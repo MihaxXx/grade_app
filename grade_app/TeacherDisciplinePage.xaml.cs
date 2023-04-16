@@ -31,7 +31,7 @@ namespace grade_app
 			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
 			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen;
 			FillSubModulePicker();
-			FillStudentsList();
+			//FillStudentsList();
 			if(!TeacherDiscipline.Discipline.IsMapCreated)
 			{
 				WarningLabel.Text = "Для дисциплины не создана учебная карта";
@@ -45,7 +45,7 @@ namespace grade_app
 
 			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
 			FillLessonPicker();
-			FillJournalStudentsList();
+			//FillJournalStudentsList();
 
 			//Must be at the end!!!
 			BindingContext = this;
@@ -126,7 +126,10 @@ namespace grade_app
 								break;
 						}
 					}
-
+				/// Setting to null and back to needed collection works around XF bug with Picker unsubscribing from collection updates
+				/// https://github.com/xamarin/Xamarin.Forms/issues/4077
+				/// https://stackoverflow.com/questions/52796368/picker-not-updating-when-itemssource-changed
+				SubmodulePicker.ItemsSource = null;
 				SubmodulePicker.ItemsSource = subModulePickerItems;
 				SubmodulePicker.SelectedIndex = 0;
 			}
@@ -147,12 +150,17 @@ namespace grade_app
 			{
 				if (TeacherJournal.Lessons == null)
 					return;
-				foreach (var l in TeacherJournal.Lessons)
+
+				var OldLessonItems = LessonPickerItems.Select(l => l.ID).ToArray();
+				foreach (var l in TeacherJournal.Lessons.Where(les => !OldLessonItems.Contains(les.Id)))
 					LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type} ({l.LessonName})",
 						TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
-
+				/// Setting to null and back to needed collection works around XF bug with Picker unsubscribing from collection updates
+				/// https://github.com/xamarin/Xamarin.Forms/issues/4077
+				/// https://stackoverflow.com/questions/52796368/picker-not-updating-when-itemssource-changed
+				LessonPicker.ItemsSource = null;
 				LessonPicker.ItemsSource = LessonPickerItems;
-				LessonPicker.SelectedIndex = 0;
+				LessonPicker.SelectedIndex = OldLessonItems.Count() > 0 ? LessonPickerItems.Count - 1 : 0;
 			}
 			catch (NullReferenceException e)
 			{
@@ -212,6 +220,11 @@ namespace grade_app
 					if (res.Item1 == false)
 					{
 						await DisplayAlert("CreateLesson error", res.Item2, "OK");
+					}
+					else
+					{
+						TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
+						FillLessonPicker();
 					}
 				}
 			}
