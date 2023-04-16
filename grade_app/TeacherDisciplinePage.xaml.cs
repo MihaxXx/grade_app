@@ -239,13 +239,17 @@ namespace grade_app
 		private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
 		{
 			var student = (sender as CheckBox).Parent.Parent.BindingContext as StudentJournalItem;
-			var lesson = LessonPicker.SelectedItem as LessonPickerItem;
-			if (lesson == null || !student.Attendance.HasValue)
-				return;
-			var res = App.API.TeacherPostSetAttendance(lesson.ID, student.RecordBookId, student.Attendance.Value);
-			if (res.Item1 == false)
+			if(student != null && student.Attendance.HasValue && student.Attendance.Value != e.Value)
 			{
-				DisplayAlert("SetRate error", res.Item2, "OK");
+				student.Attendance = e.Value;
+				var lesson = LessonPicker.SelectedItem as LessonPickerItem;
+				if (lesson == null || !student.Attendance.HasValue)
+					return;
+				var res = App.API.TeacherPostSetAttendance(lesson.ID, student.RecordBookId, student.Attendance.Value);
+				if (res.Item1 == false)
+				{
+					DisplayAlert("SetAttendance error", res.Item2, "OK");
+				}
 			}
 		}
 	}

@@ -119,7 +119,7 @@
                                        TextColor="Black"/>
                                 <CheckBox Grid.Row="0"
                                        Grid.Column="1"
-                                       IsChecked="{Binding Attendance}"
+                                       IsChecked="{Binding Attendance, Mode=OneWay}"
                                        CheckedChanged="CheckBox_CheckedChanged"/>
                             </Grid>
                         </ViewCell>
