@@ -105,7 +105,7 @@
                             <Grid Padding="10,0"
                                   Margin="5">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="40" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -114,6 +114,7 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
                                        HorizontalTextAlignment="Start"
+                                       VerticalTextAlignment="Center"
                                        Text="{Binding Name}"
                                        FontSize="Medium"
                                        TextColor="Black"/>
