@@ -31,7 +31,6 @@ namespace grade_app
 			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
 			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen;
 			FillSubModulePicker();
-			//FillStudentsList();
 			if(!TeacherDiscipline.Discipline.IsMapCreated)
 			{
 				WarningLabel.Text = "Для дисциплины не создана учебная карта";
@@ -45,7 +44,6 @@ namespace grade_app
 
 			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
 			FillLessonPicker();
-			//FillJournalStudentsList();
 
 			//Must be at the end!!!
 			BindingContext = this;
@@ -102,7 +100,6 @@ namespace grade_app
 			{
 				if (TeacherDiscipline == null || TeacherDiscipline.Modules == null)
 					return;
-				//TODO: check module type, workaround non-regular modules submodules names
 				foreach (var m in TeacherDiscipline.Modules)
 					for (int i = 0; i < m.Value.Submodules.Length; i++)
 					{
