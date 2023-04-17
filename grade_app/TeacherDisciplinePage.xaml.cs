@@ -205,7 +205,7 @@ namespace grade_app
 				if (item.AutomationId == "add_lesson")
 				{
 					string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, TeacherJournal.LessonTypes.Select(lt => lt.Type).ToArray());
-					if (action != "Отмена")
+					if (action != null && action != "Отмена")
 					{
 						var res = App.API.TeacherPostCreateLesson(TeacherJournal.Discipline.Id, DateTime.Today, TeacherJournal.LessonTypes.First(lt => lt.Type == action));
 						if (res.Item1 == false)
