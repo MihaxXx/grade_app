@@ -36,4 +36,11 @@
             </ListView.ItemTemplate>
         </ListView>
     </StackLayout>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Primary"
+                     Priority="0"
+                     IconImageSource="{OnPlatform iOS=baseline_view_timeline_white_24pt, Android=baseline_view_timeline_24.xml}"
+                     Clicked="OnToolbarItemClicked"
+                     AutomationId="change_semester" />
+    </ContentPage.ToolbarItems>
 </ContentPage>

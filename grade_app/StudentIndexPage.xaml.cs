@@ -29,18 +29,6 @@ namespace grade_app
 		private void LoadSemesters()
 		{
 			SemesterList = App.API.GetSemesterList();
-			foreach (var sem in SemesterList)
-			{
-				ToolbarItem item = new ToolbarItem
-				{
-					Text = sem.ToString(),
-					Order = ToolbarItemOrder.Secondary,
-					Priority = (int)(SemesterList.Count - sem.Id + 1),
-					CommandParameter = sem.Id,
-				};
-				item.Clicked += OnToolbarItemClicked;
-				this.ToolbarItems.Add(item);
-			}
 		}
 
 		private void LoadDisciplines(long SemesterID)
@@ -70,10 +58,27 @@ namespace grade_app
 			await Navigation.PushAsync(new StudentDisciplinePage(item.ID));
 			//Navigation.InsertPageBefore(new StudentDisciplinePage(item.ID), this);
 		}
-		void OnToolbarItemClicked(object sender, EventArgs e)
+		async void OnToolbarItemClicked(object sender, EventArgs e)
 		{
-			ToolbarItem item = (ToolbarItem)sender;
-			LoadDisciplines((long)item.CommandParameter);
+			try
+			{
+				var item = sender as ToolbarItem;
+				if (item.AutomationId == "change_semester")
+				{
+					var semlist = SemesterList.Select(sem => sem.ToString()).ToList();
+					string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, semlist.ToArray());
+					if (action != null && action != "Отмена")
+					{
+						var res = SemesterList[semlist.FindIndex(sem => sem == action)];
+						if (res.Id != CurrentSemID)
+							LoadDisciplines(res.Id);
+					}
+				}
+			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
+			}
 		}
 	}
 	public class DisciplineItem
