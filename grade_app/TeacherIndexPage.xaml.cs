@@ -46,7 +46,7 @@ namespace grade_app
 				EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
-					var group = new SubjectGroup($"{s.Value.SubjectName}",$"{s.Value.Degree} {s.Value.GradeNum} курс");
+					var group = new SubjectGroup($"{s.Value.SubjectName}",$"{s.Value.Degree}\n{s.Value.GradeNum} курс");
 					foreach (var d in s.Value.Disciplines)
 					{
 						group.Add(new DisciplineItem(
