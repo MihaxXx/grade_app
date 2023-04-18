@@ -22,23 +22,27 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="12*" />
+                                <ColumnDefinition Width="18*" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0"
                                    Grid.Column="0"
-                                   Text="{Binding ID}"/>
+                                   Text="{Binding ID}"
+                                   FontSize="Small"/>
                             <Label Grid.Row="0"
                                    Grid.Column="1"
-                                   Text="{Binding Groups}" />
+                                   Text="{Binding Groups}"
+                                   FontSize="Small"/>
                             <Label Grid.Row="0"
                                    Grid.Column="2"
                                    Text="{Binding Type}"
-                                   HorizontalTextAlignment="Center"/>
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="Small"/>
                             <Label Grid.Row="0"
                                    Grid.Column="3"
                                    Text="{Binding Teachers}" 
-                                   HorizontalTextAlignment="Center"/>
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="Small"/>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
