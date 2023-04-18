@@ -254,6 +254,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\AppIcon.png" />
+    <BundleResource Include="Resources\LaunchScreenImage.png" />
   </ItemGroup>
 </Project>
