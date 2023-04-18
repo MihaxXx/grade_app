@@ -114,7 +114,6 @@ namespace grade_app
 		public class SubjectGroup :List<DisciplineItem>
 		{
 			public string Name { get; set; }
-			//TODO: Output as 2nd column, not row
 			public string DegreeCourse { get; set; }
 
             public SubjectGroup(string name, string degreeCourse)
