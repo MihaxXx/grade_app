@@ -66,7 +66,7 @@ namespace grade_app
 				if (item.AutomationId == "change_semester")
 				{
 					var semlist = SemesterList.Select(sem => sem.ToString()).ToList();
-					string action = await DisplayActionSheet("Выберите тип создаваемого занятия", "Отмена", null, semlist.ToArray());
+					string action = await DisplayActionSheet("Выберите семестр", "Отмена", null, semlist.ToArray());
 					if (action != null && action != "Отмена")
 					{
 						var res = SemesterList[semlist.FindIndex(sem => sem == action)];
