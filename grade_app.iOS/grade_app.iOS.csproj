@@ -253,4 +253,7 @@
       <Name>grade_app</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\AppIcon.png" />
+  </ItemGroup>
 </Project>
