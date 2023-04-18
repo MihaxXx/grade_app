@@ -50,13 +50,30 @@
             <ListView.GroupHeaderTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout VerticalOptions="FillAndExpand"
-                                     Padding="5">
+                        <Grid VerticalOptions="FillAndExpand"
+                                     Padding="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Label Text="{Binding Name}"
                                    HorizontalTextAlignment="Start"
                                    FontSize="Medium"
-                                   TextColor="Black"/>
-                        </StackLayout>
+                                   TextColor="Black"
+                                   Grid.Column="0"
+                                   Grid.Row="0"
+                                   MaxLines="2"
+                                   LineBreakMode="TailTruncation"/>
+                            <Label Text="{Binding DegreeCourse}"
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="Medium"
+                                   TextColor="Black"
+                                   Grid.Column="1"
+                                   Grid.Row="0"/>
+                        </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.GroupHeaderTemplate>

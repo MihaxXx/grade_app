@@ -46,11 +46,11 @@ namespace grade_app
 				EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
-					var group = new SubjectGroup($"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс");
+					var group = new SubjectGroup($"{s.Value.SubjectName}",$"{s.Value.Degree} {s.Value.GradeNum} курс");
 					foreach (var d in s.Value.Disciplines)
 					{
 						group.Add(new DisciplineItem(
-								$"{s.Value.SubjectName}  \n{s.Value.Degree}, {s.Value.GradeNum} курс",
+								$"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс",
 								d.Id,
 								string.Join('\n', teacherIndex.Groups[d.Id.ToString()]),
 								d.TypeToString() + (d.Frozen ? "\n подписано" : ""),
@@ -115,12 +115,15 @@ namespace grade_app
 		{
 			public string Name { get; set; }
 			//TODO: Output as 2nd column, not row
-			public string DegreeCourse;
-			public SubjectGroup(string name)
-			{
-				Name = name;
-			}
-			public static IList<SubjectGroup> All { private set; get; }
+			public string DegreeCourse { get; set; }
+
+            public SubjectGroup(string name, string degreeCourse)
+            {
+                Name = name;
+                DegreeCourse = degreeCourse;
+            }
+
+            public static IList<SubjectGroup> All { private set; get; }
 		}
 	}
 }
