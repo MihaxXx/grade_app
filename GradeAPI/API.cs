@@ -409,7 +409,10 @@ namespace Grade
         [JsonProperty("Num")]
         public int Num { get; set; }
 
-		public override string ToString()
+        [JsonProperty("Season")]
+        public string Season { get; set; }
+
+        public override string ToString()
 		{
 			return $"{(Num == 1 ? "Осень" : "Весна")} {(Num == 1 ? Year : Year + 1)}";
 		}
