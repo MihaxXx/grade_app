@@ -29,6 +29,11 @@ namespace grade_app
 			int? SemesterMaxRate = 0;
 
 			LoadModules(id, ref SemesterRate, ref SemesterMaxRate);
+			if (!StudentDiscipline.Discipline.IsMapCreated)
+			{
+				WarningLabel.Text = "Для дисциплины не создана учебная карта";
+				WarningLabel.IsVisible = true;
+			}
 
 			StudentJournal = App.API.StudentGetDisciplineJournal(id).Journal.ToList();
 
@@ -79,6 +84,8 @@ namespace grade_app
 		{
 			StudentDiscipline = App.API.StudentGetDiscipline(id);
 			var SubModuleItems = new List<SubModuleItem>();
+			if (StudentDiscipline.DisciplineMap == null)
+				return;
 			foreach (var m in StudentDiscipline.DisciplineMap.Modules)
 			{
 				foreach (var smID in m.Value.Submodules)
