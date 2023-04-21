@@ -329,6 +329,12 @@ namespace Grade
 
         [JsonProperty("Journal")]
         public Journal[] Journal { get; set; }
+
+        [JsonProperty("GymAttendanceInfo")]
+        public GymAttendanceInfo GymAttendanceInfo { get; set; }
+
+        [JsonProperty("IsGym")]
+        public bool IsGym { get; set; }
     }
 
     public partial class TeacherJournalResponse
@@ -837,6 +843,21 @@ namespace Grade
 
         [JsonProperty("DisciplineID")]
         public long DisciplineId { get; set; }
+    }
+
+    public partial class GymAttendanceInfo
+    {
+        [JsonProperty("DebtCount")]
+        public int DebtCount { get; set; }
+
+        [JsonProperty("SemesterCount")]
+        public int SemesterCount { get; set; }
+
+        [JsonProperty("Uncounted")]
+        public int Uncounted { get; set; }
+
+        [JsonProperty("TotalAttendance")]
+        public int TotalAttendance { get; set; }
     }
 
     public enum Degree { Bachelor, Master, Specialist, Postgraduate };
