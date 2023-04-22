@@ -43,7 +43,12 @@ namespace grade_app
 				foreach (var d in studentIndex.Disciplines)
 				{
 					var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : Math.Min((int)d.Rate, 100)) / (double)d.MaxCurrentRate : 0).ToString("P0");
-					DisciplineItems.Add(new DisciplineItem(d.Id, percent, d.SubjectName, $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100"));
+					/// Ugly fix to make column width equal for every row regardless of UI scale and screen size, center allined text
+					percent = string.Concat(Enumerable.Repeat(" ", (4 - percent.Length))) + percent + string.Concat(Enumerable.Repeat(" ", (4 - percent.Length)));
+					var rates = $"{((d.Rate == null) ? 0 : d.Rate)}/{d.MaxCurrentRate}/100";
+					/// Ugly fix to make column width equal for every row regardless of UI scale and screen size, end allind text
+					rates = string.Concat(Enumerable.Repeat(" ", ((3*3+2)-rates.Length)*2)) + rates;
+					DisciplineItems.Add(new DisciplineItem(d.Id, percent, d.SubjectName, rates));
 				}
 			}
 			else
