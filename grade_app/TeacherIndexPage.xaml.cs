@@ -43,16 +43,26 @@ namespace grade_app
 			GroupedDisciplineItems1.Clear();
 			if (teacherIndex.Subjects != null)
 			{
+				var MaxGroupNameLenght = teacherIndex.Groups.Values.Max(groups => groups.Max(group => group.Length));
 				EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
 					var group = new SubjectGroup($"{s.Value.SubjectName}",$"{s.Value.Degree}\n{s.Value.GradeNum} курс");
 					foreach (var d in s.Value.Disciplines)
 					{
+						/// Ugly fix to make column width equal for every row regardless of UI scale and screen size, center allined text
+						string[] NormolizedGroupNames = new string[0];
+						var NoStudText = "Нет студентов";
+						var NormolizedNoStudText = 
+							string.Concat(Enumerable.Repeat(" ", (int)((MaxGroupNameLenght - NoStudText.Length)*0.8))) + NoStudText + string.Concat(Enumerable.Repeat(" ", (int)((MaxGroupNameLenght - NoStudText.Length) * 0.8)));
+						if (teacherIndex.Groups.ContainsKey(d.Id.ToString()))
+							NormolizedGroupNames = teacherIndex.Groups[d.Id.ToString()].
+								Select(g => string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length)) + g + string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length))).ToArray();
+
 						group.Add(new DisciplineItem(
 								$"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс",
 								d.Id,
-								teacherIndex.Groups.ContainsKey(d.Id.ToString()) ? string.Join('\n', teacherIndex.Groups[d.Id.ToString()]) : "Нет студентов",
+								teacherIndex.Groups.ContainsKey(d.Id.ToString()) ? string.Join('\n', NormolizedGroupNames) : NormolizedNoStudText,
 								d.TypeToString() + (d.Frozen ? "\n подписано" : ""),
 								teacherIndex.Teachers.ContainsKey(d.Id.ToString()) ? string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4)) : "Нет преподавателей"
 							));
