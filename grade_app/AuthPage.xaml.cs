@@ -37,7 +37,6 @@ namespace grade_app
             if (e.Url.StartsWith("https://" + Host))
 #endif
             {
-                Title = "Grade.sfedu.ru Auth";
                 if (e.Url.Contains("oauthfinish"))
                 {
                     var stateIdx = e.Url.IndexOf("state=")+6;

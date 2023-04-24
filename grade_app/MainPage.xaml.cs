@@ -19,9 +19,9 @@ namespace grade_app
         async private void Enter_btnClicked(object sender, EventArgs e)
         {
             if (login.Text != null && (login.Text.Contains("@sfedu.ru") || !login.Text.Contains('@')))
-                await Navigation.PushAsync(new AuthPage(login.Text.Contains(@"@sfedu.ru") ? login.Text.Substring(0, login.Text.IndexOf('@')) : login.Text, UserRole.SelectedItem.ToString() == "Student" ? "student" : "staff"));
+                await Navigation.PushAsync(new AuthPage(login.Text.Contains(@"@sfedu.ru") ? login.Text.Substring(0, login.Text.IndexOf('@')) : login.Text, UserRole.SelectedItem.ToString() == "Студент" ? "student" : "staff"));
             else
-                await DisplayAlert("Wrong email", "Email must be @sfedu.ru", "OK");
+                await DisplayAlert("Неверный Email", "Email должен быть в домене @sfedu.ru", "ОК");
         }
     }
 
