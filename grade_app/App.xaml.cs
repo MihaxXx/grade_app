@@ -2,25 +2,27 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Grade;
+using System.IO;
+using Newtonsoft.Json;
+
 
 namespace grade_app
 {
     public partial class App : Application
     {
-        public static bool _isLoggedIn;// = true;
-        public static string Token;
         public static Grade.API API;
-        public static Role role;
+        private static readonly string _fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AppSettings.json");
 
         public App()
         {
             InitializeComponent();
 
-            if (_isLoggedIn)
+            if (File.Exists(_fileName))
             {
-                //InitUser("b89c7c3a-d570-42bc-8b49-285655133a1f", Role.Student);
-                //InitUser("a506c94a-d28d-48fb-9361-96bcd3b8356d", Role.Teacher);
-                if(role == Role.Student)
+                var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(_fileName, System.Text.Encoding.UTF8));
+                InitUser(appSettings.token, appSettings.role);
+
+                if(API.role == Role.Student)
                     MainPage = new NavigationPage(new StudentIndexPage());
                 else
                     MainPage = new NavigationPage(new TeacherIndexPage());
@@ -30,11 +32,16 @@ namespace grade_app
         }
         public static void InitUser(string _token,Role _role)
 		{
-            Token = _token;
-            role = _role;
-            API = new API(Token, role);
+            API = new API(_token, _role);
+            var appSettings = new AppSettings(_token, _role);
+            File.WriteAllText(_fileName, JsonConvert.SerializeObject(appSettings, Formatting.Indented), System.Text.Encoding.UTF8);
         }
 
+        public static void WipeUser()
+		{
+            API = null;
+            File.Delete(_fileName);
+		}
         protected override void OnStart()
         {
             // Handle when your app starts

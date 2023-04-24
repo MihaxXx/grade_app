@@ -98,6 +98,12 @@ namespace grade_app
 							LoadDisciplines(res.Id);
 					}
 				}
+				else if (item.AutomationId == "logout")
+				{
+					App.WipeUser();
+					Navigation.InsertPageBefore(new MainPage(), this);
+					await Navigation.PopAsync();
+				}
 			}
 			catch (NullReferenceException ex)
 			{

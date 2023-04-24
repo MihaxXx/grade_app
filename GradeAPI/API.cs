@@ -15,7 +15,7 @@ namespace Grade
     public enum Role { Student, Teacher };
     public class API
     {
-        public static Role role;
+        public readonly Role role;
 #if DEV_RATING
         public const string Host = @"dev.rating.mmcs.sfedu.ru";
         readonly string PathBase = @"~dev_rating/api/v1/";

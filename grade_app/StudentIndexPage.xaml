@@ -46,6 +46,11 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary"
                      Priority="0"
+                     Text="Log out"
+                     Clicked="OnToolbarItemClicked"
+                     AutomationId="logout" />
+        <ToolbarItem Order="Primary"
+                     Priority="1"
                      IconImageSource="{OnPlatform iOS=baseline_view_timeline_white_24pt, Android=baseline_view_timeline_24.xml}"
                      Clicked="OnToolbarItemClicked"
                      AutomationId="change_semester" />
