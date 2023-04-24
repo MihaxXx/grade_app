@@ -46,7 +46,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary"
                      Priority="0"
-                     Text="Log out"
+                     IconImageSource="{OnPlatform iOS=baseline_logout_white_24pt, Android=baseline_logout_24.xml}"
                      Clicked="OnToolbarItemClicked"
                      AutomationId="logout" />
         <ToolbarItem Order="Primary"
