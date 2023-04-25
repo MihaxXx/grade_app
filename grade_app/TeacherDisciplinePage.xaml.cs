@@ -41,6 +41,16 @@ namespace grade_app
 				WarningLabel.Text = "Дисциплина подписана, выставление баллов невозможно";
 				WarningLabel.IsVisible = true;
 			}
+			else if(TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
+			{
+				WarningLabel.Text = "Семестр завершен, выставление баллов запрещено";
+				WarningLabel.IsVisible = true;
+			}
+			if(TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
+			{
+				MilestoneLabel.Text = $"Дисциплина находится на этапе №{ TeacherDiscipline.Milestone.Id + 1 } \"{ TeacherDiscipline.Milestone.Name }\"";
+				MilestoneLabel.IsVisible = true;
+			}
 
 			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
 			FillLessonPicker();
@@ -134,6 +144,16 @@ namespace grade_app
 
 		private void SubmodulePicker_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
+			if (TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
+			{
+				if (smi.moduleType == ModuleType.Regular || smi.moduleType == ModuleType.Bonus)
+					WarningLabel.IsVisible = true;
+				else
+					WarningLabel.IsVisible = false;
+			}
+			var isInOurMilestone = (TeacherDiscipline.Milestone.Mask & TeacherDiscipline.Modules[smi.ModuleID.ToString()].Submodules.First(sm => sm.Id == smi.ID).MilestoneMask) > 0;
+			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen && isInOurMilestone;
 			FillStudentsList();
 		}
 

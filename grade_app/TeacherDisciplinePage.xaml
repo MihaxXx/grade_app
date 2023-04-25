@@ -10,7 +10,11 @@
     <ContentPage Title="Баллы"
                  IconImageSource="{OnPlatform iOS=baseline_assignment_black_24pt, Android=ic_assignment_black_24dp.xml}">
         <StackLayout>
-            <Label x:Name="WarningLabel" 
+            <Label x:Name="MilestoneLabel"
+                   IsVisible="False"
+                   FontSize="Medium"
+                   HorizontalTextAlignment="Center"/>
+            <Label x:Name="WarningLabel"
                    IsVisible="False"
                    FontSize="Medium"
                    HorizontalTextAlignment="Center"
