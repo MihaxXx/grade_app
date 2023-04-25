@@ -308,6 +308,12 @@ namespace Grade
 
         [JsonProperty("Exams")]
         public Dictionary<string, Dictionary<string, Exam>> Exams { get; set; }
+
+        [JsonProperty("Milestone")]
+        public Milestone Milestone { get; set; }
+
+        [JsonProperty("IsAuthor")]
+        public bool IsAuthor { get; set; }
     }
 
     public partial class StudentJournalResponse
@@ -728,14 +734,17 @@ namespace Grade
 
     public partial class Exam
     {
+        [JsonProperty("Remove", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Remove { get; set; }
+
         [JsonProperty("Rate")]
         public long? Rate { get; set; }
 
-        [JsonProperty("Absence")]
-        public bool Absence { get; set; }
+        [JsonProperty("Absence", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Absence { get; set; }
 
-        [JsonProperty("AutoPass")]
-        public bool AutoPass { get; set; }
+        [JsonProperty("AutoPass", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? AutoPass { get; set; }
     }
 
     public partial class Group
@@ -862,6 +871,19 @@ namespace Grade
         [JsonProperty("TotalAttendance")]
         public int TotalAttendance { get; set; }
     }
+
+    public partial class Milestone
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Mask")]
+        public long Mask { get; set; }
+    }
+
 
     public enum Degree { Bachelor, Master, Specialist, Postgraduate };
 
