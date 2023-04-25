@@ -71,6 +71,10 @@
     <ErrorReport>prompt</ErrorReport>
     <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
+  <PropertyGroup>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidAapt2LinkExtraArgs>-c ru</AndroidAapt2LinkExtraArgs>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
