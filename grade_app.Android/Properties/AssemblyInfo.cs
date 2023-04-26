@@ -30,7 +30,7 @@ using Android.App;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 
-#if LOCAL
+#if DEBUG
 [assembly: Application(UsesCleartextTraffic = true)]
 #else
 [assembly: Application(UsesCleartextTraffic = false)]
