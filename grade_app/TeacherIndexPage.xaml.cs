@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Grade;
@@ -43,27 +44,38 @@ namespace grade_app
 			GroupedDisciplineItems1.Clear();
 			if (teacherIndex.Subjects != null)
 			{
-				var MaxGroupNameLenght = teacherIndex.Groups.Values.Max(groups => groups.Max(group => group.Length));
-				EmptyListText.IsVisible = false;
+				///Find the longest line in groups column
+				var GlobalDiscsIDs = teacherIndex.Subjects.Values.SelectMany(s => s.Disciplines).Where(d => d.IsGlobal).Select(d => d.Id.ToString()).ToHashSet();
+				var GlobalDiscText = "Межфакультетская дисциплина";
+                var MaxGroupNameLenght = teacherIndex.Groups.Where( kv => !GlobalDiscsIDs.Contains(kv.Key)).Select(kv => kv.Value).Max(groups => groups.Max(group => group.Length));
+				if (GlobalDiscsIDs.Count > 0)
+					MaxGroupNameLenght = MaxGroupNameLenght > GlobalDiscText.Length ? MaxGroupNameLenght : GlobalDiscText.Length;
+
+                EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
 					var group = new SubjectGroup($"{s.Value.SubjectName}",s.Value.GradeNum == null ? "" : $"{s.Value.Degree}\n{s.Value.GradeNum} курс");
 					foreach (var d in s.Value.Disciplines)
 					{
 						/// Ugly fix to make column width equal for every row regardless of UI scale and screen size, center allined text
-						string[] NormolizedGroupNames = new string[0];
+						/// Prepare 3 variants of groups column contents depending on set of students (no groups/non-global disc/global disc)
 						var NoStudText = "Нет студентов";
 						var NormolizedNoStudText = 
 							string.Concat(Enumerable.Repeat(" ", (int)((MaxGroupNameLenght - NoStudText.Length)*0.8))) + NoStudText + string.Concat(Enumerable.Repeat(" ", (int)((MaxGroupNameLenght - NoStudText.Length) * 0.8)));
-						if (teacherIndex.Groups.ContainsKey(d.Id.ToString()))
+                        string[] NormolizedGroupNames = new string[0];
+                        if (teacherIndex.Groups.ContainsKey(d.Id.ToString()))
 							NormolizedGroupNames = teacherIndex.Groups[d.Id.ToString()].
 								Select(g => string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length)) + g + string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length))).ToArray();
+                        string NormolizedGlobalName = "";
+                        if (d.IsGlobal)
+							NormolizedGlobalName = Regex.Replace(d.GlobalName, $".{{{(int)(MaxGroupNameLenght*0.8)}}}", "$0\n");
 
-						//TODO: If discipline isGlobal then use GlobalName
-						group.Add(new DisciplineItem(
+                        group.Add(new DisciplineItem(
                                 s.Value.GradeNum == null ? $"{s.Value.SubjectName}" : $"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс",
 								d.Id,
-								teacherIndex.Groups.ContainsKey(d.Id.ToString()) ? string.Join('\n', NormolizedGroupNames) : NormolizedNoStudText,
+								d.IsGlobal?
+                                    GlobalDiscText + "\n" + NormolizedGlobalName :
+									teacherIndex.Groups.ContainsKey(d.Id.ToString()) ? string.Join('\n', NormolizedGroupNames) : NormolizedNoStudText,
 								d.TypeToString() + (d.Frozen ? "\n подписано" : ""),
 								teacherIndex.Teachers.ContainsKey(d.Id.ToString()) ? string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4)) : "Нет преподавателей"
 							));
