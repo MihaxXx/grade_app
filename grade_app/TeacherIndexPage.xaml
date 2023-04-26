@@ -7,7 +7,6 @@
                Text="В настоящий момент Вы не подписаны ни на одну из существующих дисциплин."
                HorizontalTextAlignment="Center"></Label>
         <ListView ItemsSource="{Binding GroupedDisciplineItems1}"
-                  GroupDisplayBinding="{Binding Name}"
                   IsGroupingEnabled="True"
                   HasUnevenRows="True"
                   SelectionMode="None"

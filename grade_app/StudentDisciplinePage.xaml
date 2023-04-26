@@ -15,7 +15,6 @@
                    TextColor="#a94442"
                    BackgroundColor="#f2dede" />
             <ListView ItemsSource="{Binding GroupedSubModules}"
-                      GroupDisplayBinding="{Binding Key}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
                       SelectionMode="None">

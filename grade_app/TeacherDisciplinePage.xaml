@@ -29,7 +29,6 @@
             <ListView x:Name="StudentSubmoduleList"
                       ItemsSource="{Binding GroupedStudentItems}"
                       CachingStrategy="RecycleElement"
-                      GroupDisplayBinding="{Binding Name}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
                       SelectionMode="None"
@@ -99,7 +98,6 @@
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="LessonPicker_SelectedIndexChanged"/>
             <ListView ItemsSource="{Binding GroupedJournalStudentItems}"
-                      GroupDisplayBinding="{Binding Name}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
                       SelectionMode="None">
