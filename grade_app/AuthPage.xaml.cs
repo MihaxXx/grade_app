@@ -30,11 +30,14 @@ namespace grade_app
 #if LOCAL
             if (e.Url.StartsWith("https://"+Host))
                 ((WebView)sender).Source = e.Url.Replace("https://" + Host, $"http://{Host}/~dev_rating");
+#else
+            if (e.Url.StartsWith("http://" + Host))
+				((WebView)sender).Source = e.Url.Replace("http://", "https://");
 #endif
 #if LOCAL
             if (e.Url.StartsWith("http://" + Host))
 #else
-            if (e.Url.StartsWith("https://" + Host))
+			if (e.Url.StartsWith("https://" + Host))
 #endif
             {
                 if (e.Url.Contains("oauthfinish"))
