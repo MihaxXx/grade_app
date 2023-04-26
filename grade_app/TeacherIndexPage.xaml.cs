@@ -47,7 +47,7 @@ namespace grade_app
 				EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
-					var group = new SubjectGroup($"{s.Value.SubjectName}",$"{s.Value.Degree}\n{s.Value.GradeNum} курс");
+					var group = new SubjectGroup($"{s.Value.SubjectName}",s.Value.GradeNum == null ? "" : $"{s.Value.Degree}\n{s.Value.GradeNum} курс");
 					foreach (var d in s.Value.Disciplines)
 					{
 						/// Ugly fix to make column width equal for every row regardless of UI scale and screen size, center allined text
@@ -59,8 +59,9 @@ namespace grade_app
 							NormolizedGroupNames = teacherIndex.Groups[d.Id.ToString()].
 								Select(g => string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length)) + g + string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length))).ToArray();
 
+						//TODO: If discipline isGlobal then use GlobalName
 						group.Add(new DisciplineItem(
-								$"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс",
+                                s.Value.GradeNum == null ? $"{s.Value.SubjectName}" : $"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс",
 								d.Id,
 								teacherIndex.Groups.ContainsKey(d.Id.ToString()) ? string.Join('\n', NormolizedGroupNames) : NormolizedNoStudText,
 								d.TypeToString() + (d.Frozen ? "\n подписано" : ""),
