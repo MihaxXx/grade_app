@@ -23,11 +23,14 @@ namespace grade_app
 		public ObservableCollection<LessonPickerItem> LessonPickerItems { get; private set; } = new ObservableCollection<LessonPickerItem>();
 		public ObservableCollection<DisJourGroup> GroupedJournalStudentItems { get; private set; } = new ObservableCollection<DisJourGroup>();
 
+		public string teachersStr { get; private set; }
 
-		public TeacherDisciplinePage(long id)
+
+		public TeacherDisciplinePage(long id, List<Teacher> teachers)
 		{
 			InitializeComponent();
 
+			teachersStr = string.Join("\n", teachers.Select(t => t.FullName()));
 			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
 			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen;
 			FillSubModulePicker();

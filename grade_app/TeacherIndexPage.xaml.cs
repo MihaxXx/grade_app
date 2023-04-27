@@ -54,7 +54,7 @@ namespace grade_app
                 EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
-					var group = new SubjectGroup($"{s.Value.SubjectName}",s.Value.GradeNum == null ? "" : $"{s.Value.Degree}\n{s.Value.GradeNum} курс");
+					var group = new SubjectGroup($"{s.Value.SubjectName}",s.Value.GradeNum == null ? "" : $"{s.Value.ShortDegree()}\n{s.Value.GradeNum} курс");
 					foreach (var d in s.Value.Disciplines)
 					{
 						/// Ugly fix to make column width equal for every row regardless of UI scale and screen size, center allined text
@@ -71,12 +71,12 @@ namespace grade_app
 							NormolizedGlobalName = Regex.Replace(d.GlobalName, $".{{{(int)(MaxGroupNameLenght*0.8)}}}", "$0\n");
 
                         group.Add(new DisciplineItem(
-                                s.Value.GradeNum == null ? $"{s.Value.SubjectName}" : $"{s.Value.SubjectName} \n{s.Value.Degree}, {s.Value.GradeNum} курс",
+                                s.Value.GradeNum == null ? $"{s.Value.SubjectName}" : $"{s.Value.SubjectName} \n{s.Value.ShortDegree()}, {s.Value.GradeNum} курс",
 								d.Id,
 								d.IsGlobal?
                                     GlobalDiscText + "\n" + NormolizedGlobalName :
 									teacherIndex.Groups.ContainsKey(d.Id.ToString()) ? string.Join('\n', NormolizedGroupNames) : NormolizedNoStudText,
-								d.TypeToString() + (d.Frozen ? "\n подписано" : ""),
+								d.TypeToString() + (d.Frozen ? "\n подписано" : "\n"),
 								teacherIndex.Teachers.ContainsKey(d.Id.ToString()) ? string.Join('\n', teacherIndex.Teachers[d.Id.ToString()].Values.Select(t => t.ShortName()).Take(4)) : "Нет преподавателей"
 							));
 					}
@@ -93,7 +93,7 @@ namespace grade_app
 		{
 			((ListView)sender).SelectedItem = null;
 			var item = (DisciplineItem)e.Item;
-			await Navigation.PushAsync(new TeacherDisciplinePage(item.ID));
+			await Navigation.PushAsync(new TeacherDisciplinePage(item.ID, teacherIndex.Teachers[item.ID.ToString()].Values.ToList()));
 		}
 		async void OnToolbarItemClicked(object sender, EventArgs e)
 		{

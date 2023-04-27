@@ -152,4 +152,12 @@
                 AutomationId="add_lesson"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
+    <ContentPage Title="Информация">
+        <StackLayout>
+            <Label Text="Идентификатор:" FontSize="Medium" />
+            <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="Small"/>
+            <Label Text="Преподаватели:" FontSize="Medium" />
+            <Label Text="{Binding teachersStr}" FontSize="Small"/>
+        </StackLayout>
+    </ContentPage>
 </TabbedPage>

@@ -20,26 +20,15 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="12*" />
-                                <ColumnDefinition Width="18*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0"
                                    Grid.Column="0"
-                                   Text="{Binding ID}"
-                                   FontSize="Small"/>
-                            <Label Grid.Row="0"
-                                   Grid.Column="1"
                                    Text="{Binding Groups}"
                                    FontSize="Small"/>
                             <Label Grid.Row="0"
-                                   Grid.Column="2"
+                                   Grid.Column="1"
                                    Text="{Binding Type}"
-                                   HorizontalTextAlignment="Center"
-                                   FontSize="Small"/>
-                            <Label Grid.Row="0"
-                                   Grid.Column="3"
-                                   Text="{Binding Teachers}" 
                                    HorizontalTextAlignment="Center"
                                    FontSize="Small"/>
                         </Grid>
@@ -52,8 +41,8 @@
                         <Grid VerticalOptions="FillAndExpand"
                                      Padding="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="8*"/>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="17*"/>
+                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>

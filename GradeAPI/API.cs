@@ -398,7 +398,19 @@ namespace Grade
         public long? GradeNum { get; set; }
 
         [JsonProperty("Degree")]
-        public string Degree { get; set; }
+        public Degree Degree { get; set; }
+
+        public string ShortDegree()
+        {
+            switch(this.Degree)
+            {
+                case Degree.Bachelor: return "бак";
+                case Degree.Master: return "маг";
+                case Degree.Postgraduate: return "асп";
+                case Degree.Specialist: return "спец";
+                default: return Degree.ToString();
+			}
+        }
 
         [JsonProperty("Disciplines")]
         public Discipline[] Disciplines { get; set; }
@@ -706,8 +718,9 @@ namespace Grade
         [JsonProperty("SecondName")]
         public string SecondName { get; set; }
         public string ShortName() => $"{LastName} {FirstName[0]}. {SecondName[0]}.";
+        public string FullName() => $"{LastName} {FirstName} {SecondName}";
 
-        [JsonProperty("JobPositionID")]
+		[JsonProperty("JobPositionID")]
         public long JobPositionId { get; set; }
 
         [JsonProperty("JobPositionName")]
