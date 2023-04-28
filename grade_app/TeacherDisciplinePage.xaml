@@ -159,7 +159,8 @@
                 AutomationId="add_lesson"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
-    <ContentPage Title="Информация">
+    <ContentPage Title="Информация"
+                 IconImageSource="{OnPlatform iOS=baseline_info_outline_black_24pt, Android=baseline_info_outline_24.xml}">
         <ScrollView>
             <StackLayout>
                 <Label Text="Идентификатор:" FontSize="19" FontAttributes="Bold" />
