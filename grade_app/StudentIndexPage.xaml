@@ -5,7 +5,7 @@
                Text="В настоящий момент Вы не подписаны ни на одну из существующих дисциплин."
                HorizontalTextAlignment="Center"></Label>
         <ListView ItemsSource="{Binding DisciplineItems}"
-                  HasUnevenRows="False"
+                  HasUnevenRows="True"
                   SelectionMode="None"
                   ItemTapped="OnListItemTapped">
             <ListView.ItemTemplate>
@@ -13,7 +13,7 @@
                     <ViewCell>
                         <Grid Padding="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -25,18 +25,21 @@
                                    Text="{Binding Percent}"
                                    FontAttributes="Bold"
                                    VerticalOptions="Center"
-                                   HorizontalTextAlignment="Center"/>
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="18"/>
                             <Label Grid.Row="0"
                                    Grid.Column="1"
                                    Text="{Binding Name}"
                                    MaxLines="2"
                                    LineBreakMode="TailTruncation"
-                                   VerticalTextAlignment="Center"/>
+                                   VerticalTextAlignment="Center"
+                                   FontSize="18"/>
                             <Label Grid.Row="0"
                                    Grid.Column="2"
                                    Text="{Binding Rate}"
                                    HorizontalTextAlignment="End"
-                                   VerticalTextAlignment="Center"/>
+                                   VerticalTextAlignment="Center"
+                                   FontSize="18"/>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
