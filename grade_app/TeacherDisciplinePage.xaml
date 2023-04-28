@@ -162,9 +162,9 @@
     <ContentPage Title="Информация">
         <ScrollView>
             <StackLayout>
-                <Label Text="Идентификатор:" FontSize="19" />
+                <Label Text="Идентификатор:" FontSize="19" FontAttributes="Bold" />
                 <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="18"/>
-                <Label Text="Преподаватели:" FontSize="19" />
+                <Label Text="Преподаватели:" FontSize="19" FontAttributes="Bold" />
                 <Label Text="{Binding teachersStr}" FontSize="18"/>
             </StackLayout>
         </ScrollView>
