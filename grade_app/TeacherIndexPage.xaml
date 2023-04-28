@@ -42,8 +42,8 @@
                         <Grid VerticalOptions="FillAndExpand"
                                      Padding="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="17*"/>
-                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
