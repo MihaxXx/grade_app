@@ -12,11 +12,11 @@
         <StackLayout>
             <Label x:Name="MilestoneLabel"
                    IsVisible="False"
-                   FontSize="Medium"
+                   FontSize="18"
                    HorizontalTextAlignment="Center"/>
             <Label x:Name="WarningLabel"
                    IsVisible="False"
-                   FontSize="Medium"
+                   FontSize="18"
                    HorizontalTextAlignment="Center"
                    TextColor="#a94442"
                    BackgroundColor="#f2dede"/>
@@ -25,7 +25,8 @@
                     ItemsSource="{Binding subModulePickerItems}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="SubmodulePicker_SelectedIndexChanged"
-                    IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}" />
+                    IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}"
+                    FontSize="18"/>
             <ListView x:Name="StudentSubmoduleList"
                       ItemsSource="{Binding GroupedStudentItems}"
                       CachingStrategy="RecycleElement"
@@ -39,19 +40,21 @@
                             <Grid Padding="10,0"
                                   Margin="5">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="40" />
-                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="35" />
+                                    <ColumnDefinition Width="35" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
                                        HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Center"
-                                       Text="{Binding Name}" 
-                                       FontSize="Medium"
+                                       Text="{Binding Name}"
+                                       MaxLines="1"
+                                       LineBreakMode="TailTruncation"
+                                       FontSize="18"
                                        TextColor="Black"/>
                                 <Entry Grid.Row="0"
                                        Grid.Column="1"
@@ -62,12 +65,13 @@
                                        Text="{Binding Rate}"
                                        Focused="Entry_Focused"
                                        Unfocused="Entry_Unfocused"
+                                       FontSize="18"
                                        IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=DisciplineNotFrozen}"/>
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding MaxRate, StringFormat='/{0}'}"
-                                       FontSize="Medium"
+                                       FontSize="18"
                                        TextColor="Black"/>
                             </Grid>
                         </ViewCell>
@@ -80,7 +84,7 @@
                                          Padding="0">
                                 <Label Text="{Binding Name}" 
                                        HorizontalTextAlignment="Center"
-                                       FontSize="Medium"
+                                       FontSize="19"
                                        TextColor="Black"/>
                             </StackLayout>
                         </ViewCell>
@@ -96,7 +100,8 @@
                     Title="Выберите занятие"
                     ItemsSource="{Binding LessonPickerItems}"
                     ItemDisplayBinding="{Binding Name}"
-                    SelectedIndexChanged="LessonPicker_SelectedIndexChanged"/>
+                    SelectedIndexChanged="LessonPicker_SelectedIndexChanged"
+                    FontSize="18"/>
             <ListView ItemsSource="{Binding GroupedJournalStudentItems}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
@@ -107,7 +112,7 @@
                             <Grid Padding="10,0"
                                   Margin="5">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -118,8 +123,10 @@
                                        HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding Name}"
-                                       FontSize="Medium"
-                                       TextColor="Black"/>
+                                       FontSize="18"
+                                       TextColor="Black"
+                                       MaxLines="1"
+                                       LineBreakMode="TailTruncation"/>
                                 <CheckBox Grid.Row="0"
                                        Grid.Column="1"
                                        IsChecked="{Binding Attendance, Mode=OneWay}"
@@ -135,7 +142,7 @@
                                          Padding="0">
                                 <Label Text="{Binding Name}"
                                        HorizontalTextAlignment="Center"
-                                       FontSize="Medium"
+                                       FontSize="19"
                                        TextColor="Black" />
                             </StackLayout>
                         </ViewCell>
@@ -153,11 +160,13 @@
         </ContentPage.ToolbarItems>
     </ContentPage>
     <ContentPage Title="Информация">
-        <StackLayout>
-            <Label Text="Идентификатор:" FontSize="Medium" />
-            <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="Small"/>
-            <Label Text="Преподаватели:" FontSize="Medium" />
-            <Label Text="{Binding teachersStr}" FontSize="Small"/>
-        </StackLayout>
+        <ScrollView>
+            <StackLayout>
+                <Label Text="Идентификатор:" FontSize="19" />
+                <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="18"/>
+                <Label Text="Преподаватели:" FontSize="19" />
+                <Label Text="{Binding teachersStr}" FontSize="18"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage>
 </TabbedPage>
