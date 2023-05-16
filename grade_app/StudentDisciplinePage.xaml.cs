@@ -13,12 +13,16 @@ namespace grade_app
 	public partial class StudentDisciplinePage : TabbedPage
 	{
 		public StudentDiscipline StudentDiscipline { get; private set; }
+		public StudentJournal studentJour { get;private set; }
 
 		public List<Journal> StudentJournal { get; private set; }
 
 		public DisciplineInfo DisciplineInfo { get; private set; }
 
 		public IEnumerable<IGrouping<string, SubModuleItem>> GroupedSubModules { get; private set; }
+
+		public string GymInfo { get; private set; }
+		public bool IsNewGym { get; private set; }
 
 
 		public StudentDisciplinePage(long id)
@@ -35,7 +39,15 @@ namespace grade_app
 				WarningLabel.IsVisible = true;
 			}
 
-			StudentJournal = App.API.StudentGetDisciplineJournal(id).Journal.ToList();
+			studentJour = App.API.StudentGetDisciplineJournal(id);
+			StudentJournal = studentJour.Journal.ToList();
+			GymInfo = studentJour.GymAttendanceInfo != null ?
+				$"{studentJour.GymAttendanceInfo.DebtCount} в счет задолженности\n" +
+				$"{studentJour.GymAttendanceInfo.SemesterCount} в баллах текущего семестра\n" +
+				$"{studentJour.GymAttendanceInfo.TotalAttendance} посещений учтено\n" +
+				$"{studentJour.GymAttendanceInfo.Uncounted} еще не учтено" :
+				"";
+			IsNewGym = studentJour.IsGym && studentJour.GymAttendanceInfo != null && studentJour.Discipline.SemesterId >= 17;
 
 			FillDisciplineInfo(SemesterRate, SemesterMaxRate);
 

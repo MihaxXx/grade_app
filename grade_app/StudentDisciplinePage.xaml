@@ -249,38 +249,53 @@
     </ContentPage>
     <ContentPage Title="Посещения"
                  IconImageSource="{OnPlatform iOS=baseline_date_range_black_24pt, Android=ic_date_range_black_24dp.xml}">
-        <ListView ItemsSource="{Binding StudentJournal}"
+        <StackLayout>
+            <Label Text="Число посещений"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Start"
+                               FontSize="Medium" 
+                               Margin="5"
+                   IsVisible="{Binding IsNewGym}"/>
+            <Label Text="{Binding GymInfo}"
+                   IsVisible="{Binding IsNewGym}"/>
+            <Label Text="Журнал посещений"
+                               HorizontalOptions="Fill"
+                               HorizontalTextAlignment="Start"
+                               FontSize="Medium" 
+                               Margin="5"/>
+            <ListView ItemsSource="{Binding StudentJournal}"
                   HasUnevenRows="False"
                   SelectionMode="None">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="Grade:Journal">
-                    <ViewCell>
-                        <Grid Padding="10,0"
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="Grade:Journal">
+                        <ViewCell>
+                            <Grid Padding="10,0"
                               Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0"
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0"
                                    Grid.Column="0"
                                    HorizontalTextAlignment="Center"
                                    Text="{Binding LessonDate, StringFormat='{0:d}'}" />
-                            <Label Grid.Row="0"
+                                <Label Grid.Row="0"
                                    Grid.Column="1"
                                    HorizontalTextAlignment="Center"
                                    Text="{Binding LessonType}" />
-                            <Label Grid.Row="0"
+                                <Label Grid.Row="0"
                                    Grid.Column="2"
                                    HorizontalTextAlignment="Center"
                                    Text="{Binding AttendedSymbol}" />
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </ContentPage>
 </TabbedPage>
