@@ -2,7 +2,9 @@
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             x:Class="grade_app.StudentDisciplinePage"
-            xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+            xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core" 
+            xmlns:grade_app="clr-namespace:grade_app" xmlns:Grade="clr-namespace:Grade;assembly=GradeAPI"
+            x:DataType="grade_app:StudentDisciplinePage"
             android:TabbedPage.ToolbarPlacement="Bottom"
             Title="{Binding StudentDiscipline.Discipline.SubjectName}">
     <ContentPage Title="Баллы"
@@ -72,7 +74,7 @@
                     </StackLayout>
                 </ListView.Header>
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="grade_app:SubModuleItem">
                         <ViewCell>
                             <Grid Padding="0" Margin="5">
                                 <Grid.RowDefinitions>
@@ -106,7 +108,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.GroupHeaderTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="{x:Null}">
                         <ViewCell>
                             <StackLayout VerticalOptions="FillAndExpand"
                                          Padding="5"
@@ -251,7 +253,7 @@
                   HasUnevenRows="False"
                   SelectionMode="None">
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="Grade:Journal">
                     <ViewCell>
                         <Grid Padding="10,0"
                               Margin="5">
