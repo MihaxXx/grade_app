@@ -12,11 +12,11 @@
         <StackLayout>
             <Label x:Name="MilestoneLabel"
                    IsVisible="False"
-                   FontSize="18"
+                   FontSize="{StaticResource MySubtitle}"
                    HorizontalTextAlignment="Center"/>
             <Label x:Name="WarningLabel"
                    IsVisible="False"
-                   FontSize="18"
+                   FontSize="{StaticResource MySubtitle}"
                    HorizontalTextAlignment="Center"
                    TextColor="#a94442"
                    BackgroundColor="#f2dede"/>
@@ -26,7 +26,7 @@
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="SubmodulePicker_SelectedIndexChanged"
                     IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}"
-                    FontSize="18"/>
+                    FontSize="{StaticResource MySubtitle}"/>
             <ListView x:Name="StudentSubmoduleList"
                       ItemsSource="{Binding GroupedStudentItems}"
                       CachingStrategy="RecycleElement"
@@ -54,7 +54,7 @@
                                        Text="{Binding Name}"
                                        MaxLines="1"
                                        LineBreakMode="TailTruncation"
-                                       FontSize="18"
+                                       FontSize="{StaticResource MySubtitle}"
                                        TextColor="Black"/>
                                 <Entry Grid.Row="0"
                                        Grid.Column="1"
@@ -65,13 +65,13 @@
                                        Text="{Binding Rate}"
                                        Focused="Entry_Focused"
                                        Unfocused="Entry_Unfocused"
-                                       FontSize="18"
+                                       FontSize="{StaticResource MySubtitle}"
                                        IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=DisciplineNotFrozen}"/>
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding MaxRate, StringFormat='/{0}'}"
-                                       FontSize="18"
+                                       FontSize="{StaticResource MySubtitle}"
                                        TextColor="Black"/>
                             </Grid>
                         </ViewCell>
@@ -84,7 +84,7 @@
                                          Padding="0">
                                 <Label Text="{Binding Name}" 
                                        HorizontalTextAlignment="Center"
-                                       FontSize="19"
+                                       FontSize="{StaticResource MyTitle}"
                                        TextColor="Black"/>
                             </StackLayout>
                         </ViewCell>
@@ -101,7 +101,7 @@
                     ItemsSource="{Binding LessonPickerItems}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="LessonPicker_SelectedIndexChanged"
-                    FontSize="18"/>
+                    FontSize="{StaticResource MySubtitle}"/>
             <ListView ItemsSource="{Binding GroupedJournalStudentItems}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
@@ -123,7 +123,7 @@
                                        HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Center"
                                        Text="{Binding Name}"
-                                       FontSize="18"
+                                       FontSize="{StaticResource MySubtitle}"
                                        TextColor="Black"
                                        MaxLines="1"
                                        LineBreakMode="TailTruncation"/>
@@ -142,7 +142,7 @@
                                          Padding="0">
                                 <Label Text="{Binding Name}"
                                        HorizontalTextAlignment="Center"
-                                       FontSize="19"
+                                       FontSize="{StaticResource MyTitle}"
                                        TextColor="Black" />
                             </StackLayout>
                         </ViewCell>
@@ -163,10 +163,10 @@
                  IconImageSource="{OnPlatform iOS=baseline_info_outline_black_24pt, Android=baseline_info_outline_24.xml}">
         <ScrollView>
             <StackLayout>
-                <Label Text="Идентификатор:" FontSize="19" FontAttributes="Bold" />
-                <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="18"/>
-                <Label Text="Преподаватели:" FontSize="19" FontAttributes="Bold" />
-                <Label Text="{Binding teachersStr}" FontSize="18"/>
+                <Label Text="Идентификатор:" FontSize="{StaticResource MyTitle}" FontAttributes="Bold" />
+                <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="{StaticResource MySubtitle}"/>
+                <Label Text="Преподаватели:" FontSize="{StaticResource MyTitle}" FontAttributes="Bold" />
+                <Label Text="{Binding teachersStr}" FontSize="{StaticResource MySubtitle}"/>
             </StackLayout>
         </ScrollView>
     </ContentPage>

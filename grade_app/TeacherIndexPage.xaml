@@ -5,7 +5,7 @@
     <StackLayout>
         <Label x:Name="EmptyListText"
                Text="В настоящий момент Вы не подписаны ни на одну из существующих дисциплин."
-               FontSize="19"
+               FontSize="{StaticResource MyTitle}"
                HorizontalTextAlignment="Center"/>
         <ListView ItemsSource="{Binding GroupedDisciplineItems1}"
                   IsGroupingEnabled="True"
@@ -26,12 +26,12 @@
                             <Label Grid.Row="0"
                                    Grid.Column="0"
                                    Text="{Binding Groups}"
-                                   FontSize="17"/>
+                                   FontSize="{StaticResource MyDefault}"/>
                             <Label Grid.Row="0"
                                    Grid.Column="1"
                                    Text="{Binding Type}"
                                    HorizontalTextAlignment="Center"
-                                   FontSize="17"/>
+                                   FontSize="{StaticResource MyDefault}"/>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
@@ -50,7 +50,7 @@
                             </Grid.RowDefinitions>
                             <Label Text="{Binding Name}"
                                    HorizontalTextAlignment="Start"
-                                   FontSize="19"
+                                   FontSize="{StaticResource MyTitle}"
                                    TextColor="Black"
                                    Grid.Column="0"
                                    Grid.Row="0"
@@ -58,7 +58,7 @@
                                    LineBreakMode="TailTruncation"/>
                             <Label Text="{Binding DegreeCourse}"
                                    HorizontalTextAlignment="Center"
-                                   FontSize="19"
+                                   FontSize="{StaticResource MyTitle}"
                                    TextColor="Black"
                                    Grid.Column="1"
                                    Grid.Row="0"/>
