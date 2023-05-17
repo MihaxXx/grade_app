@@ -64,7 +64,11 @@ namespace Grade
             {
                 //TODO
             }
-            return response;
+            catch (AggregateException)
+            {
+				//TODO
+			}
+			return response;
         }
 
         public string Post(Dictionary<string, string> args, string relPath)
@@ -193,7 +197,18 @@ namespace Grade
             var res = PostRequestResponse.FromJson(Post(args, "create_lesson")).Response;
             return (res.Success, res.Message);
         }
-    }
+
+		public (bool, string) TeacherPostDeleteLesson(long disciplineID, long lessonID)
+		{
+			var args = new Dictionary<string, string>
+			{
+				{ nameof(disciplineID), disciplineID.ToString() },
+				{ nameof(lessonID), lessonID.ToString() }
+			};
+			var res = PostRequestResponse.FromJson(Post(args, "delete_lesson")).Response;
+			return (res.Success, res.Message);
+		}
+	}
 
     public partial class StudentIndexResponse
     {

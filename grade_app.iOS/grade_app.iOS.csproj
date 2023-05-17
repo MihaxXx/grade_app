@@ -154,6 +154,15 @@
     <ImageAsset Include="Assets.xcassets\baseline_add_circle_white_24pt.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\baseline_delete_white_24pt.imageset\baseline_delete_white_24pt_1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\baseline_delete_white_24pt.imageset\baseline_delete_white_24pt_2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\baseline_delete_white_24pt.imageset\baseline_delete_white_24pt_3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\baseline_filter_list_white_24pt.imageset\baseline_filter_list_white_24pt_1x.png">
       <Visible>false</Visible>
     </ImageAsset>
@@ -200,6 +209,9 @@
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\baseline_filter_list_white_24pt.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\baseline_delete_white_24pt.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

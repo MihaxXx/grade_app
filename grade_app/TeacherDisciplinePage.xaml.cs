@@ -64,6 +64,9 @@ namespace grade_app
 
 			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
 			FillLessonPicker();
+			if (LessonPickerItems.Count > 0)
+				LessonPicker.SelectedIndex = 0;
+
 
 			//Must be at the end!!!
 			BindingContext = this;
@@ -186,7 +189,6 @@ namespace grade_app
 					LessonPickerItems.Add(new LessonPickerItem($"{l.LessonDate:d} - {TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type}{(l.LessonName.Length > 0 ? "(" + l.LessonName + ")" : "")}",
 						TeacherJournal.LessonTypes.First(lt => lt.Id == l.LessonType).Type, l.Id, l.LessonDate));
 				LessonPicker.ItemsSource = LessonPickerItems;
-				LessonPicker.SelectedIndex = OldLessonItems.Count() > 0 ? LessonPickerItems.Count - 1 : 0;
 			}
 			catch (NullReferenceException e)
 			{
@@ -261,6 +263,7 @@ namespace grade_app
 						{
 							TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
 							FillLessonPicker();
+							LessonPicker.SelectedIndex = LessonPickerItems.Count - 1;
 						}
 					}
 				}
@@ -284,6 +287,28 @@ namespace grade_app
 					{
 						lessonFilter = action;
 						FillFilteredJournalStudentsList();
+					}
+				}
+				else if (item.AutomationId == "delete_lesson")
+				{
+					var li = (LessonPickerItem)LessonPicker.SelectedItem;
+					var answ = await DisplayAlert("Удалить занятие?", $"Вы действительно хотите удалить занятие \"{li.Name}\" типа {li.Type} за {li.Date}?", "Да", "Отмена");
+					if (answ)
+					{
+						var res = App.API.TeacherPostDeleteLesson(TeacherJournal.Discipline.Id, li.ID);
+						if (res.Item1 == false)
+						{
+							await DisplayAlert("DeleteLesson error", res.Item2, "OK");
+						}
+						else
+						{
+							var prevSelectedIdx = LessonPicker.SelectedIndex;
+							LessonPickerItems.Remove(li);
+							/*TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
+							FillLessonPicker();*/
+							if (LessonPickerItems.Count > 0)
+								LessonPicker.SelectedIndex = prevSelectedIdx > 0? prevSelectedIdx - 1 : 0;
+						}
 					}
 				}
 			}

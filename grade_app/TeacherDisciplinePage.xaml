@@ -163,16 +163,22 @@
         <ContentPage.ToolbarItems>
             <ToolbarItem 
                 Order="Primary"
-                Priority="0"
+                Priority="2"
+                IconImageSource="{OnPlatform iOS=baseline_filter_list_white_24pt, Android=baseline_filter_list_24.xml}"
+                Clicked="ToolbarItem_Clicked"
+                AutomationId="filter_lesson"/>
+            <ToolbarItem 
+                Order="Primary"
+                Priority="1"
                 IconImageSource="{OnPlatform iOS=baseline_add_circle_white_24pt, Android=baseline_add_circle_24.xml}"
                 Clicked="ToolbarItem_Clicked"
                 AutomationId="add_lesson"/>
             <ToolbarItem 
                 Order="Primary"
-                Priority="1"
-                IconImageSource="{OnPlatform iOS=baseline_filter_list_white_24pt, Android=baseline_filter_list_24.xml}"
+                Priority="0"
+                IconImageSource="{OnPlatform iOS=baseline_delete_white_24pt, Android=baseline_delete_24.xml}"
                 Clicked="ToolbarItem_Clicked"
-                AutomationId="filter_lesson"/>
+                AutomationId="delete_lesson"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
     <ContentPage Title="Информация"
