@@ -215,7 +215,7 @@ namespace grade_app
 					foreach (var group in TeacherJournal.Students)
 					{
 						var groupInfo = TeacherJournal.Groups[group.Key];
-						var disGroup = new DisJourGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr);
+						var disGroup = new DisJourGroup(groupInfo.Name() + " | " + (groupInfo.SpecAbbr ?? groupInfo.SpecName));
 						foreach (var student in group.Value)
 						{
 							disGroup.Add(new StudentJournalItem(student.ShortName(), student.RecordBookId,
