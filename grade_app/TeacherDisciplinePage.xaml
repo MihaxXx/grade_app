@@ -85,7 +85,8 @@
                                 <Label Text="{Binding Name}" 
                                        HorizontalTextAlignment="Center"
                                        FontSize="{StaticResource MyTitle}"
-                                       TextColor="Black"/>
+                                       TextColor="Black"
+                                       MaxLines="2"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
@@ -151,7 +152,8 @@
                                 <Label Text="{Binding Name}"
                                        HorizontalTextAlignment="Center"
                                        FontSize="{StaticResource MyTitle}"
-                                       TextColor="Black" />
+                                       TextColor="Black"
+                                       MaxLines="2"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

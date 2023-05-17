@@ -135,7 +135,7 @@ namespace grade_app
 					foreach (var group in TeacherDiscipline.Students)
 					{
 						var groupInfo = TeacherDiscipline.Groups[group.Key];
-						var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr ?? groupInfo.SpecName);
+						var disGroup = new DisGroup(groupInfo.Name() + " | " + (groupInfo.SpecAbbr ?? groupInfo.SpecName));
 						foreach (var student in group.Value)
 						{
 							var Rate = TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
