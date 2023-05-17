@@ -28,7 +28,7 @@
                     IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}"
                     FontSize="{StaticResource MySubtitle}"/>
             <ListView x:Name="StudentSubmoduleList"
-                      ItemsSource="{Binding GroupedStudentItems}"
+                      ItemsSource="{Binding FilteredGroupedRatesStudentsList}"
                       CachingStrategy="RecycleElement"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
@@ -92,6 +92,14 @@
                 </ListView.GroupHeaderTemplate>
             </ListView>
         </StackLayout>
+        <ContentPage.ToolbarItems>
+            <ToolbarItem 
+                Order="Primary"
+                Priority="0"
+                IconImageSource="{OnPlatform iOS=baseline_filter_list_white_24pt, Android=baseline_filter_list_24.xml}"
+                Clicked="ToolbarItem_Clicked"
+                AutomationId="filter_submodule"/>
+        </ContentPage.ToolbarItems>
     </ContentPage>
     <ContentPage Title="Посещения"
                  IconImageSource="{OnPlatform iOS=baseline_date_range_black_24pt, Android=ic_date_range_black_24dp.xml}">
@@ -102,7 +110,7 @@
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="LessonPicker_SelectedIndexChanged"
                     FontSize="{StaticResource MySubtitle}"/>
-            <ListView ItemsSource="{Binding GroupedJournalStudentItems}"
+            <ListView ItemsSource="{Binding FilteredGroupedJournalStudentsList}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
                       SelectionMode="None">
@@ -157,6 +165,12 @@
                 IconImageSource="{OnPlatform iOS=baseline_add_circle_white_24pt, Android=baseline_add_circle_24.xml}"
                 Clicked="ToolbarItem_Clicked"
                 AutomationId="add_lesson"/>
+            <ToolbarItem 
+                Order="Primary"
+                Priority="1"
+                IconImageSource="{OnPlatform iOS=baseline_filter_list_white_24pt, Android=baseline_filter_list_24.xml}"
+                Clicked="ToolbarItem_Clicked"
+                AutomationId="filter_lesson"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
     <ContentPage Title="Информация"

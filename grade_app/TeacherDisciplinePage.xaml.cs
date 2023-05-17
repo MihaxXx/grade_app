@@ -15,15 +15,22 @@ namespace grade_app
 	{
 		public TeacherDiscipline TeacherDiscipline { get; private set; }
 		public ObservableCollection<SubModulePickerItem> subModulePickerItems { get; private set; } = new ObservableCollection<SubModulePickerItem>();
-		public ObservableCollection<DisGroup> GroupedStudentItems { get; private set; } = new ObservableCollection<DisGroup>();
+		public ObservableCollection<DisGroup> GroupedRatesStudentsList { get; private set; } = new ObservableCollection<DisGroup>();
+		public ObservableCollection<DisGroup> FilteredGroupedRatesStudentsList { get; private set; } = new ObservableCollection<DisGroup>();
+		public string subModuleFilter { get; private set; } = "ВСЕ";
 
 		public bool DisciplineNotFrozen { get; private set; }
 
 		public TeacherJournal TeacherJournal { get; private set; }
 		public ObservableCollection<LessonPickerItem> LessonPickerItems { get; private set; } = new ObservableCollection<LessonPickerItem>();
-		public ObservableCollection<DisJourGroup> GroupedJournalStudentItems { get; private set; } = new ObservableCollection<DisJourGroup>();
+		public ObservableCollection<DisJourGroup> GroupedJournalStudentsList { get; private set; } = new ObservableCollection<DisJourGroup>();
+		public ObservableCollection<DisJourGroup> FilteredGroupedJournalStudentsList { get; private set; } = new ObservableCollection<DisJourGroup>();
+
+		public string lessonFilter { get; private set; } = "ВСЕ";
 
 		public string teachersStr { get; private set; }
+
+		
 
 
 		public TeacherDisciplinePage(long id, List<Teacher> teachers)
@@ -60,51 +67,6 @@ namespace grade_app
 
 			//Must be at the end!!!
 			BindingContext = this;
-		}
-
-		private void FillStudentsList()
-		{
-			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
-			GroupedStudentItems.Clear();
-
-			try
-			{
-				var studentSubmodules = new List<StudentSubmoduleItem>();
-				var MaxExtraRate = TeacherDiscipline.Discipline.Type == "exam" ? 38 : 60;
-				if (smi != null && TeacherDiscipline != null && TeacherDiscipline.Students != null)
-				{
-					foreach (var group in TeacherDiscipline.Students)
-					{
-						var groupInfo = TeacherDiscipline.Groups[group.Key];
-						var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr ?? groupInfo.SpecName);
-						foreach (var student in group.Value)
-						{
-							var Rate = TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
-									TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(smi.ID) ?
-										new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
-										0 :
-									null;
-							var SemesterRate = TeacherDiscipline.Modules.Where(m => m.Value.Type == ModuleType.Regular).Sum(m =>
-							TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
-									m.Value.Submodules.Sum(sm =>
-									TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(sm.Id) ?
-									new int?(TeacherDiscipline.Rates[student.RecordBookId][sm.Id]) : 0) : 0);
-							disGroup.Add(new StudentSubmoduleItem(
-								student.ShortName(),
-								student.RecordBookId,
-								Rate,
-								//TODO: In case of ModuleType.Extra should be MaxExtraRate - SemesterRate - PreviousSubModulesFromExtraModule, current version will lie maxrate on second extra submodule
-								//TODO: Also, In case of ModuleType.Extra would be better to display - instead of 0 on non-positive results (when extra rates is unnecessary) 
-								smi.moduleType == ModuleType.Extra ? Math.Max(MaxExtraRate - SemesterRate.Value, 0) : smi.MaxRate));
-						}
-						GroupedStudentItems.Add(disGroup);
-					}
-				}
-			}
-			catch(NullReferenceException e)
-			{
-				Console.WriteLine("Error: " + e.Message);
-			}
 		}
 
 		private void FillSubModulePicker()
@@ -157,7 +119,59 @@ namespace grade_app
 			}
 			var isInOurMilestone = (TeacherDiscipline.Milestone.Mask & TeacherDiscipline.Modules[smi.ModuleID.ToString()].Submodules.First(sm => sm.Id == smi.ID).MilestoneMask) > 0;
 			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen && isInOurMilestone;
-			FillStudentsList();
+			PrepareRatesStudentsList();
+		}
+
+		private void PrepareRatesStudentsList()
+		{
+			var smi = (SubModulePickerItem)SubmodulePicker.SelectedItem;
+			GroupedRatesStudentsList.Clear();
+			try
+			{
+				var studentSubmodules = new List<StudentSubmoduleItem>();
+				var MaxExtraRate = TeacherDiscipline.Discipline.Type == "exam" ? 38 : 60;
+				if (smi != null && TeacherDiscipline != null && TeacherDiscipline.Students != null)
+				{
+					foreach (var group in TeacherDiscipline.Students)
+					{
+						var groupInfo = TeacherDiscipline.Groups[group.Key];
+						var disGroup = new DisGroup(groupInfo.Name() + " | " + groupInfo.SpecAbbr ?? groupInfo.SpecName);
+						foreach (var student in group.Value)
+						{
+							var Rate = TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+									TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(smi.ID) ?
+										new int?(TeacherDiscipline.Rates[student.RecordBookId][smi.ID]) :
+										0 :
+									null;
+							var SemesterRate = TeacherDiscipline.Modules.Where(m => m.Value.Type == ModuleType.Regular).Sum(m =>
+							TeacherDiscipline.Rates != null && TeacherDiscipline.Rates.ContainsKey(student.RecordBookId) ?
+									m.Value.Submodules.Sum(sm =>
+									TeacherDiscipline.Rates[student.RecordBookId].ContainsKey(sm.Id) ?
+									new int?(TeacherDiscipline.Rates[student.RecordBookId][sm.Id]) : 0) : 0);
+							disGroup.Add(new StudentSubmoduleItem(
+								student.ShortName(),
+								student.RecordBookId,
+								Rate,
+								//TODO: In case of ModuleType.Extra should be MaxExtraRate - SemesterRate - PreviousSubModulesFromExtraModule, current version will lie maxrate on second extra submodule
+								//TODO: Also, In case of ModuleType.Extra would be better to display - instead of 0 on non-positive results (when extra rates is unnecessary) 
+								smi.moduleType == ModuleType.Extra ? Math.Max(MaxExtraRate - SemesterRate.Value, 0) : smi.MaxRate));
+						}
+						GroupedRatesStudentsList.Add(disGroup);
+					}
+					FillFilteredRatesStudentsList();
+				}
+			}
+			catch(NullReferenceException e)
+			{
+				Console.WriteLine("Error: " + e.Message);
+			}
+		}
+
+		private void FillFilteredRatesStudentsList()
+		{
+			FilteredGroupedRatesStudentsList.Clear();
+			foreach (var g in GroupedRatesStudentsList.Where(g => g.Name == subModuleFilter || subModuleFilter == "ВСЕ"))
+				FilteredGroupedRatesStudentsList.Add(g);
 		}
 
 		private void FillLessonPicker()
@@ -180,10 +194,15 @@ namespace grade_app
 			}
 		}
 
-		private void FillJournalStudentsList()
+		private void LessonPicker_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PrepareJournalStudentsList();
+		}
+
+		private void PrepareJournalStudentsList()
 		{
 			var li = (LessonPickerItem)LessonPicker.SelectedItem;
-			GroupedJournalStudentItems.Clear();
+			GroupedJournalStudentsList.Clear();
 
 			try
 			{
@@ -205,8 +224,9 @@ namespace grade_app
 									null
 								));
 						}
-						GroupedJournalStudentItems.Add(disGroup);
+						GroupedJournalStudentsList.Add(disGroup);
 					}
+					FillFilteredJournalStudentsList();
 				}
 			}
 			catch(NullReferenceException e)
@@ -215,9 +235,11 @@ namespace grade_app
 			}
 		}
 
-		private void LessonPicker_SelectedIndexChanged(object sender, EventArgs e)
+		private void FillFilteredJournalStudentsList()
 		{
-			FillJournalStudentsList();
+			FilteredGroupedJournalStudentsList.Clear();
+			foreach (var g in GroupedJournalStudentsList.Where(g => g.Name == lessonFilter || lessonFilter == "ВСЕ"))
+				FilteredGroupedJournalStudentsList.Add(g);
 		}
 
 		async private void ToolbarItem_Clicked(object sender, EventArgs e)
@@ -240,6 +262,28 @@ namespace grade_app
 							TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
 							FillLessonPicker();
 						}
+					}
+				}
+				else if (item.AutomationId == "filter_submodule")
+				{
+					var listOfGroups = GroupedRatesStudentsList.Select(g => g.Name).ToList();
+					listOfGroups.Add("ВСЕ");
+					string action = await DisplayActionSheet("Фильтр: выберите группу", "Отмена", null, listOfGroups.ToArray());
+					if (action != null && action != "Отмена")
+					{
+						subModuleFilter = action;
+						FillFilteredRatesStudentsList();
+					}
+				}
+				else if (item.AutomationId == "filter_lesson")
+				{
+					var listOfGroups = GroupedJournalStudentsList.Select(g => g.Name).ToList();
+					listOfGroups.Add("ВСЕ");
+					string action = await DisplayActionSheet("Фильтр: выберите группу", "Отмена", null, listOfGroups.ToArray());
+					if (action != null && action != "Отмена")
+					{
+						lessonFilter = action;
+						FillFilteredJournalStudentsList();
 					}
 				}
 			}
