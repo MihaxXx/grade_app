@@ -241,7 +241,7 @@ namespace grade_app
 				FilteredGroupedJournalStudentsList.Add(g);
 		}
 
-		async private void ToolbarItem_Clicked(object sender, EventArgs e)
+		async private void AddLesson_Clicked(object sender, EventArgs e)
 		{
 			try
 			{
@@ -264,7 +264,19 @@ namespace grade_app
 						}
 					}
 				}
-				else if (item.AutomationId == "filter_submodule")
+			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
+			}
+		}
+
+		async private void FilterSubModule_Clicked(object sender, EventArgs e)
+		{
+			try
+			{
+				var item = sender as ToolbarItem;
+				if (item.AutomationId == "filter_submodule")
 				{
 					var listOfGroups = GroupedRatesStudentsList.Select(g => g.Name).ToList();
 					listOfGroups.Add("ВСЕ");
@@ -275,7 +287,19 @@ namespace grade_app
 						FillFilteredRatesStudentsList();
 					}
 				}
-				else if (item.AutomationId == "filter_lesson")
+			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
+			}
+		}
+
+		async private void FilterLesson_Clicked(object sender, EventArgs e)
+		{
+			try
+			{
+				var item = sender as ToolbarItem;
+				if (item.AutomationId == "filter_lesson")
 				{
 					var listOfGroups = GroupedJournalStudentsList.Select(g => g.Name).ToList();
 					listOfGroups.Add("ВСЕ");
@@ -286,7 +310,19 @@ namespace grade_app
 						FillFilteredJournalStudentsList();
 					}
 				}
-				else if (item.AutomationId == "delete_lesson")
+			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Error: " + ex.Message);
+			}
+		}
+
+		async private void DeleteLesson_Clicked(object sender, EventArgs e)
+		{
+			try
+			{
+				var item = sender as ToolbarItem;
+				if (item.AutomationId == "delete_lesson")
 				{
 					var li = (LessonPickerItem)LessonPicker.SelectedItem;
 					var answ = await DisplayAlert("Удалить занятие?", $"Вы действительно хотите удалить занятие \"{li.Name}\"?", "Да", "Отмена");
@@ -302,7 +338,7 @@ namespace grade_app
 							var prevSelectedIdx = LessonPicker.SelectedIndex;
 							LessonPickerItems.Remove(li);
 							if (LessonPickerItems.Count > 0)
-								LessonPicker.SelectedIndex = prevSelectedIdx > 0? prevSelectedIdx - 1 : 0;
+								LessonPicker.SelectedIndex = prevSelectedIdx > 0 ? prevSelectedIdx - 1 : 0;
 						}
 					}
 				}

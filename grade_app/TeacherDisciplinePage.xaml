@@ -98,7 +98,7 @@
                 Order="Primary"
                 Priority="0"
                 IconImageSource="{OnPlatform iOS=baseline_filter_list_white_24pt, Android=baseline_filter_list_24.xml}"
-                Clicked="ToolbarItem_Clicked"
+                Clicked="FilterSubModule_Clicked"
                 AutomationId="filter_submodule"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
@@ -165,19 +165,19 @@
                 Order="Primary"
                 Priority="2"
                 IconImageSource="{OnPlatform iOS=baseline_filter_list_white_24pt, Android=baseline_filter_list_24.xml}"
-                Clicked="ToolbarItem_Clicked"
+                Clicked="FilterLesson_Clicked"
                 AutomationId="filter_lesson"/>
             <ToolbarItem 
                 Order="Primary"
                 Priority="1"
                 IconImageSource="{OnPlatform iOS=baseline_add_circle_white_24pt, Android=baseline_add_circle_24.xml}"
-                Clicked="ToolbarItem_Clicked"
+                Clicked="AddLesson_Clicked"
                 AutomationId="add_lesson"/>
             <ToolbarItem 
                 Order="Primary"
                 Priority="0"
                 IconImageSource="{OnPlatform iOS=baseline_delete_white_24pt, Android=baseline_delete_24.xml}"
-                Clicked="ToolbarItem_Clicked"
+                Clicked="DeleteLesson_Clicked"
                 AutomationId="delete_lesson"/>
         </ContentPage.ToolbarItems>
     </ContentPage>
