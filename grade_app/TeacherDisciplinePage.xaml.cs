@@ -363,6 +363,10 @@ namespace grade_app
 					{
 						DisplayAlert("SetAttendance error", res.Item2, "OK");
 					}
+					else
+					{
+						TeacherJournal.Attendance[student.RecordBookId][lesson.ID] = student.Attendance.Value? 1 : 0;
+					}
 				}
 			}
 			catch (NullReferenceException ex)
