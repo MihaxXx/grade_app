@@ -30,9 +30,6 @@ namespace grade_app
 
 		public string teachersStr { get; private set; }
 
-		
-
-
 		public TeacherDisciplinePage(long id, List<Teacher> teachers)
 		{
 			InitializeComponent();
@@ -292,7 +289,7 @@ namespace grade_app
 				else if (item.AutomationId == "delete_lesson")
 				{
 					var li = (LessonPickerItem)LessonPicker.SelectedItem;
-					var answ = await DisplayAlert("Удалить занятие?", $"Вы действительно хотите удалить занятие \"{li.Name}\" типа {li.Type} за {li.Date}?", "Да", "Отмена");
+					var answ = await DisplayAlert("Удалить занятие?", $"Вы действительно хотите удалить занятие \"{li.Name}\"?", "Да", "Отмена");
 					if (answ)
 					{
 						var res = App.API.TeacherPostDeleteLesson(TeacherJournal.Discipline.Id, li.ID);
@@ -304,8 +301,6 @@ namespace grade_app
 						{
 							var prevSelectedIdx = LessonPicker.SelectedIndex;
 							LessonPickerItems.Remove(li);
-							/*TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
-							FillLessonPicker();*/
 							if (LessonPickerItems.Count > 0)
 								LessonPicker.SelectedIndex = prevSelectedIdx > 0? prevSelectedIdx - 1 : 0;
 						}
