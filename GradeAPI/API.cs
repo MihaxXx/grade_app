@@ -309,13 +309,13 @@ namespace Grade
         public Discipline Discipline { get; set; }
 
         [JsonProperty("Modules")]
-        public Dictionary<string, ModuleT> Modules { get; set; }
+        public Dictionary<long, ModuleT> Modules { get; set; }
 
         [JsonProperty("Groups")]
-        public Dictionary<string, Group> Groups { get; set; }
+        public Dictionary<long, Group> Groups { get; set; }
 
         [JsonProperty("Students")]
-        public Dictionary<string, Student[]> Students { get; set; }
+        public Dictionary<long, Student[]> Students { get; set; }
 
         //RecordBookID to<SubModule ID, rate>
         [JsonProperty("Rates")]
@@ -373,19 +373,19 @@ namespace Grade
         public Lesson[] Lessons { get; set; }
 
         [JsonProperty("Groups")]
-        public System.Collections.Generic.Dictionary<string, Group> Groups { get; set; }
+        public Dictionary<long, Group> Groups { get; set; }
 
         [JsonProperty("Subgroups")]
-        public System.Collections.Generic.Dictionary<string, Subgroup> Subgroups { get; set; }
+        public Dictionary<long, Subgroup> Subgroups { get; set; }
 
         [JsonProperty("Students")]
-        public System.Collections.Generic.Dictionary<string, Student[]> Students { get; set; }
+        public Dictionary<long, Student[]> Students { get; set; }
 
         [JsonProperty("LessonTypes")]
         public LessonType[] LessonTypes { get; set; }
 
         [JsonProperty("Attendance")]
-        public System.Collections.Generic.Dictionary<long, System.Collections.Generic.Dictionary<long, long>> Attendance { get; set; }
+        public Dictionary<long, System.Collections.Generic.Dictionary<long, long>> Attendance { get; set; }
     }
 
     public partial class PostRequestResponse
@@ -506,13 +506,13 @@ namespace Grade
         public string Degree { get; set; }
 
         [JsonProperty("GroupID")]
-        public object GroupId { get; set; }
+        public long? GroupId { get; set; }
 
         [JsonProperty("GroupNum")]
-        public object GroupNum { get; set; }
+        public int? GroupNum { get; set; }
 
         [JsonProperty("GroupName")]
-        public object GroupName { get; set; }
+        public string GroupName { get; set; }
 
         [JsonProperty("Lectures")]
         public int Lectures { get; set; }
@@ -542,7 +542,7 @@ namespace Grade
         public long Milestone { get; set; }
 
         [JsonProperty("CompoundDiscID")]
-        public object CompoundDiscId { get; set; }
+        public long? CompoundDiscId { get; set; }
 
         [JsonProperty("IsMapCreated")]
         public bool IsMapCreated { get; set; }
@@ -716,7 +716,7 @@ namespace Grade
         public bool IsAttached { get; set; }
 
         [JsonProperty("SubgroupID")]
-        public object SubgroupId { get; set; }
+        public long? SubgroupId { get; set; }
     }
 
     public partial class Teacher
@@ -742,10 +742,10 @@ namespace Grade
         public string JobPositionName { get; set; }
 
         [JsonProperty("DepID")]
-        public object DepId { get; set; }
+        public long? DepId { get; set; }
 
         [JsonProperty("DepName")]
-        public object DepName { get; set; }
+        public string DepName { get; set; }
 
         [JsonProperty("FacultyID")]
         public long FacultyId { get; set; }
@@ -867,7 +867,7 @@ namespace Grade
         public string LessonName { get; set; }
 
         [JsonProperty("SubgroupID")]
-        public object SubgroupId { get; set; }
+        public long? SubgroupId { get; set; }
     }
 
     public partial class Subgroup

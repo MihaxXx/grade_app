@@ -117,7 +117,7 @@ namespace grade_app
 				else
 					WarningLabel.IsVisible = false;
 			}
-			var isInOurMilestone = (TeacherDiscipline.Milestone.Mask & TeacherDiscipline.Modules[smi.ModuleID.ToString()].Submodules.First(sm => sm.Id == smi.ID).MilestoneMask) > 0;
+			var isInOurMilestone = (TeacherDiscipline.Milestone.Mask & TeacherDiscipline.Modules[smi.ModuleID].Submodules.First(sm => sm.Id == smi.ID).MilestoneMask) > 0;
 			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen && isInOurMilestone;
 			PrepareRatesStudentsList();
 		}
