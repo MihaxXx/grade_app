@@ -36,7 +36,8 @@
                       IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="grade_app:StudentSubmoduleItem">
-                        <ViewCell>
+                        <ViewCell                            
+                            Tapped="RatesItem_Tapped">
                             <Grid Padding="10,0"
                                   Margin="5">
                                 <Grid.RowDefinitions>
@@ -66,7 +67,8 @@
                                        Focused="Entry_Focused"
                                        Unfocused="Entry_Unfocused"
                                        FontSize="{StaticResource MySubtitle}"
-                                       IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=DisciplineNotFrozen}"/>
+                                       IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=DisciplineNotFrozen}"
+                                       x:Name="vsEntry"/>
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        VerticalTextAlignment="Center"
@@ -117,7 +119,8 @@
                       SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="grade_app:StudentJournalItem">
-                        <ViewCell>
+                        <ViewCell
+                            Tapped="LessonItem_Tapped">
                             <Grid Padding="10,0"
                                   Margin="5">
                                 <Grid.RowDefinitions>
@@ -139,7 +142,8 @@
                                 <CheckBox Grid.Row="0"
                                        Grid.Column="1"
                                        IsChecked="{Binding Attendance, Mode=OneWay}"
-                                       CheckedChanged="CheckBox_CheckedChanged"/>
+                                       CheckedChanged="CheckBox_CheckedChanged"
+                                          x:Name="vsCheckBox"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

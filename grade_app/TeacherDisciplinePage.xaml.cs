@@ -405,6 +405,21 @@ namespace grade_app
 				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
+
+		private void RatesItem_Tapped(object sender, EventArgs e)
+		{
+			var vs = (ViewCell)sender;
+			var entry = vs.FindByName<Entry>("vsEntry");
+			entry?.Focus();
+		}
+
+		private void LessonItem_Tapped(object sender, EventArgs e)
+		{
+			var vs = (ViewCell)sender;
+			var checkBox = vs.FindByName<CheckBox>("vsCheckBox");
+			if (checkBox != null)
+				checkBox.IsChecked = !checkBox.IsChecked;
+		}
 	}
 
 	public class StudentSubmoduleItem
