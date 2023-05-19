@@ -301,4 +301,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\LaunchScreenImage.png" />
   </ItemGroup>
+  <ItemGroup>
+    <LinkDescription Include="LinkerFix.xml" />
+  </ItemGroup>
 </Project>
