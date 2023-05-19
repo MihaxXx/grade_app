@@ -93,8 +93,8 @@ namespace grade_app
 		}
 		private void AddLineToInfo(string title, string value)
 		{
-			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"] });
-			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"] });
+			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"], TextColor = Color.Black });
+			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"], TextColor = Color.Black });
 		}
 
 		private void FillSubModulePicker()
