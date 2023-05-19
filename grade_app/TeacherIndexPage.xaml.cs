@@ -16,7 +16,7 @@ namespace grade_app
 	public partial class TeacherIndexPage : ContentPage
 	{
 		TeacherIndex teacherIndex;
-		List<Semester> SemesterList { get; set; }
+		public static List<Semester> SemesterList { get; set; }
 
 		public long CurrentSemID { get; set; }
 		public ObservableCollection<SubjectGroup> GroupedDisciplineItems1 { get; private set; } = new ObservableCollection<SubjectGroup>();

@@ -30,6 +30,8 @@ namespace grade_app
 
 		public string teachersStr { get; private set; }
 
+		public FormattedString MoreInfo { get; private set; } = new FormattedString();
+
 		public TeacherDisciplinePage(long id, List<Teacher> teachers)
 		{
 			InitializeComponent();
@@ -64,9 +66,35 @@ namespace grade_app
 			if (LessonPickerItems.Count > 0)
 				LessonPicker.SelectedIndex = 0;
 
+			FillMoreInfo();
+
 
 			//Must be at the end!!!
 			BindingContext = this;
+		}
+
+		private void FillMoreInfo()
+		{
+			if (TeacherDiscipline.Discipline == null)
+				return;
+			var Dis = TeacherDiscipline.Discipline;
+			AddLineToInfo("Идентификатор", Dis.Id.ToString());
+			AddLineToInfo("Учебное подразделение", Dis.FacultyName);
+			AddLineToInfo("Предмет", Dis.SubjectName);
+			AddLineToInfo("Форма контроля", Dis.LocalizedExamType);
+			AddLineToInfo("Лекционных часов", Dis.Lectures.ToString());
+			AddLineToInfo("Практических часов", Dis.Practice.ToString());
+			AddLineToInfo("Лабораторных часов", Dis.Labs.ToString());
+			AddLineToInfo("Семестр", TeacherIndexPage.SemesterList.Find(s => s.Id == Dis.SemesterId).ToString());
+			AddLineToInfo("Этап", TeacherDiscipline.Milestone == null ? "" : $"№{TeacherDiscipline.Milestone.Id + 1} \"{TeacherDiscipline.Milestone.Name}\"");
+
+			AddLineToInfo("Группы", TeacherDiscipline.Groups == null ? "" : ("\n" + string.Join("\n", TeacherDiscipline.Groups.Select(g => $"Группа {g.Value.GroupNum} - {g.Value.SpecName}"))));
+			AddLineToInfo("Преподаватели", "\n" + teachersStr);
+		}
+		private void AddLineToInfo(string title, string value)
+		{
+			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"] });
+			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"] });
 		}
 
 		private void FillSubModulePicker()

@@ -189,10 +189,7 @@
                  IconImageSource="{OnPlatform iOS=baseline_info_outline_black_24pt, Android=baseline_info_outline_24.xml}">
         <ScrollView>
             <StackLayout>
-                <Label Text="Идентификатор:" FontSize="{StaticResource MyTitle}" FontAttributes="Bold" />
-                <Label Text="{Binding TeacherDiscipline.Discipline.Id}" FontSize="{StaticResource MySubtitle}"/>
-                <Label Text="Преподаватели:" FontSize="{StaticResource MyTitle}" FontAttributes="Bold" />
-                <Label Text="{Binding teachersStr}" FontSize="{StaticResource MySubtitle}"/>
+                <Label FormattedText="{Binding MoreInfo}" LineHeight="1.5"/>
             </StackLayout>
         </ScrollView>
     </ContentPage>
