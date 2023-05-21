@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Configurations>Debug;Release;Release dev.rating;Debug dev.rating;Debug prod</Configurations>
+    <Configurations>Release dev.rating;Debug;Debug prod;Debug dev.rating;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release dev.rating|AnyCPU'">
