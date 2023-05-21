@@ -61,7 +61,7 @@ namespace grade_app
 
 		async void WebViewNavigated(object sender, WebNavigatedEventArgs e)
 		{
-            if (e.Url.EndsWith("authtokenget"))
+            if (e.Url.EndsWith("authtokenget") && e.Result != WebNavigationResult.Failure)
             {
                 var token = await((WebView)sender).EvaluateJavaScriptAsync("document.body.getElementsByTagName('p')[0].innerText");
                 App.InitUser(token, state == "student" ? Role.Student : Role.Teacher);
