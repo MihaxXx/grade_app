@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <Configurations>Debug;Release;Release dev.rating;Debug dev.rating</Configurations>
+    <Configurations>Debug;Release;Release dev.rating;Debug dev.rating;Debug prod</Configurations>
     <VersionPrefix>1.1.0</VersionPrefix>
     <Version>$(VersionPrefix)$(VersionSuffix)</Version>
   </PropertyGroup>
@@ -18,6 +18,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug dev.rating|AnyCPU'">
     <DefineConstants>TRACE;DEV_RATING</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug prod|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
