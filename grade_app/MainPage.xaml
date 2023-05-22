@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:d="http://xamarin.com/schemas/2014/forms/design" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="grade_app.MainPage"
              Title="Сервис БРС">
     <StackLayout Spacing="0">
-        <Label Text="Role"
+        <Label Text="Роль"
                FontSize="Medium">
         </Label>
         <Picker x:Name="UserRole"
@@ -15,10 +15,13 @@
             </Picker.ItemsSource>
             <Picker.SelectedIndex>0</Picker.SelectedIndex>
         </Picker>
-        <Label Text="Email"
+        <Label Text="E-mail"
                FontSize="Medium">
         </Label>
-        <Entry Placeholder="login@sfedu.ru" x:Name="login"/>
-        <Button Text="Войти через сервис Microsoft" Clicked="Enter_btnClicked"/>
+        <Entry Placeholder="Логин@sfedu.ru" 
+               x:Name="login"
+               Keyboard="Email"/>
+        <Button Text="Войти через сервис Microsoft" 
+                Clicked="Enter_btnClicked"/>
     </StackLayout>
 </ContentPage>
