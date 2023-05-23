@@ -219,13 +219,13 @@ namespace Grade
     public partial class StudentIndex
     {
         [JsonProperty("Marks")]
-        public Dictionary<string, string> Marks { get; set; }
+        public Dictionary<long, string> Marks { get; set; }
 
         [JsonProperty("Disciplines")]
         public Discipline[] Disciplines { get; set; }
 
         [JsonProperty("Teachers")]
-        public Dictionary<string, TeacherValue> Teachers { get; set; }
+        public Dictionary<long, TeacherValue> Teachers { get; set; }
 
         [JsonProperty("EMailChanged")]
         public bool EMailChanged { get; set; }
@@ -612,7 +612,7 @@ namespace Grade
         public long Bonus { get; set; }
 
         [JsonProperty("Modules")]
-        public Dictionary<string, Module> Modules { get; set; }
+        public Dictionary<long, Module> Modules { get; set; }
     }
 
     public partial class Module

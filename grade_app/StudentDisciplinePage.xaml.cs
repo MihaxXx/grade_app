@@ -103,7 +103,7 @@ namespace grade_app
 				foreach (var smID in m.Value.Submodules)
 				{
 					var smVal = StudentDiscipline.Submodules[smID.ToString()];
-					SubModuleItems.Add(new SubModuleItem(smID, long.Parse(m.Key), m.Value.Title, smVal.Title, smVal.MaxRate, smVal.Rate, smVal.Date));
+					SubModuleItems.Add(new SubModuleItem(smID, m.Key, m.Value.Title, smVal.Title, smVal.MaxRate, smVal.Rate, smVal.Date));
 
 					SemesterRate += (smVal.Rate == null ? 0 : smVal.Rate);
 					SemesterMaxRate += (smVal.MaxRate == null ? 0 : smVal.MaxRate);
