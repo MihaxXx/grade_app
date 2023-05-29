@@ -43,8 +43,11 @@ namespace grade_app
             }
             else
                 MainPage = new NavigationPage(new MainPage());
+#if !(LOCAL || DEV_RATING)
+			Xamarin.Essentials.VersionTracking.Track();
+#endif
         }
-        public static void InitUser(string _token,Role _role)
+		public static void InitUser(string _token,Role _role)
 		{
             API = new API(_token, _role);
             var appSettings = new AppSettings(_token, _role);
