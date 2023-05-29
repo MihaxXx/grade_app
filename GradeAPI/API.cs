@@ -18,15 +18,16 @@ namespace Grade
         public readonly Role role;
 #if DEV_RATING
         public const string Host = @"dev.rating.mmcs.sfedu.ru";
-        readonly string PathBase = @"~dev_rating/api/v1/";
+        public const string PathToAPI = @"~dev_rating/api/v1/";
 #elif LOCAL
-        public const string Host = @"192.168.88.16";
-        readonly string PathBase = @"~dev_rating/api/v1/";
+		public const string Host = @"192.168.88.16";
+		public const string PathToAPI = @"~dev_rating/api/v1/";
 #else
         public const string Host = @"grade.sfedu.ru";
-        readonly string PathBase = @"api/v1/";
+        public const string PathToAPI = @"api/v1/";
 #endif
-        readonly string Token;
+		readonly string PathBase = PathToAPI;
+		readonly string Token;
         static readonly HttpClient client = new HttpClient();
 
         public API(string token, Role _role)
@@ -105,7 +106,41 @@ namespace Grade
             }
             return result;
         }
-        public StudentIndex StudentGetIndex(long SemesterID = -1)
+
+		public static string PostNoUser(Dictionary<string, string> query_args, Dictionary<string, string> form_urlencoded_args, string relPath)
+		{
+			var newuriB = new UriBuilder(
+#if LOCAL
+				"http"
+#else
+                "https"
+#endif
+				, Host)
+			{
+				Path = PathToAPI + relPath
+			};
+			var query = HttpUtility.ParseQueryString(string.Empty);
+			foreach (var arg in query_args)
+                query.Set(arg.Key, arg.Value);
+			newuriB.Query = query.ToString();
+			var content = new FormUrlEncodedContent(form_urlencoded_args);
+			content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+			/*content.Headers.*/
+			var Uri = newuriB.Uri;
+
+			string result = "";
+			try
+			{
+				var response = client.PostAsync(Uri, content).Result;
+				result = response.Content.ReadAsStringAsync().Result;
+			}
+			catch (HttpRequestException)
+			{
+				//TODO
+			}
+			return result;
+		}
+		public StudentIndex StudentGetIndex(long SemesterID = -1)
         {
             var args = new Dictionary<string, string>();
             if (SemesterID != -1)
@@ -207,6 +242,16 @@ namespace Grade
 			};
 			var res = PostRequestResponse.FromJson(Post(args, "delete_lesson")).Response;
 			return (res.Success, res.Message);
+		}
+        public static (bool, string) PostGetToken(string login, string password)
+        {
+			var args = new Dictionary<string, string>
+			{
+				{ nameof(login), login },
+				{ nameof(password), password }
+			};
+			var res = GetTokenResponse.FromJson(PostNoUser(new Dictionary<string, string>(), args, "auth/get_token")).Response;
+			return (res.Success, res.Success? res.Token : res.Message);
 		}
 	}
 
@@ -402,9 +447,25 @@ namespace Grade
         [JsonProperty("message")]
         public string Message { get; set; }
     }
+	public partial class GetTokenResponse
+	{
+		[JsonProperty("response")]
+		public GetToken Response { get; set; }
+	}
 
+	public partial class GetToken
+	{
+		[JsonProperty("success")]
+		public bool Success { get; set; }
 
-    public partial class Subject
+		[JsonProperty("token")]
+		public string Token { get; set; }
+
+		[JsonProperty("message")]
+		public string Message { get; set; }
+	}
+
+	public partial class Subject
     {
         [JsonProperty("SubjectName")]
         public string SubjectName { get; set; }
@@ -961,12 +1022,16 @@ namespace Grade
     {
         public static TeacherJournalResponse FromJson(string json) => JsonConvert.DeserializeObject<TeacherJournalResponse>(json, Grade.Converter.Settings);
     }
-        public partial class PostRequestResponse
+    public partial class PostRequestResponse
     {
         public static PostRequestResponse FromJson(string json) => JsonConvert.DeserializeObject<PostRequestResponse>(json, Grade.Converter.Settings);
     }
+	public partial class GetTokenResponse
+	{
+		public static GetTokenResponse FromJson(string json) => JsonConvert.DeserializeObject<GetTokenResponse>(json, Grade.Converter.Settings);
+	}
 
-    public static class Serialize
+	public static class Serialize
     {
         public static string ToJson(this StudentIndexResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
@@ -976,7 +1041,8 @@ namespace Grade
         public static string ToJson(this StudentJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this TeacherJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this PostRequestResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
-    }
+		public static string ToJson(this GetTokenResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+	}
 
     internal static class Converter
     {
