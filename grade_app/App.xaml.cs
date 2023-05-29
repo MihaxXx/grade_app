@@ -16,13 +16,27 @@ namespace grade_app
         public App()
         {
             InitializeComponent();
-
-            if (File.Exists(_fileName))
+#if LOCAL
+            if(true)
             {
-                var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(_fileName, System.Text.Encoding.UTF8));
+                InitUser("token1", Role.Teacher);
+                //InitUser("token2", Role.Student);
+            /*if (File.Exists(_fileName))
+			{
+				var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(_fileName, System.Text.Encoding.UTF8));
+                InitUser(appSettings.token, appSettings.role);*/
+#elif DEV_RATING
+            if (File.Exists(_fileName))
+			{
+				var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(_fileName, System.Text.Encoding.UTF8));
                 InitUser(appSettings.token, appSettings.role);
-
-                if(API.role == Role.Student)
+#else
+			if (File.Exists(_fileName))
+			{
+				var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(_fileName, System.Text.Encoding.UTF8));
+				InitUser(appSettings.token, appSettings.role);
+#endif
+                if (API.role == Role.Student)
                     MainPage = new NavigationPage(new StudentIndexPage());
                 else
                     MainPage = new NavigationPage(new TeacherIndexPage());
