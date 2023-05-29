@@ -15,13 +15,33 @@
             </Picker.ItemsSource>
             <Picker.SelectedIndex>0</Picker.SelectedIndex>
         </Picker>
-        <Label Text="E-mail"
+        <Label Text="Email"
+               x:Name="EmailLabel"
                FontSize="Medium">
         </Label>
         <Entry Placeholder="Логин@sfedu.ru" 
                x:Name="login"
                Keyboard="Email"/>
+        <Label Text="Пароль"
+               x:Name="passLabel"
+               FontSize="Medium"
+               IsVisible="false">
+        </Label>
+        <Entry x:Name="pass"
+               IsPassword="True"
+               IsVisible="false"/>
         <Button Text="Войти через сервис Microsoft" 
+                x:Name="Enter_btn"
                 Clicked="Enter_btnClicked"/>
+        <Label x:Name="SignInLocalLabel" 
+               HorizontalOptions="Center"
+               Text="Вход через локальную учетную запись"
+               FontSize="Medium"
+               TextColor="DarkGray"
+               TextDecorations="Underline">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+            </Label.GestureRecognizers>
+        </Label>
     </StackLayout>
 </ContentPage>

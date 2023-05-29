@@ -4,26 +4,70 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using Xamarin.Forms;
+
+using Grade;
 
 namespace grade_app
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+		public MainPage()
         {
             InitializeComponent();
         }
 
         async private void Enter_btnClicked(object sender, EventArgs e)
         {
-            if (login.Text != null && (login.Text.Contains("@sfedu.ru") || !login.Text.Contains('@')))
-                await Navigation.PushAsync(new AuthPage(login.Text.Contains(@"@sfedu.ru") ? login.Text.Substring(0, login.Text.IndexOf('@')) : login.Text, UserRole.SelectedItem.ToString() == "Студент" ? "student" : "staff"));
+            if (!pass.IsVisible)
+            {
+                if (login.Text != null && (login.Text.Contains("@sfedu.ru") || !login.Text.Contains('@')))
+                    await Navigation.PushAsync(new AuthPage(login.Text.Contains(@"@sfedu.ru") ? login.Text.Substring(0, login.Text.IndexOf('@')) : login.Text, UserRole.SelectedItem.ToString() == "Студент" ? "student" : "staff"));
+                else
+                    await DisplayAlert("Неверный Email", "Email должен быть в домене @sfedu.ru", "ОК");
+            }
             else
-                await DisplayAlert("Неверный Email", "Email должен быть в домене @sfedu.ru", "ОК");
+            {
+                var res = API.PostGetToken(login.Text, pass.Text);
+                if (res.Item1)
+                {
+                    var token = res.Item2;
+					App.InitUser(token, UserRole.SelectedItem.ToString() == "Студент" ? Role.Student : Role.Teacher);
+					if (App.API.role == Role.Student)
+						Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
+					else
+						Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
+					await Navigation.PopToRootAsync();
+				}
+				else
+					await DisplayAlert("Ошибка", res.Item2, "ОК");
+			}
         }
-    }
+
+		private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+		{
+			if (SignInLocalLabel.Text == "Вход через локальную учетную запись")
+			{
+				SignInLocalLabel.Text = "Вход через Microsoft";
+				EmailLabel.Text = "Логин или Email";
+				login.Placeholder = "";
+				Enter_btn.Text = "Войти";
+				passLabel.IsVisible = true;
+				pass.IsVisible = true;
+			}
+			else
+			{
+				SignInLocalLabel.Text = "Вход через локальную учетную запись";
+				EmailLabel.Text = "Email";
+				login.Placeholder = "Логин@sfedu.ru";
+				Enter_btn.Text = "Войти через сервис Microsoft";
+				passLabel.IsVisible = false;
+				pass.IsVisible = false;
+
+			}
+		}
+	}
 
 
 }
