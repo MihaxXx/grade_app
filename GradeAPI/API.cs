@@ -299,7 +299,7 @@ namespace Grade
         public DisciplineMap DisciplineMap { get; set; }
 
         [JsonProperty("Submodules")]
-        public Dictionary<string, Submodule> Submodules { get; set; }
+        public Dictionary<long, Submodule> Submodules { get; set; }
 
         [JsonProperty("ExtraRate")]
         public int ExtraRate { get; set; }

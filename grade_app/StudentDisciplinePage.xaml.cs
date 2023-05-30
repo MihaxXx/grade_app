@@ -102,7 +102,7 @@ namespace grade_app
 			{
 				foreach (var smID in m.Value.Submodules)
 				{
-					var smVal = StudentDiscipline.Submodules[smID.ToString()];
+					var smVal = StudentDiscipline.Submodules[smID];
 					SubModuleItems.Add(new SubModuleItem(smID, m.Key, m.Value.Title, smVal.Title, smVal.MaxRate, smVal.Rate, smVal.Date));
 
 					SemesterRate += (smVal.Rate == null ? 0 : smVal.Rate);
@@ -128,7 +128,7 @@ namespace grade_app
 			if (DisciplineInfo.IsBonus)
 			{
 				BonusID = StudentDiscipline.DisciplineMap.Bonus;
-				Bonus = StudentDiscipline.Submodules[BonusID.ToString()];
+				Bonus = StudentDiscipline.Submodules[BonusID];
 				DisciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
 			}
 			var Rating = SemesterRate + StudentDiscipline.ExtraRate + (StudentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0);
@@ -152,11 +152,11 @@ namespace grade_app
 			if (DisciplineInfo.IsBonus && StudentDiscipline.DisciplineMap != null)
 			{
 				BonusID = StudentDiscipline.DisciplineMap.Bonus;
-				Bonus = StudentDiscipline.Submodules[BonusID.ToString()];
+				Bonus = StudentDiscipline.Submodules[BonusID];
 				DisciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
 			}
 			var ExamID = (StudentDiscipline.Discipline.IsMapCreated && StudentDiscipline.DisciplineMap != null)? StudentDiscipline.DisciplineMap.Exam : -1;
-			var Exam = ExamID != -1? StudentDiscipline.Submodules[ExamID.ToString()] : StudentDiscipline.Submodules.First().Value;
+			var Exam = ExamID != -1? StudentDiscipline.Submodules[ExamID] : StudentDiscipline.Submodules.First().Value;
 			DisciplineInfo.Exam = new SubModuleItem(ExamID, -1, "", $"Экзамен по курсу «{ StudentDiscipline.Discipline.SubjectName }»", Exam.MaxRate, Exam.Rate, Exam.Date);
 			var Rating = SemesterRate + StudentDiscipline.ExtraRate + (StudentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0) + (Exam.Rate != null ? Exam.Rate : 0);
 			DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
