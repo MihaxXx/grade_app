@@ -103,7 +103,10 @@ namespace grade_app
 			{
 				if (TeacherDiscipline == null || TeacherDiscipline.Modules == null)
 					return;
+				var RegModules = TeacherDiscipline.Modules.ToList().Where(m => m.Value.Type == ModuleType.Regular).Select(m => m.Key).ToList();
 				foreach (var m in TeacherDiscipline.Modules)
+				{
+					var ModNum = RegModules.IndexOf(m.Key) + 1;
 					for (int i = 0; i < m.Value.Submodules.Length; i++)
 					{
 						SubmoduleT sm = m.Value.Submodules[i];
@@ -122,10 +125,12 @@ namespace grade_app
 								subModulePickerItems.Add(new SubModulePickerItem(m.Value.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
 								break;
 							case ModuleType.Regular:
-								subModulePickerItems.Add(new SubModulePickerItem(sm.Name, sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
+								subModulePickerItems.Add(new SubModulePickerItem($"М{ModNum}.{sm.Name}", sm.ModuleId, sm.Id, sm.Rate, m.Value.Type));
 								break;
 						}
 					}
+				}
+
 				SubmodulePicker.ItemsSource = subModulePickerItems;
 				SubmodulePicker.SelectedIndex = 0;
 			}
