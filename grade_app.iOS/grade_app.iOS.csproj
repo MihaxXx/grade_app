@@ -58,9 +58,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution: Ekaterina Dots (KM55VN3845)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>SdkOnly</MtouchLink>
+    <CodesignProvision>grade app</CodesignProvision>
+    <IpaMetadata></IpaMetadata>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release dev.rating|iPhoneSimulator'">
     <OutputPath>bin\iPhoneSimulator\Release dev.rating\</OutputPath>
