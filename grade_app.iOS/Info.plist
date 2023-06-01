@@ -47,5 +47,7 @@
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ru</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<true/>
 </dict>
 </plist>
