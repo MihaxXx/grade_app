@@ -48,6 +48,6 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ru</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<true/>
+	<false/>
 </dict>
 </plist>
