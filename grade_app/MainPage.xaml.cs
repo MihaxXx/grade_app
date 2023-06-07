@@ -29,20 +29,25 @@ namespace grade_app
             }
             else
             {
-                var res = API.PostGetToken(login.Text, pass.Text);
-                if (res.Item1)
-                {
-                    var token = res.Item2;
-					App.InitUser(token, UserRole.SelectedItem.ToString() == "Студент" ? Role.Student : Role.Teacher);
-					if (App.API.role == Role.Student)
-						Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
+				if (login.Text != null && pass.Text != null)
+				{
+					var res = API.PostGetToken(login.Text, pass.Text);
+					if (res.Item1)
+					{
+						var token = res.Item2;
+						App.InitUser(token, UserRole.SelectedItem.ToString() == "Студент" ? Role.Student : Role.Teacher);
+						if (App.API.role == Role.Student)
+							Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
+						else
+							Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
+						await Navigation.PopToRootAsync();
+					}
 					else
-						Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
-					await Navigation.PopToRootAsync();
+						await DisplayAlert("Ошибка", res.Item2, "ОК");
 				}
 				else
-					await DisplayAlert("Ошибка", res.Item2, "ОК");
-			}
+                    await DisplayAlert($"Неверный {(login.Text == null ? "логин": "пароль")}", $"Поле \"{(login.Text == null ? "Логин" : "Пароль")}\" не может быть пустым", "ОК");
+            }
         }
 
 		private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
