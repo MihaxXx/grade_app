@@ -51,7 +51,7 @@
                             <Label Text="{Binding Name}"
                                    HorizontalTextAlignment="Start"
                                    FontSize="{StaticResource MyTitle}"
-                                   TextColor="Black"
+                                   TextColor="{OnPlatform Android=Black}"
                                    Grid.Column="0"
                                    Grid.Row="0"
                                    MaxLines="2"
@@ -59,7 +59,7 @@
                             <Label Text="{Binding DegreeCourse}"
                                    HorizontalTextAlignment="Center"
                                    FontSize="{StaticResource MyTitle}"
-                                   TextColor="Black"
+                                   TextColor="{OnPlatform Android=Black}"
                                    Grid.Column="1"
                                    Grid.Row="0"/>
                         </Grid>

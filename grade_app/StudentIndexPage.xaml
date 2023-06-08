@@ -27,7 +27,7 @@
                                    VerticalOptions="Center"
                                    HorizontalTextAlignment="Center"
                                    FontSize="18"
-                                   TextColor="Black"/>
+                                   TextColor="{OnPlatform Android=Black}"/>
                             <Label Grid.Row="0"
                                    Grid.Column="1"
                                    Text="{Binding Name}"
@@ -35,14 +35,14 @@
                                    LineBreakMode="TailTruncation"
                                    VerticalTextAlignment="Center"
                                    FontSize="18"
-                                   TextColor="Black"/>
+                                   TextColor="{OnPlatform Android=Black}"/>
                             <Label Grid.Row="0"
                                    Grid.Column="2"
                                    Text="{Binding Rate}"
                                    HorizontalTextAlignment="End"
                                    VerticalTextAlignment="Center"
                                    FontSize="18"
-                                   TextColor="Black"/>
+                                   TextColor="{OnPlatform Android=Black}"/>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

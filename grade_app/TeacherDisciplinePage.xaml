@@ -56,7 +56,7 @@
                                        MaxLines="1"
                                        LineBreakMode="TailTruncation"
                                        FontSize="{StaticResource MySubtitle}"
-                                       TextColor="Black"/>
+                                       TextColor="{OnPlatform Android=Black}"/>
                                 <Entry Grid.Row="0"
                                        Grid.Column="1"
                                        Keyboard="Numeric"
@@ -74,7 +74,7 @@
                                        VerticalTextAlignment="Center"
                                        Text="{Binding MaxRate, StringFormat='/{0}'}"
                                        FontSize="{StaticResource MySubtitle}"
-                                       TextColor="Black"/>
+                                       TextColor="{OnPlatform Android=Black}"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
@@ -87,7 +87,7 @@
                                 <Label Text="{Binding Name}" 
                                        HorizontalTextAlignment="Center"
                                        FontSize="{StaticResource MyTitle}"
-                                       TextColor="Black"
+                                       TextColor="{OnPlatform Android=Black}"
                                        MaxLines="2"/>
                             </StackLayout>
                         </ViewCell>
@@ -136,7 +136,7 @@
                                        VerticalTextAlignment="Center"
                                        Text="{Binding Name}"
                                        FontSize="{StaticResource MySubtitle}"
-                                       TextColor="Black"
+                                       TextColor="{OnPlatform Android=Black}"
                                        MaxLines="1"
                                        LineBreakMode="TailTruncation"/>
                                 <CheckBox Grid.Row="0"
@@ -156,7 +156,7 @@
                                 <Label Text="{Binding Name}"
                                        HorizontalTextAlignment="Center"
                                        FontSize="{StaticResource MyTitle}"
-                                       TextColor="Black"
+                                       TextColor="{OnPlatform Android=Black}"
                                        MaxLines="2"/>
                             </StackLayout>
                         </ViewCell>
