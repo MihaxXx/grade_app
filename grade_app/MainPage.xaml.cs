@@ -20,15 +20,15 @@ namespace grade_app
 
         async private void Enter_btnClicked(object sender, EventArgs e)
         {
-            if (!pass.IsVisible)
-            {
-                if (login.Text != null && (login.Text.Contains("@sfedu.ru") || !login.Text.Contains('@')))
-                    await Navigation.PushAsync(new AuthPage(login.Text.Contains(@"@sfedu.ru") ? login.Text.Substring(0, login.Text.IndexOf('@')) : login.Text, UserRole.SelectedItem.ToString() == "Студент" ? "student" : "staff"));
-                else
-                    await DisplayAlert("Неверный Email", "Email должен быть в домене @sfedu.ru", "ОК");
-            }
-            else
-            {
+			if (!pass.IsVisible)
+			{
+				if (login.Text != null && (login.Text.Contains("@sfedu.ru") || !login.Text.Contains('@')))
+					await Navigation.PushAsync(new AuthPage(login.Text.Contains(@"@sfedu.ru") ? login.Text.Substring(0, login.Text.IndexOf('@')) : login.Text, UserRole.SelectedItem.ToString() == "Студент" ? "student" : "staff"));
+				else
+					await DisplayAlert("Неверный Email", "Email должен быть в домене @sfedu.ru", "ОК");
+			}
+			else
+			{
 				if (login.Text != null && pass.Text != null)
 				{
 					var res = API.PostGetToken(login.Text, pass.Text);
@@ -36,18 +36,30 @@ namespace grade_app
 					{
 						var token = res.Item2;
 						App.InitUser(token, UserRole.SelectedItem.ToString() == "Студент" ? Role.Student : Role.Teacher);
-						if (App.API.role == Role.Student)
-							Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
-						else
-							Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
+						try
+						{
+							var t = App.API.GetSemesterList();
+						}
+						catch (Exception)
+						{
+							App.WipeUser();
+							App.InitUser(token, UserRole.SelectedItem.ToString() == "Студент" ? Role.Teacher : Role.Student);
+						}
+						finally
+						{
+							if (App.API.role == Role.Student)
+								Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
+							else
+								Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
+						}
 						await Navigation.PopToRootAsync();
 					}
 					else
 						await DisplayAlert("Ошибка", res.Item2, "ОК");
 				}
 				else
-                    await DisplayAlert($"Неверный {(login.Text == null ? "логин": "пароль")}", $"Поле \"{(login.Text == null ? "Логин" : "Пароль")}\" не может быть пустым", "ОК");
-            }
+					await DisplayAlert($"Неверный {(login.Text == null ? "логин": "пароль")}", $"Поле \"{(login.Text == null ? "Логин" : "Пароль")}\" не может быть пустым", "ОК");
+			}
         }
 
 		private void TapGestureRecognizer_Tapped(object sender, EventArgs e)

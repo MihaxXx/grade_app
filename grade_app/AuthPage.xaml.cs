@@ -10,7 +10,13 @@ namespace grade_app
     {
         int PassedRedirect = 0;
         string state;
-        public AuthPage(string name, string userrole)
+        bool changedRole = false;
+#if DEV_RATING
+        string Host = "dev.rating.mmcs.sfedu.ru";
+#else
+		string Host = "grade.sfedu.ru";
+#endif
+		public AuthPage(string name, string userrole)
         {
             InitializeComponent();
 #if DEV_RATING 
@@ -21,12 +27,6 @@ namespace grade_app
         }
         void WebviewNavigating(object sender, WebNavigatingEventArgs e)
         {
-#if DEV_RATING
-            string Host = "dev.rating.mmcs.sfedu.ru";
-#else
-            string Host = "grade.sfedu.ru";
-#endif
-
 #if LOCAL
             if (e.Url.StartsWith("https://"+Host))
                 ((WebView)sender).Source = e.Url.Replace("https://" + Host, $"http://{Host}/~dev_rating");
@@ -64,14 +64,38 @@ namespace grade_app
             if (e.Url.EndsWith("authtokenget") && e.Result != WebNavigationResult.Failure)
             {
                 var token = await((WebView)sender).EvaluateJavaScriptAsync("document.body.getElementsByTagName('p')[0].innerText");
-                App.InitUser(token, state == "student" ? Role.Student : Role.Teacher);
-                //await Navigation.PushAsync(new StudentIndexPage());
-                if (App.API.role == Role.Student)
-                    Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
-                else
-                    Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
-                await Navigation.PopToRootAsync();
-            }
+                if (token != null && token.Length == 40)
+                {
+                    if (changedRole) //if got token after role change then save changed role
+                        state = (state == "student") ? "staff" : "student";
+                        App.InitUser(token, state == "student" ? Role.Student : Role.Teacher);
+					if (App.API.role == Role.Student)
+                        Navigation.InsertPageBefore(new StudentIndexPage(), Navigation.NavigationStack[0]);
+                    else
+                        Navigation.InsertPageBefore(new TeacherIndexPage(), Navigation.NavigationStack[0]);
+                    await Navigation.PopToRootAsync();
+                }
+				else //if token is broken, try another role
+				{
+                    if(!changedRole)
+                    {
+#if DEV_RATING
+                        ((WebView)sender).Source = $"https://{Host}/~dev_rating/{ (state == "student" ? "teacher" : "student") }/authtokenget";
+#elif LOCAL
+                        ((WebView)sender).Source = $"http://{Host}/~dev_rating/{ (state == "student" ? "teacher" : "student") }/authtokenget";
+#else
+						((WebView)sender).Source = $"https://{Host}/{(state == "student" ? "teacher" : "student")}/authtokenget";
+#endif
+						changedRole = true;
+                    }
+                    else //if alreday tried another role, return to MainPage
+                    {
+						await DisplayAlert("Ошибка", "Не удалось получить токен доступа. Проверьте верность введёных данных: Email, пароль, роль.", "ОК");
+						await Navigation.PopToRootAsync();
+					}
+
+				}
+			}
         }
 	}
 }
