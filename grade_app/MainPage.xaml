@@ -36,7 +36,7 @@
         <Label x:Name="SignInLocalLabel" 
                HorizontalOptions="Center"
                Text="Вход через локальную учетную запись"
-               FontSize="Small"
+               FontSize="{StaticResource MyDefault}"
                TextColor="DarkGray"
                TextDecorations="Underline">
             <Label.GestureRecognizers>
