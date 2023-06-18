@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <Configurations>Release dev.rating;Debug;Debug dev.rating;Debug prod;Release</Configurations>
-    <VersionPrefix>1.2.2</VersionPrefix>
+    <VersionPrefix>1.2.3</VersionPrefix>
     <Version>$(VersionPrefix)$(VersionSuffix)</Version>
   </PropertyGroup>
 

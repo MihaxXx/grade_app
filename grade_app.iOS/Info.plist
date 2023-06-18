@@ -27,9 +27,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>ru.mihaxxx.grade</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.2</string>
-	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>1.2.3</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -49,5 +47,7 @@
 	<string>ru</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>CFBundleVersion</key>
+	<string>6</string>
 </dict>
 </plist>
