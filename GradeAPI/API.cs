@@ -37,7 +37,7 @@ namespace Grade
             PathBase += (_role == Role.Student ? "student" : "teacher") + "/";
         }
 
-        public string Request(Dictionary<string, string> args, string relPath)
+        public async Task<string> Request(Dictionary<string, string> args, string relPath)
         {
             var newuriB = new UriBuilder(
 #if LOCAL
@@ -59,7 +59,7 @@ namespace Grade
             string response = string.Empty;
             try
             {
-                response = client.GetStringAsync(Uri).Result;
+                response = await client.GetStringAsync(Uri);
             }
             catch (HttpRequestException)
             {
@@ -140,58 +140,58 @@ namespace Grade
 			}
 			return result;
 		}
-		public StudentIndex StudentGetIndex(long SemesterID = -1)
+		public async Task<StudentIndex> StudentGetIndex(long SemesterID = -1)
         {
             var args = new Dictionary<string, string>();
             if (SemesterID != -1)
                 args.Add("SemesterID", SemesterID.ToString());
-            return StudentIndexResponse.FromJson(Request(args, "")).Response;
+            return StudentIndexResponse.FromJson(await Request(args, "")).Response;
         }
 
-        public StudentDiscipline StudentGetDiscipline(long ID)
+        public async Task<StudentDiscipline> StudentGetDiscipline(long ID)
         {
             var args = new Dictionary<string, string>
             {
                 { "id", ID.ToString() }
             };
-            return StudentDisciplineResponse.FromJson(Request(args, "discipline/subject")).Response;
+            return StudentDisciplineResponse.FromJson(await Request(args, "discipline/subject")).Response;
         }
-        public List<Semester> GetSemesterList()
+        public async Task<List<Semester>> GetSemesterList()
         {
             var args = new Dictionary<string, string>();
-            return SemesterListResponse.FromJson(Request(args, "semester_list")).Response.Values.ToList();
+            return SemesterListResponse.FromJson(await Request(args, "semester_list")).Response.Values.ToList();
         }
-        public TeacherIndex TeacherGetIndex(long SemesterID = -1)
+        public async Task<TeacherIndex> TeacherGetIndex(long SemesterID = -1)
         {
             var args = new Dictionary<string, string>();
             if (SemesterID != -1)
                 args.Add("SemesterID", SemesterID.ToString());
-            return TeacherIndexResponse.FromJson(Request(args, "")).Response;
+            return TeacherIndexResponse.FromJson(await Request(args, "")).Response;
         }
-        public TeacherDiscipline TeacherGetDiscipline(long ID)
+        public async Task<TeacherDiscipline> TeacherGetDiscipline(long ID)
         {
             var args = new Dictionary<string, string>
             {
                 { "id", ID.ToString() }
             };
-            return TeacherDisciplineResponse.FromJson(Request(args, "discipline/rating")).Response;
+            return TeacherDisciplineResponse.FromJson(await Request(args, "discipline/rating")).Response;
         }
-        public StudentJournal StudentGetDisciplineJournal(long ID)
+        public async Task<StudentJournal> StudentGetDisciplineJournal(long ID)
         {
             var args = new Dictionary<string, string>
             {
                 { "id", ID.ToString() }
             };
-            return StudentJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
+            return StudentJournalResponse.FromJson(await Request(args, "discipline/journal")).Response;
         }
 
-        public TeacherJournal TeacherGetDisciplineJournal(long ID)
+        public async Task<TeacherJournal> TeacherGetDisciplineJournal(long ID)
         {
             var args = new Dictionary<string, string>
             {
                 { "id", ID.ToString() }
             };
-            return TeacherJournalResponse.FromJson(Request(args, "discipline/journal")).Response;
+            return TeacherJournalResponse.FromJson(await Request(args, "discipline/journal")).Response;
         }
 
         public (bool, string) TeacherPostSetRate(long recordBookID, long disciplineID, long submoduleID, int rate)

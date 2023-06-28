@@ -5,6 +5,7 @@ using Grade;
 using System.Collections.ObjectModel;
 
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 namespace grade_app
 {
@@ -20,26 +21,33 @@ namespace grade_app
 		{
 			InitializeComponent();
 
-			LoadSemesters();
-			LoadDisciplines(SemesterList.Max(s => s.Id));
+			_ = LoadData();
 			//Must be at the end!!!
 			BindingContext = this;
 		}
 
-		private void LoadSemesters()
+		private async Task LoadData()
 		{
-			SemesterList = App.API.GetSemesterList();
+			activityIndicator.IsRunning = activityIndicator.IsVisible = true;
+			await LoadSemesters();
+			await LoadDisciplines(SemesterList.Max(s => s.Id));
+			activityIndicator.IsRunning = activityIndicator.IsVisible = false;
 		}
 
-		private void LoadDisciplines(long SemesterID)
+		private async Task LoadSemesters()
 		{
-			studentIndex = App.API.StudentGetIndex(SemesterID);
+			SemesterList = await App.API.GetSemesterList();
+		}
+
+		private async Task LoadDisciplines(long SemesterID)
+		{
+			DisciplineItems.Clear();
+			activityIndicator.IsRunning = activityIndicator.IsVisible = true;
+			studentIndex = await App.API.StudentGetIndex(SemesterID);
 			CurrentSemID = SemesterID;
 			Title = $"БРС - {SemesterList.Find(s => s.Id == CurrentSemID)}";
-			DisciplineItems.Clear();
 			if (studentIndex.Disciplines.Length != 0)
 			{
-				EmptyListText.IsVisible = false;
 				foreach (var d in studentIndex.Disciplines)
 				{
 					var percent = (d.MaxCurrentRate != 0 ? ((d.Rate == null) ? 0 : Math.Min((int)d.Rate, 100)) / (double)d.MaxCurrentRate : 0).
@@ -57,6 +65,7 @@ namespace grade_app
 			{
 				EmptyListText.IsVisible = true;
 			}
+			activityIndicator.IsRunning = activityIndicator.IsVisible = false;
 		}
 		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
 		{
@@ -78,7 +87,7 @@ namespace grade_app
 					{
 						var res = SemesterList[semlist.FindIndex(sem => sem == action)];
 						if (res.Id != CurrentSemID)
-							LoadDisciplines(res.Id);
+							_ = LoadDisciplines(res.Id);
 					}
 				}
 				else if (item.AutomationId == "logout")

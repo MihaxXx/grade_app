@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="grade_app.StudentIndexPage">
     <StackLayout>
+        <ActivityIndicator x:Name="activityIndicator" IsRunning="False" IsVisible="False"/>
         <Label x:Name="EmptyListText" 
                Text="В настоящий момент Вы не подписаны ни на одну из существующих дисциплин."
-               HorizontalTextAlignment="Center"></Label>
+               HorizontalTextAlignment="Center"
+               IsVisible="False"/>
         <ListView ItemsSource="{Binding DisciplineItems}"
                   HasUnevenRows="True"
                   SelectionMode="None"
