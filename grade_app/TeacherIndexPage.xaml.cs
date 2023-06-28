@@ -45,10 +45,11 @@ namespace grade_app
 
 		private async Task LoadDisciplines(long SemesterID)
 		{
+			GroupedDisciplineItems1.Clear();
+			activityIndicator.IsRunning = activityIndicator.IsVisible = true;
 			CurrentSemID = SemesterID;
 			Title = $"БРС - {SemesterList.Find(s => s.Id == CurrentSemID)}";
 			teacherIndex = await App.API.TeacherGetIndex(SemesterID);
-			GroupedDisciplineItems1.Clear();
 			if (teacherIndex.Subjects != null)
 			{
 				///Find the longest line in groups column
@@ -94,6 +95,7 @@ namespace grade_app
 			{
 				EmptyListText.IsVisible = true;
 			}
+			activityIndicator.IsRunning = activityIndicator.IsVisible = false;
 		}
 
 		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
