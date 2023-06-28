@@ -429,6 +429,8 @@ namespace grade_app
 					}
 					else
 					{
+						if (!TeacherJournal.Attendance.ContainsKey(student.RecordBookId))
+							TeacherJournal.Attendance[student.RecordBookId] = new Dictionary<long, long>();
 						TeacherJournal.Attendance[student.RecordBookId][lesson.ID] = student.Attendance.Value? 1 : 0;
 					}
 				}
