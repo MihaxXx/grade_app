@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Grade;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace grade_app
@@ -13,63 +16,65 @@ namespace grade_app
 	public partial class StudentDisciplinePage : TabbedPage
 	{
 		public StudentDiscipline StudentDiscipline { get; private set; }
-		public StudentJournal studentJour { get;private set; }
+		public StudentJournal studentJour { get; private set; }
 
-		public List<Journal> StudentJournal { get; private set; }
+		public ObservableCollection<Journal> StudentJournal { get; private set; } = new ObservableCollection<Journal>();
 
-		public DisciplineInfo DisciplineInfo { get; private set; }
+		public DisciplineInfo DisciplineInfo { get; private set; } = new DisciplineInfo();
 
-		public IEnumerable<IGrouping<string, SubModuleItem>> GroupedSubModules { get; private set; }
-
-		public string GymInfo { get; private set; }
-		public bool IsNewGym { get; private set; }
+		public ObservableCollection<IGrouping<string, SubModuleItem>> GroupedSubModules { get; private set; } = new ObservableCollection<IGrouping<string, SubModuleItem>>();
 
 
 		public StudentDisciplinePage(long id)
 		{
 			InitializeComponent();
-
-			int? SemesterRate = 0;
-			int? SemesterMaxRate = 0;
-
-			LoadModules(id, ref SemesterRate, ref SemesterMaxRate);
-			if (!StudentDiscipline.Discipline.IsMapCreated)
-			{
-				WarningLabel.Text = "Для дисциплины не создана учебная карта";
-				WarningLabel.IsVisible = true;
-			}
-
-			studentJour = App.API.StudentGetDisciplineJournal(id);
-			StudentJournal = studentJour.Journal.ToList();
-			GymInfo = studentJour.GymAttendanceInfo != null ?
-				$"{studentJour.GymAttendanceInfo.DebtCount} в счет задолженности\n" +
-				$"{studentJour.GymAttendanceInfo.SemesterCount} в баллах текущего семестра\n" +
-				$"{studentJour.GymAttendanceInfo.TotalAttendance} посещений учтено\n" +
-				$"{studentJour.GymAttendanceInfo.Uncounted} еще не учтено" :
-				"";
-			IsNewGym = studentJour.IsGym && studentJour.GymAttendanceInfo != null && studentJour.Discipline.SemesterId >= 17;
-
-			FillDisciplineInfo(SemesterRate, SemesterMaxRate);
+			_ = LoadData(id);
+			DisciplineInfo.Type = "";
 
 			//Must be at the end!!!
 			BindingContext = this;
 		}
 
-		private void FillDisciplineInfo(int? SemesterRate, int? SemesterMaxRate)
+		private async Task LoadData(long id)
 		{
-			DisciplineInfo = new DisciplineInfo();
-			{
-				FillBaseDisInfo();
-				if (DisciplineInfo.IsExam)
-				{
-					FillExamInfo(SemesterRate, SemesterMaxRate);
-				}
-				else
-				{
-					FillCreditInfo(SemesterRate);
-				}
+			activityIndicator.IsRunning = activityIndicator.IsVisible = true;
+			activityIndicatorJour.IsRunning = activityIndicatorJour.IsVisible = true;
 
-			};
+			(int SemesterRate, int SemesterMaxRate) = await LoadModules(id);
+			Title = StudentDiscipline.Discipline.SubjectName;
+			if (!StudentDiscipline.Discipline.IsMapCreated)
+			{
+				WarningLabel.Text = "Для дисциплины не создана учебная карта";
+				WarningLabel.IsVisible = true;
+			}
+			FillDisciplineInfo(SemesterRate, SemesterMaxRate);
+			activityIndicator.IsRunning = activityIndicator.IsVisible = false;
+
+			studentJour = await App.API.StudentGetDisciplineJournal(id);
+			foreach (var lesson in studentJour.Journal)
+				StudentJournal.Add(lesson);
+			DisciplineInfo.GymInfo = studentJour.GymAttendanceInfo != null ?
+				$"{studentJour.GymAttendanceInfo.DebtCount} в счет задолженности\n" +
+				$"{studentJour.GymAttendanceInfo.SemesterCount} в баллах текущего семестра\n" +
+				$"{studentJour.GymAttendanceInfo.TotalAttendance} посещений учтено\n" +
+				$"{studentJour.GymAttendanceInfo.Uncounted} еще не учтено" :
+				"";
+			DisciplineInfo.IsNewGym = studentJour.IsGym && studentJour.GymAttendanceInfo != null && studentJour.Discipline.SemesterId >= 17;
+
+			activityIndicatorJour.IsRunning = activityIndicatorJour.IsVisible = false;
+		}
+
+		private void FillDisciplineInfo(int SemesterRate, int SemesterMaxRate)
+		{
+			FillBaseDisInfo();
+			if (DisciplineInfo.IsExam)
+			{
+				FillExamInfo(SemesterRate, SemesterMaxRate);
+			}
+			else
+			{
+				FillCreditInfo(SemesterRate);
+			}
 		}
 
 		private void FillBaseDisInfo()
@@ -92,12 +97,15 @@ namespace grade_app
 			DisciplineInfo.IsExamOrBonusOrExtraRate = DisciplineInfo.IsExam || DisciplineInfo.IsBonus || DisciplineInfo.IsExtraRate;
 		}
 
-		private void LoadModules(long id, ref int? SemesterRate, ref int? SemesterMaxRate)
+		private async Task<(int, int)> LoadModules(long id)
 		{
-			StudentDiscipline = App.API.StudentGetDiscipline(id);
+			int SemesterRate = 0;
+			int SemesterMaxRate = 0;
+
+			StudentDiscipline = await App.API.StudentGetDiscipline(id);
 			var SubModuleItems = new List<SubModuleItem>();
 			if (StudentDiscipline.DisciplineMap == null)
-				return;
+				return (SemesterRate, SemesterMaxRate);
 			foreach (var m in StudentDiscipline.DisciplineMap.Modules)
 			{
 				foreach (var smID in m.Value.Submodules)
@@ -105,23 +113,25 @@ namespace grade_app
 					var smVal = StudentDiscipline.Submodules[smID];
 					SubModuleItems.Add(new SubModuleItem(smID, m.Key, m.Value.Title, smVal.Title, smVal.MaxRate, smVal.Rate, smVal.Date));
 
-					SemesterRate += (smVal.Rate == null ? 0 : smVal.Rate);
-					SemesterMaxRate += (smVal.MaxRate == null ? 0 : smVal.MaxRate);
+					SemesterRate += smVal.Rate ?? 0;
+					SemesterMaxRate += smVal.MaxRate ?? 0;
 				}
 			}
-			GroupedSubModules = SubModuleItems.GroupBy(sm => sm.ModuleTitle);
+			foreach (var m in SubModuleItems.GroupBy(sm => sm.ModuleTitle))
+				GroupedSubModules.Add(m);
+			return (SemesterRate, SemesterMaxRate);
 		}
 
-		private void FillCreditInfo(int? SemesterRate)
+		private void FillCreditInfo(int SemesterRate)
 		{
 			DisciplineInfo.ResultHeader1 = "Зачет";
 			var Admission = 60 - (SemesterRate + StudentDiscipline.ExtraRate);
 			//TODO: Fix num ending
 			DisciplineInfo.ResultText = Admission > 0 ?
-				$"Для получения зачета необходимо набрать ещё { Admission } баллов." :
-				$"Поздравляем, Вы получили зачет по курсу «{ StudentDiscipline.Discipline.SubjectName }»!";
+				$"Для получения зачета необходимо набрать ещё {Admission} баллов." :
+				$"Поздравляем, Вы получили зачет по курсу «{StudentDiscipline.Discipline.SubjectName}»!";
 			DisciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, StudentDiscipline.ExtraRate, null);
-			DisciplineInfo.ResultSubHeader2 = $"Зачет по курсу «{ StudentDiscipline.Discipline.SubjectName }»";
+			DisciplineInfo.ResultSubHeader2 = $"Зачет по курсу «{StudentDiscipline.Discipline.SubjectName}»";
 
 			long BonusID = -1;
 			Submodule Bonus = null;
@@ -132,21 +142,21 @@ namespace grade_app
 				DisciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
 			}
 			var Rating = SemesterRate + StudentDiscipline.ExtraRate + (StudentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0);
-			DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
+			DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: {Math.Min(Rating.Value, 100)} / 100";
 		}
 
-		private void FillExamInfo(int? SemesterRate, int? SemesterMaxRate)
+		private void FillExamInfo(int SemesterRate, int SemesterMaxRate)
 		{
 			DisciplineInfo.ResultHeader1 = "Допуск к экзамену";
 			var Admission = 38 - (SemesterRate + StudentDiscipline.ExtraRate);
 			//TODO: Fix num ending
 			DisciplineInfo.ResultText = Admission > 0 ?
-				$"Для допуска к экзамену Вам необходимо получить еще { Admission } баллов." :
+				$"Для допуска к экзамену Вам необходимо получить еще {Admission} баллов." :
 				"Поздравляем, заработанных Вами баллов достаточно для получения допуска к экзамену!";
 			DisciplineInfo.ExtraRate = new SubModuleItem(-1, -1, "", "Добор баллов", 38, StudentDiscipline.ExtraRate, null);
-			DisciplineInfo.MiddleTotalRate = $"Промежуточный итог: { SemesterRate + StudentDiscipline.ExtraRate } / { SemesterMaxRate }";
+			DisciplineInfo.MiddleTotalRate = $"Промежуточный итог: {SemesterRate + StudentDiscipline.ExtraRate} / {SemesterMaxRate}";
 			DisciplineInfo.ResultHeader2 = "Экзамен";
-			DisciplineInfo.ResultSubHeader2 = $"Экзамен по курсу «{ StudentDiscipline.Discipline.SubjectName }»";
+			DisciplineInfo.ResultSubHeader2 = $"Экзамен по курсу «{StudentDiscipline.Discipline.SubjectName}»";
 			long BonusID = -1;
 			Submodule Bonus = null;
 			if (DisciplineInfo.IsBonus && StudentDiscipline.DisciplineMap != null)
@@ -155,11 +165,11 @@ namespace grade_app
 				Bonus = StudentDiscipline.Submodules[BonusID];
 				DisciplineInfo.Bonus = new SubModuleItem(BonusID, -1, "", "Бонусные баллы", Bonus.MaxRate, Bonus.Rate, Bonus.Date);
 			}
-			var ExamID = (StudentDiscipline.Discipline.IsMapCreated && StudentDiscipline.DisciplineMap != null)? StudentDiscipline.DisciplineMap.Exam : -1;
-			var Exam = ExamID != -1? StudentDiscipline.Submodules[ExamID] : StudentDiscipline.Submodules.First().Value;
-			DisciplineInfo.Exam = new SubModuleItem(ExamID, -1, "", $"Экзамен по курсу «{ StudentDiscipline.Discipline.SubjectName }»", Exam.MaxRate, Exam.Rate, Exam.Date);
+			var ExamID = (StudentDiscipline.Discipline.IsMapCreated && StudentDiscipline.DisciplineMap != null) ? StudentDiscipline.DisciplineMap.Exam : -1;
+			var Exam = ExamID != -1 ? StudentDiscipline.Submodules[ExamID] : StudentDiscipline.Submodules.First().Value;
+			DisciplineInfo.Exam = new SubModuleItem(ExamID, -1, "", $"Экзамен по курсу «{StudentDiscipline.Discipline.SubjectName}»", Exam.MaxRate, Exam.Rate, Exam.Date);
 			var Rating = SemesterRate + StudentDiscipline.ExtraRate + (StudentDiscipline.Discipline.IsBonus && Bonus != null && Bonus.Rate != null ? Bonus.Rate : 0) + (Exam.Rate != null ? Exam.Rate : 0);
-			DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: { Math.Min(Rating.Value, 100) } / 100";
+			DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: {Math.Min(Rating.Value, 100)} / 100";
 		}
 	}
 	public class SubModuleItem
@@ -184,8 +194,30 @@ namespace grade_app
 		public string Date { get; set; }
 
 	}
-	public class DisciplineInfo
+	public class DisciplineInfo : INotifyPropertyChanged
 	{
+		private bool isExam;
+		private bool isBonus;
+		private bool isExtraRate;
+		private bool isExamOrBonusOrExtraRate;
+		private string type;
+		private string semesterName;
+		private string teachers;
+		private string studyLoad;
+		private string resultHeader1;
+		private string resultText;
+		private SubModuleItem extraRate;
+		private string middleTotalRate;
+		private string resultHeader2;
+		private string resultSubHeader2;
+		private SubModuleItem bonus;
+		private SubModuleItem exam;
+		private string finalTotalRate;
+		private bool isNewGym;
+		private string gymInfo;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
 		private static string HoursToText(int hours)
 		{
 			if (hours >= 10 && hours <= 20 || hours % 10 >= 5)
@@ -220,29 +252,165 @@ namespace grade_app
 			}
 			return res;
 		}
-		public bool IsExam { get; set; }
-		public bool IsBonus { get; set; }
-		public bool IsExtraRate { get; set; }
-		public bool IsExamOrBonusOrExtraRate { get; set; }
+		public bool IsExam
+		{
+			get => isExam; set
+			{
+				isExam = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsExam)));
+			}
+		}
+		public bool IsBonus
+		{
+			get => isBonus; set
+			{
+				isBonus = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBonus)));
+			}
+		}
+		public bool IsExtraRate
+		{
+			get => isExtraRate; set
+			{
+				isExtraRate = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(isExtraRate)));
+			}
+		}
+		public bool IsExamOrBonusOrExtraRate
+		{
+			get => isExamOrBonusOrExtraRate; set
+			{
+				isExamOrBonusOrExtraRate = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsExamOrBonusOrExtraRate)));
+			}
+		}
 		/// <summary>
 		/// List Header
 		/// </summary>
-		public string Type { get; set; }
-		public string SemesterName { get; set; }
-		public string Teachers { get; set; }
-		public string StudyLoad { get; set; }
+		public string Type
+		{
+			get => type; set
+			{
+				type = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Type)));
+			}
+		}
+		public string SemesterName
+		{
+			get => semesterName; set
+			{
+				semesterName = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SemesterName)));
+			}
+		}
+		public string Teachers
+		{
+			get => teachers; set
+			{
+				teachers = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Teachers)));
+			}
+		}
+		public string StudyLoad
+		{
+			get => studyLoad; set
+			{
+				studyLoad = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StudyLoad)));
+			}
+		}
 
 		/// <summary>
 		/// List Footer
 		/// </summary>
-		public string ResultHeader1 { get; set; }
-		public string ResultText { get; set; }
-		public SubModuleItem ExtraRate { get; set; }
-		public string MiddleTotalRate { get; set; }
-		public string ResultHeader2 { get; set; }
-		public string ResultSubHeader2 { get; set; }
-		public SubModuleItem Bonus { get; set; }
-		public SubModuleItem Exam { get; set; }
-		public string FinalTotalRate { get; set; }
+		public string ResultHeader1
+		{
+			get => resultHeader1; set
+			{
+				resultHeader1 = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ResultHeader1)));
+			}
+		}
+		public string ResultText
+		{
+			get => resultText; set
+			{
+				resultText = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ResultText)));
+			}
+		}
+		public SubModuleItem ExtraRate
+		{
+			get => extraRate; set
+			{
+				extraRate = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ExtraRate)));
+			}
+		}
+		public string MiddleTotalRate
+		{
+			get => middleTotalRate; set
+			{
+				middleTotalRate = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MiddleTotalRate)));
+			}
+		}
+		public string ResultHeader2
+		{
+			get => resultHeader2; set
+			{
+				resultHeader2 = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ResultHeader2)));
+			}
+		}
+		public string ResultSubHeader2
+		{
+			get => resultSubHeader2; set
+			{
+				resultSubHeader2 = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ResultSubHeader2)));
+			}
+		}
+		public SubModuleItem Bonus
+		{
+			get => bonus; set
+			{
+				bonus = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Bonus)));
+			}
+		}
+		public SubModuleItem Exam
+		{
+			get => exam; set
+			{
+				exam = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Exam)));
+			}
+		}
+		public string FinalTotalRate
+		{
+			get => finalTotalRate; set
+			{
+				finalTotalRate = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FinalTotalRate)));
+			}
+		}
+
+		public string GymInfo
+		{
+			get => gymInfo; set
+			{
+				gymInfo = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GymInfo)));
+			}
+		}
+		public bool IsNewGym
+		{
+			get => isNewGym; set
+			{
+				isNewGym = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNewGym)));
+			}
+		}
 	}
 }

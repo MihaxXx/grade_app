@@ -4,10 +4,10 @@
             x:Class="grade_app.StudentDisciplinePage"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+            xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
             xmlns:grade_app="clr-namespace:grade_app" xmlns:Grade="clr-namespace:Grade;assembly=GradeAPI"
             x:DataType="grade_app:StudentDisciplinePage"
-            android:TabbedPage.ToolbarPlacement="Bottom"
-            Title="{Binding StudentDiscipline.Discipline.SubjectName}">
+            android:TabbedPage.ToolbarPlacement="Bottom">
     <ContentPage Title="Баллы"
                  IconImageSource="{OnPlatform iOS=baseline_assignment_black_24pt, Android=ic_assignment_black_24dp.xml}">
         <StackLayout>
@@ -17,7 +17,9 @@
                    HorizontalTextAlignment="Center"
                    TextColor="#a94442"
                    BackgroundColor="#f2dede" />
+            <ActivityIndicator x:Name="activityIndicator" IsRunning="False" IsVisible="False"/>
             <ListView ItemsSource="{Binding GroupedSubModules}"
+                      IsVisible="{Binding IsVisible, Source={x:Reference activityIndicator}, Converter={xct:InvertedBoolConverter}}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
                       SelectionMode="None"
@@ -180,7 +182,7 @@
                                HorizontalTextAlignment="Center"
                                Margin="5" />
                         <Grid Padding="0"
-                              IsVisible="{Binding StudentDiscipline.Discipline.IsBonus}">
+                              IsVisible="{Binding DisciplineInfo.IsBonus}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -252,22 +254,30 @@
     <ContentPage Title="Посещения"
                  IconImageSource="{OnPlatform iOS=baseline_date_range_black_24pt, Android=ic_date_range_black_24dp.xml}">
         <StackLayout>
-            <Label Text="Число посещений"
+            <ActivityIndicator x:Name="activityIndicatorJour" IsRunning="False" IsVisible="False"/>
+            
+            <ListView ItemsSource="{Binding StudentJournal}"
+                      IsVisible="{Binding IsVisible, Source={x:Reference activityIndicatorJour}, Converter={xct:InvertedBoolConverter}}"
+                      HasUnevenRows="False"
+                      SelectionMode="None">
+                <ListView.Header>
+                    <StackLayout>
+                        <Label Text="Число посещений"
                                HorizontalOptions="Fill"
                                HorizontalTextAlignment="Start"
                                FontSize="Medium" 
                                Margin="5"
-                   IsVisible="{Binding IsNewGym}"/>
-            <Label Text="{Binding GymInfo}"
-                   IsVisible="{Binding IsNewGym}"/>
-            <Label Text="Журнал посещений"
+                               IsVisible="{Binding DisciplineInfo.IsNewGym}"/>
+                        <Label Text="{Binding DisciplineInfo.GymInfo}"
+                               IsVisible="{Binding DisciplineInfo.IsNewGym}"
+                               Margin="5"/>
+                        <Label Text="Журнал посещений"
                                HorizontalOptions="Fill"
                                HorizontalTextAlignment="Start"
                                FontSize="Medium" 
                                Margin="5"/>
-            <ListView ItemsSource="{Binding StudentJournal}"
-                  HasUnevenRows="False"
-                  SelectionMode="None">
+                    </StackLayout>
+                </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="Grade:Journal">
                         <ViewCell>
