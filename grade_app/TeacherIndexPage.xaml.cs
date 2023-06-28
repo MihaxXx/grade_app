@@ -25,22 +25,29 @@ namespace grade_app
 		{
 			InitializeComponent();
 
-			LoadSemesters();
-			LoadDisciplines(SemesterList.Max(s => s.Id));
+			_ = LoadData();
 			//Must be at the end!!!
 			BindingContext = this;
 		}
 
-		private void LoadSemesters()
+		private async Task LoadData()
 		{
-			SemesterList = App.API.GetSemesterList();
+			activityIndicator.IsRunning = activityIndicator.IsVisible = true;
+			await LoadSemesters();
+			await LoadDisciplines(SemesterList.Max(s => s.Id));
+			activityIndicator.IsRunning = activityIndicator.IsVisible = false;
 		}
 
-		private void LoadDisciplines(long SemesterID)
+		private async Task LoadSemesters()
 		{
-			teacherIndex = App.API.TeacherGetIndex(SemesterID);
+			SemesterList = await App.API.GetSemesterList();
+		}
+
+		private async Task LoadDisciplines(long SemesterID)
+		{
 			CurrentSemID = SemesterID;
-			Title = $"БРС - {SemesterList.Find(s=> s.Id == CurrentSemID)}";
+			Title = $"БРС - {SemesterList.Find(s => s.Id == CurrentSemID)}";
+			teacherIndex = await App.API.TeacherGetIndex(SemesterID);
 			GroupedDisciplineItems1.Clear();
 			if (teacherIndex.Subjects != null)
 			{
@@ -108,7 +115,7 @@ namespace grade_app
 					{
 						var res = SemesterList[semlist.FindIndex(sem => sem == action)];
 						if (res.Id != CurrentSemID)
-							LoadDisciplines(res.Id);
+							_ = LoadDisciplines(res.Id);
 					}
 				}
 				else if (item.AutomationId == "logout")
