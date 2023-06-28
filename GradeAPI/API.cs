@@ -72,7 +72,7 @@ namespace Grade
 			return response;
         }
 
-        public string Post(Dictionary<string, string> args, string relPath)
+        public (bool, string) Post(Dictionary<string, string> args, string relPath)
         {
             var newuriB = new UriBuilder(
 #if LOCAL
@@ -94,20 +94,22 @@ namespace Grade
             /*content.Headers.*/
             var Uri = newuriB.Uri;
 
+            bool success = false;
             string result = "";
             try
             {
                 var response = client.PostAsync(Uri, content).Result;
                 result = response.Content.ReadAsStringAsync().Result;
+                success = response.IsSuccessStatusCode;
             }
             catch (HttpRequestException)
             {
                 //TODO
             }
-            return result;
+            return (success, result);
         }
 
-		public static string PostNoUser(Dictionary<string, string> query_args, Dictionary<string, string> form_urlencoded_args, string relPath)
+		public static (bool, string) PostNoUser(Dictionary<string, string> query_args, Dictionary<string, string> form_urlencoded_args, string relPath)
 		{
 			var newuriB = new UriBuilder(
 #if LOCAL
@@ -128,17 +130,19 @@ namespace Grade
 			/*content.Headers.*/
 			var Uri = newuriB.Uri;
 
+			bool success = false;
 			string result = "";
 			try
 			{
 				var response = client.PostAsync(Uri, content).Result;
 				result = response.Content.ReadAsStringAsync().Result;
+				success = response.IsSuccessStatusCode;
 			}
 			catch (HttpRequestException)
 			{
 				//TODO
 			}
-			return result;
+			return (success, result);
 		}
 		public async Task<StudentIndex> StudentGetIndex(long SemesterID = -1)
         {
@@ -203,7 +207,10 @@ namespace Grade
                 { nameof(submoduleID), submoduleID.ToString() },
                 { nameof(rate), rate.ToString() }
             };
-            var res = PostRequestResponse.FromJson(Post(args, "set_rate")).Response;
+            var rawRes = Post(args, "set_rate");
+            if (!rawRes.Item1)
+                return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
             return (res.Success, res.Message);
         }
 
@@ -215,7 +222,10 @@ namespace Grade
                 { nameof(recordBookID), recordBookID.ToString() },
                 { nameof(attendance), (attendance? 1 : 0).ToString() }
             };
-            var res = PostRequestResponse.FromJson(Post(args, "set_attendance")).Response;
+            var rawRes = Post(args, "set_attendance");
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
             return (res.Success, res.Message);
         }
 
@@ -229,7 +239,10 @@ namespace Grade
             };
             if (lessonSubgroup != null)
                 args.Add(nameof(lessonSubgroup), lessonSubgroup.Id.ToString());
-            var res = PostRequestResponse.FromJson(Post(args, "create_lesson")).Response;
+            var rawRes = Post(args, "create_lesson");
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
             return (res.Success, res.Message);
         }
 
@@ -240,7 +253,10 @@ namespace Grade
 				{ nameof(disciplineID), disciplineID.ToString() },
 				{ nameof(lessonID), lessonID.ToString() }
 			};
-			var res = PostRequestResponse.FromJson(Post(args, "delete_lesson")).Response;
+            var rawRes = Post(args, "delete_lesson");
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
 			return (res.Success, res.Message);
 		}
         public static (bool, string) PostGetToken(string login, string password)
@@ -250,7 +266,10 @@ namespace Grade
 				{ nameof(login), login },
 				{ nameof(password), password }
 			};
-			var res = GetTokenResponse.FromJson(PostNoUser(new Dictionary<string, string>(), args, "auth/get_token")).Response;
+            var rawRes = PostNoUser(new Dictionary<string, string>(), args, "auth/get_token");
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = GetTokenResponse.FromJson(rawRes.Item2).Response;
 			return (res.Success, res.Success? res.Token : res.Message);
 		}
 	}
