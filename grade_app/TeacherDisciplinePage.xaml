@@ -5,8 +5,7 @@
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
             xmlns:grade_app="clr-namespace:grade_app"
             x:DataType="grade_app:TeacherDisciplinePage"
-            android:TabbedPage.ToolbarPlacement="Bottom"
-            Title="{Binding TeacherDiscipline.Discipline.SubjectName}">
+            android:TabbedPage.ToolbarPlacement="Bottom">
     <ContentPage Title="Баллы"
                  IconImageSource="{OnPlatform iOS=baseline_assignment_black_24pt, Android=ic_assignment_black_24dp.xml}">
         <StackLayout>
@@ -25,15 +24,16 @@
                     ItemsSource="{Binding subModulePickerItems}"
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="SubmodulePicker_SelectedIndexChanged"
-                    IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}"
+                    IsVisible="{Binding disciplineInfo.IsDisciplineMapCreated}"
                     FontSize="{StaticResource MySubtitle}"/>
+            <ActivityIndicator x:Name="activityIndicatorRates" IsRunning="False" IsVisible="False"/>
             <ListView x:Name="StudentSubmoduleList"
                       ItemsSource="{Binding FilteredGroupedRatesStudentsList}"
                       CachingStrategy="RecycleElement"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
                       SelectionMode="None"
-                      IsVisible="{Binding TeacherDiscipline.Discipline.IsMapCreated}">
+                      IsVisible="{Binding disciplineInfo.IsDisciplineMapCreated}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="grade_app:StudentSubmoduleItem">
                         <ViewCell                            
@@ -67,7 +67,7 @@
                                        Focused="Entry_Focused"
                                        Unfocused="Entry_Unfocused"
                                        FontSize="{StaticResource MySubtitle}"
-                                       IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=DisciplineNotFrozen}"
+                                       IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=disciplineInfo.DisciplineNotFrozen}"
                                        x:Name="vsEntry"/>
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
@@ -113,6 +113,7 @@
                     ItemDisplayBinding="{Binding Name}"
                     SelectedIndexChanged="LessonPicker_SelectedIndexChanged"
                     FontSize="{StaticResource MySubtitle}"/>
+            <ActivityIndicator x:Name="activityIndicatorJournal" IsRunning="False" IsVisible="False"/>
             <ListView ItemsSource="{Binding FilteredGroupedJournalStudentsList}"
                       IsGroupingEnabled="True"
                       HasUnevenRows="True"
@@ -189,6 +190,7 @@
                  IconImageSource="{OnPlatform iOS=baseline_info_outline_black_24pt, Android=baseline_info_outline_24.xml}">
         <ScrollView>
             <StackLayout>
+                <ActivityIndicator x:Name="activityIndicatorInfo" IsRunning="False" IsVisible="False"/>
                 <Label FormattedText="{Binding MoreInfo}" LineHeight="1.5"/>
             </StackLayout>
         </ScrollView>

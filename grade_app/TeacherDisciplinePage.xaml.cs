@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace grade_app
 		public ObservableCollection<DisGroup> FilteredGroupedRatesStudentsList { get; private set; } = new ObservableCollection<DisGroup>();
 		public string subModuleFilter { get; private set; } = "ВСЕ";
 
-		public bool DisciplineNotFrozen { get; private set; }
+		public DisciplineInfo disciplineInfo { get; private set; } = new DisciplineInfo();
 
 		public TeacherJournal TeacherJournal { get; private set; }
 		public ObservableCollection<LessonPickerItem> LessonPickerItems { get; private set; } = new ObservableCollection<LessonPickerItem>();
@@ -28,52 +29,61 @@ namespace grade_app
 
 		public string lessonFilter { get; private set; } = "ВСЕ";
 
-		public string teachersStr { get; private set; }
-
 		public FormattedString MoreInfo { get; private set; } = new FormattedString();
 
 		public TeacherDisciplinePage(long id, List<Teacher> teachers)
 		{
 			InitializeComponent();
 
-			teachersStr = string.Join("\n", teachers.Select(t => t.FullName()));
-			TeacherDiscipline = App.API.TeacherGetDiscipline(id);
-			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen;
-			FillSubModulePicker();
-			if(!TeacherDiscipline.Discipline.IsMapCreated)
-			{
-				WarningLabel.Text = "Для дисциплины не создана учебная карта";
-				WarningLabel.IsVisible = true;
-			}
-			if(TeacherDiscipline.Discipline.Frozen)
-			{
-				WarningLabel.Text = "Дисциплина подписана, выставление баллов невозможно";
-				WarningLabel.IsVisible = true;
-			}
-			else if(TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
-			{
-				WarningLabel.Text = "Семестр завершен, выставление баллов запрещено";
-				WarningLabel.IsVisible = true;
-			}
-			if(TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
-			{
-				MilestoneLabel.Text = $"Дисциплина находится на этапе №{ TeacherDiscipline.Milestone.Id + 1 } \"{ TeacherDiscipline.Milestone.Name }\"";
-				MilestoneLabel.IsVisible = true;
-			}
-
-			TeacherJournal = App.API.TeacherGetDisciplineJournal(id);
-			FillLessonPicker();
-			if (LessonPickerItems.Count > 0)
-				LessonPicker.SelectedIndex = 0;
-
-			FillMoreInfo();
-
+			_ = LoadData(id, teachers);
 
 			//Must be at the end!!!
 			BindingContext = this;
 		}
 
-		private void FillMoreInfo()
+		private async Task LoadData(long id, List<Teacher> teachers)
+		{
+			activityIndicatorRates.IsRunning = activityIndicatorRates.IsVisible = true;
+			activityIndicatorJournal.IsRunning = activityIndicatorJournal.IsVisible = true;
+			activityIndicatorInfo.IsRunning = activityIndicatorInfo.IsVisible = true;
+			TeacherDiscipline = await App.API.TeacherGetDiscipline(id);
+			Title = TeacherDiscipline.Discipline.SubjectName;
+			disciplineInfo.DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen;
+			disciplineInfo.IsDisciplineMapCreated = TeacherDiscipline.Discipline.IsMapCreated;
+			FillSubModulePicker();
+			if (!TeacherDiscipline.Discipline.IsMapCreated)
+			{
+				WarningLabel.Text = "Для дисциплины не создана учебная карта";
+				WarningLabel.IsVisible = true;
+			}
+			if (TeacherDiscipline.Discipline.Frozen)
+			{
+				WarningLabel.Text = "Дисциплина подписана, выставление баллов невозможно";
+				WarningLabel.IsVisible = true;
+			}
+			else if (TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
+			{
+				WarningLabel.Text = "Семестр завершен, выставление баллов запрещено";
+				WarningLabel.IsVisible = true;
+			}
+			if (TeacherDiscipline.Discipline.Milestone > 0 & TeacherDiscipline.Discipline.Milestone < 4)
+			{
+				MilestoneLabel.Text = $"Дисциплина находится на этапе №{TeacherDiscipline.Milestone.Id + 1} \"{TeacherDiscipline.Milestone.Name}\"";
+				MilestoneLabel.IsVisible = true;
+			}
+			activityIndicatorRates.IsRunning = activityIndicatorRates.IsVisible = false;
+
+			TeacherJournal = await App.API.TeacherGetDisciplineJournal(id);
+			FillLessonPicker();
+			if (LessonPickerItems.Count > 0)
+				LessonPicker.SelectedIndex = 0;
+			activityIndicatorJournal.IsRunning = activityIndicatorJournal.IsVisible = false;
+
+			FillMoreInfo(teachers);
+			activityIndicatorInfo.IsRunning = activityIndicatorInfo.IsVisible = false;
+		}
+
+		private void FillMoreInfo(List<Teacher> teachers)
 		{
 			if (TeacherDiscipline.Discipline == null)
 				return;
@@ -89,7 +99,7 @@ namespace grade_app
 			AddLineToInfo("Этап", TeacherDiscipline.Milestone == null ? "" : $"№{TeacherDiscipline.Milestone.Id + 1} \"{TeacherDiscipline.Milestone.Name}\"");
 
 			AddLineToInfo("Группы", TeacherDiscipline.Groups == null ? "" : ("\n" + string.Join("\n", TeacherDiscipline.Groups.Select(g => $"Группа {g.Value.GroupNum} - {g.Value.SpecName}"))));
-			AddLineToInfo("Преподаватели", "\n" + teachersStr);
+			AddLineToInfo("Преподаватели", "\n" + string.Join("\n", teachers.Select(t => t.FullName())));
 		}
 		private void AddLineToInfo(string title, string value)
 		{
@@ -151,7 +161,7 @@ namespace grade_app
 					WarningLabel.IsVisible = false;
 			}
 			var isInOurMilestone = (TeacherDiscipline.Milestone.Mask & TeacherDiscipline.Modules[smi.ModuleID].Submodules.First(sm => sm.Id == smi.ID).MilestoneMask) > 0;
-			DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen && isInOurMilestone;
+			disciplineInfo.DisciplineNotFrozen = !TeacherDiscipline.Discipline.Frozen && isInOurMilestone;
 			PrepareRatesStudentsList();
 		}
 
@@ -291,7 +301,7 @@ namespace grade_app
 						}
 						else
 						{
-							TeacherJournal = App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
+							TeacherJournal = await App.API.TeacherGetDisciplineJournal(TeacherJournal.Discipline.Id);
 							FillLessonPicker();
 							LessonPicker.SelectedIndex = LessonPickerItems.Count - 1;
 						}
@@ -454,6 +464,31 @@ namespace grade_app
 			var checkBox = vs.FindByName<CheckBox>("vsCheckBox");
 			if (checkBox != null)
 				checkBox.IsChecked = !checkBox.IsChecked;
+		}
+
+		public class DisciplineInfo : INotifyPropertyChanged
+		{
+			private bool disciplineNotFrozen;
+			private bool isDisciplineMapCreated;
+
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			public bool DisciplineNotFrozen
+			{
+				get => disciplineNotFrozen; set
+				{
+					disciplineNotFrozen = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisciplineNotFrozen)));
+				}
+			}
+			public bool IsDisciplineMapCreated
+			{
+				get => isDisciplineMapCreated; set
+				{
+					isDisciplineMapCreated = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDisciplineMapCreated)));
+				}
+			}
 		}
 	}
 
