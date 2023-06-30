@@ -20,6 +20,12 @@ namespace grade_app
 
         async private void Enter_btnClicked(object sender, EventArgs e)
         {
+			if (!App.IsInternetConnected())
+			{
+				await DisplayAlert("Нет доступа к интернету!", "Попробуйте снова позднее.", "ОК");
+				return;
+			}
+
 			if (!pass.IsVisible)
 			{
 				if (login.Text != null && (login.Text.Contains("@sfedu.ru") || !login.Text.Contains('@')))
