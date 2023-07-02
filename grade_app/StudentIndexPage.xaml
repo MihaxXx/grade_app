@@ -4,6 +4,7 @@
         <ActivityIndicator x:Name="activityIndicator" IsRunning="False" IsVisible="False"/>
         <Label x:Name="EmptyListText" 
                Text="В настоящий момент Вы не подписаны ни на одну из существующих дисциплин."
+               FontSize="{StaticResource MyTitle}"
                HorizontalTextAlignment="Center"
                IsVisible="False"/>
         <ListView ItemsSource="{Binding DisciplineItems}"
