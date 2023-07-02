@@ -44,7 +44,7 @@ namespace grade_app
 						App.InitUser(token, UserRole.SelectedItem.ToString() == "Студент" ? Role.Student : Role.Teacher);
 						try
 						{
-							var t = App.API.GetSemesterList();
+							var t = await App.API.GetSemesterList();
 						}
 						catch (Exception)
 						{
