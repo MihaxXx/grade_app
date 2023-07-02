@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.2.3" package="ru.mihaxxx.grade" android:installLocation="auto" android:versionCode="6">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.3.0" package="ru.mihaxxx.grade" android:installLocation="auto" android:versionCode="7">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33" />
 	<application android:icon="@mipmap/icon" android:label="Сервис БРС"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
