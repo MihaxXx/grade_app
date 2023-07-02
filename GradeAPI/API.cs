@@ -28,7 +28,7 @@ namespace Grade
 #endif
 		readonly string PathBase = PathToAPI;
 		readonly string Token;
-        static readonly HttpClient client = new HttpClient();
+        static readonly HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
 
         public API(string token, Role _role)
         {
@@ -61,13 +61,9 @@ namespace Grade
             {
                 response = await client.GetStringAsync(Uri);
             }
-            catch (HttpRequestException)
+            catch (Exception e) when (e is HttpRequestException || /*e is TaskCanceledException ||*/ e is InvalidOperationException || e is UriFormatException || e is AggregateException)
             {
-                //TODO
-            }
-            catch (AggregateException)
-            {
-				//TODO
+				// TODO: пробрасывать провалы запроса и исключения в функции, инициировавшие запрос
 			}
 			return response;
         }
@@ -102,11 +98,11 @@ namespace Grade
                 result = response.Content.ReadAsStringAsync().Result;
                 success = response.IsSuccessStatusCode;
             }
-            catch (HttpRequestException)
-            {
-                //TODO
-            }
-            return (success, result);
+			catch (Exception e) when (e is HttpRequestException || e is TaskCanceledException || e is InvalidOperationException || e is UriFormatException || e is AggregateException)
+			{
+                return (false, e.Message);
+			}
+			return (success, result);
         }
 
 		public static (bool, string) PostNoUser(Dictionary<string, string> query_args, Dictionary<string, string> form_urlencoded_args, string relPath)
@@ -138,9 +134,9 @@ namespace Grade
 				result = response.Content.ReadAsStringAsync().Result;
 				success = response.IsSuccessStatusCode;
 			}
-			catch (HttpRequestException)
+			catch (Exception e) when (e is HttpRequestException || e is TaskCanceledException || e is InvalidOperationException || e is UriFormatException || e is AggregateException)
 			{
-				//TODO
+				return (false, e.Message);
 			}
 			return (success, result);
 		}
