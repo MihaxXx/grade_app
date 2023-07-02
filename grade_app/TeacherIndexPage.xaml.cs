@@ -101,6 +101,11 @@ namespace grade_app
 		private async void OnListItemTapped(object sender, ItemTappedEventArgs e)
 		{
 			((ListView)sender).SelectedItem = null;
+			if (!App.IsInternetConnected())
+			{
+				await DisplayAlert("Нет доступа к интернету!", "Попробуйте снова позднее.", "ОК");
+				return;
+			}
 			var item = (DisciplineItem)e.Item;
 			await Navigation.PushAsync(new TeacherDisciplinePage(item.ID, teacherIndex.Teachers[item.ID.ToString()].Values.ToList()));
 		}
@@ -111,6 +116,11 @@ namespace grade_app
 				var item = sender as ToolbarItem;
 				if (item.AutomationId == "change_semester")
 				{
+					if (!App.IsInternetConnected())
+					{
+						await DisplayAlert("Нет доступа к интернету!", "Попробуйте снова позднее.", "ОК");
+						return;
+					}
 					var semlist = SemesterList.Select(sem => sem.ToString()).ToList();
 					string action = await DisplayActionSheet("Выберите семестр", "Отмена", null, semlist.ToArray());
 					if (action != null && action != "Отмена")
