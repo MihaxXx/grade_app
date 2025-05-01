@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Grade;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace grade_app
 {
@@ -103,8 +105,8 @@ namespace grade_app
 		}
 		private void AddLineToInfo(string title, string value)
 		{
-			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"], TextColor = Color.Black });
-			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"], TextColor = Color.Black });
+			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"], TextColor = Colors.Black });
+			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"], TextColor = Colors.Black });
 		}
 
 		private void FillSubModulePicker()
@@ -400,10 +402,10 @@ namespace grade_app
 				var submodule = (SubModulePickerItem)SubmodulePicker.SelectedItem;
 				if (!student.Rate.HasValue || student.Rate > student.MaxRate)
 				{
-					(sender as Entry).BackgroundColor = Color.FromHex("#a94442");
+					(sender as Entry).BackgroundColor = Color.FromArgb("#a94442");
 					return;
 				}
-				(sender as Entry).BackgroundColor = Color.Default;
+				(sender as Entry).BackgroundColor = null;
 				var res = App.API.TeacherPostSetRate(student.RecordBookId, TeacherDiscipline.Discipline.Id, submodule.ID, student.Rate.Value);
 				if (res.Item1 == false)
 				{

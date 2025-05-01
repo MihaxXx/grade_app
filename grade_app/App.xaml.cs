@@ -1,12 +1,14 @@
 ﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls.Xaml;
 using Grade;
 using System.IO;
 using Newtonsoft.Json;
-using Xamarin.Essentials;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Networking;
 
 namespace grade_app
 {
@@ -20,9 +22,6 @@ namespace grade_app
 		public App()
 		{
 			InitializeComponent();
-#if !(LOCAL || DEV_RATING)
-			Xamarin.Essentials.VersionTracking.Track();
-#endif
 			NetworkAccess = Connectivity.NetworkAccess;
 			ConnectionProfiles = Connectivity.ConnectionProfiles;
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;

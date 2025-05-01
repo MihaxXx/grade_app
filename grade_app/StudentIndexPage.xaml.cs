@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Grade;
 using System.Collections.ObjectModel;
-
-using Xamarin.Forms;
 using System.Threading.Tasks;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace grade_app
 {
