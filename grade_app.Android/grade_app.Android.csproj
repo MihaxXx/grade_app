@@ -21,8 +21,4 @@
 		<ProjectReference Include="..\grade_app\grade_app.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Resources\drawable-night\" />
-	</ItemGroup>
-
 </Project>
