@@ -66,7 +66,7 @@
                                        Focused="Entry_Focused"
                                        Unfocused="Entry_Unfocused"
                                        FontSize="{StaticResource MySubtitle}"
-                                       IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=disciplineInfo.DisciplineNotFrozen}"
+                                       IsEnabled="{Binding x:DataType='grade_app:TeacherDisciplinePage', Source={RelativeSource AncestorType={x:Type grade_app:TeacherDisciplinePage}}, Path=disciplineInfo.DisciplineNotFrozen}"
                                        x:Name="vsEntry"/>
                                 <Label Grid.Row="0"
                                        Grid.Column="2"

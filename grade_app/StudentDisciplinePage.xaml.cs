@@ -18,11 +18,11 @@ namespace grade_app
 		public StudentDiscipline StudentDiscipline { get; private set; }
 		public StudentJournal studentJour { get; private set; }
 
-		public ObservableCollection<Journal> StudentJournal { get; private set; } = new ObservableCollection<Journal>();
+		public ObservableCollection<Journal> StudentJournal { get; private set; } = [];
 
 		public DisciplineInfo DisciplineInfo { get; private set; } = new DisciplineInfo();
 
-		public ObservableCollection<IGrouping<string, SubModuleItem>> GroupedSubModules { get; private set; } = new ObservableCollection<IGrouping<string, SubModuleItem>>();
+		public ObservableCollection<IGrouping<string, SubModuleItem>> GroupedSubModules { get; private set; } = [];
 
 
 		public StudentDisciplinePage(long id)
@@ -172,28 +172,17 @@ namespace grade_app
 			DisciplineInfo.FinalTotalRate = $"Итоговый рейтинг: {Math.Min(Rating.Value, 100)} / 100";
 		}
 	}
-	public class SubModuleItem
-	{
-		public SubModuleItem(long id, long moduleID, string moduleTitle, string title, int? maxRate, int? rate, DateTime? date)
-		{
-			ID = id;
-			ModuleID = moduleID;
-			ModuleTitle = moduleTitle;
-			Title = title;
-			Rate = $"{(rate ?? 0)}/{(maxRate ?? 0)}";
-			Percent = ((double)(rate ?? 0) / (maxRate ?? 0)).ToString("P0");
-			Date = date.HasValue ? date.Value.ToString("d") : "—";
-		}
+	public class SubModuleItem(long id, long moduleID, string moduleTitle, string title, int? maxRate, int? rate, DateTime? date)
+    {
+        public long ID { get; set; } = id;
+        public long ModuleID { get; set; } = moduleID;
+        public string ModuleTitle { get; set; } = moduleTitle;
+        public string Title { get; set; } = title;
+        public string Rate { get; set; } = $"{(rate ?? 0)}/{(maxRate ?? 0)}";
+        public string Percent { get; set; } = ((double)(rate ?? 0) / (maxRate ?? 0)).ToString("P0");
+        public string Date { get; set; } = date.HasValue ? date.Value.ToString("d") : "—";
 
-		public long ID { get; set; }
-		public long ModuleID { get; set; }
-		public string ModuleTitle { get; set; }
-		public string Title { get; set; }
-		public string Rate { get; set; }
-		public string Percent { get; set; }
-		public string Date { get; set; }
-
-	}
+    }
 	public class DisciplineInfo : INotifyPropertyChanged
 	{
 		private bool isExam;

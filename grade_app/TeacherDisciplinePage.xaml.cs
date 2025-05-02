@@ -17,17 +17,17 @@ namespace grade_app
 	public partial class TeacherDisciplinePage : TabbedPage
 	{
 		public TeacherDiscipline TeacherDiscipline { get; private set; }
-		public ObservableCollection<SubModulePickerItem> subModulePickerItems { get; private set; } = new ObservableCollection<SubModulePickerItem>();
-		public ObservableCollection<DisGroup> GroupedRatesStudentsList { get; private set; } = new ObservableCollection<DisGroup>();
-		public ObservableCollection<DisGroup> FilteredGroupedRatesStudentsList { get; private set; } = new ObservableCollection<DisGroup>();
+		public ObservableCollection<SubModulePickerItem> subModulePickerItems { get; private set; } = [];
+		public ObservableCollection<DisGroup> GroupedRatesStudentsList { get; private set; } = [];
+		public ObservableCollection<DisGroup> FilteredGroupedRatesStudentsList { get; private set; } = [];
 		public string subModuleFilter { get; private set; } = "ВСЕ";
 
 		public DisciplineInfo disciplineInfo { get; private set; } = new DisciplineInfo();
 
 		public TeacherJournal TeacherJournal { get; private set; }
-		public ObservableCollection<LessonPickerItem> LessonPickerItems { get; private set; } = new ObservableCollection<LessonPickerItem>();
-		public ObservableCollection<DisJourGroup> GroupedJournalStudentsList { get; private set; } = new ObservableCollection<DisJourGroup>();
-		public ObservableCollection<DisJourGroup> FilteredGroupedJournalStudentsList { get; private set; } = new ObservableCollection<DisJourGroup>();
+		public ObservableCollection<LessonPickerItem> LessonPickerItems { get; private set; } = [];
+		public ObservableCollection<DisJourGroup> GroupedJournalStudentsList { get; private set; } = [];
+		public ObservableCollection<DisJourGroup> FilteredGroupedJournalStudentsList { get; private set; } = [];
 
 		public string lessonFilter { get; private set; } = "ВСЕ";
 
@@ -105,8 +105,8 @@ namespace grade_app
 		}
 		private void AddLineToInfo(string title, string value)
 		{
-			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"], TextColor = Colors.Black });
-			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"], TextColor = Colors.Black });
+			MoreInfo.Spans.Add(new Span { Text = $"{title}: ", FontAttributes = FontAttributes.Bold, FontSize = (double)App.Current.Resources["MyTitle"] });
+			MoreInfo.Spans.Add(new Span { Text = $"{value}\n", FontSize = (double)App.Current.Resources["MySubtitle"] });
 		}
 
 		private void FillSubModulePicker()
@@ -442,7 +442,7 @@ namespace grade_app
 					else
 					{
 						if (!TeacherJournal.Attendance.ContainsKey(student.RecordBookId))
-							TeacherJournal.Attendance[student.RecordBookId] = new Dictionary<long, long>();
+							TeacherJournal.Attendance[student.RecordBookId] = [];
 						TeacherJournal.Attendance[student.RecordBookId][lesson.ID] = student.Attendance.Value? 1 : 0;
 					}
 				}
@@ -494,84 +494,44 @@ namespace grade_app
 		}
 	}
 
-	public class StudentSubmoduleItem
+	public class StudentSubmoduleItem(string name, long recordBookId, int? rate, int maxRate)
+    {
+        public string Name { get; set; } = name;
+        public long RecordBookId { get; set; } = recordBookId;
+        public int? Rate { get; set; } = rate;
+        public int MaxRate { get; set; } = maxRate;
+    }
+	public class SubModulePickerItem(string name, long moduleID, long iD, int maxRate, ModuleType moduleType)
+    {
+        public string Name { get; set; } = name;
+        public long ModuleID { get; set; } = moduleID;
+        public long ID { get; set; } = iD;
+        public int MaxRate { get; set; } = maxRate;
+        public ModuleType moduleType { get; set; } = moduleType;
+    }
+	public class DisGroup(string name) : List<StudentSubmoduleItem>
 	{
-		public StudentSubmoduleItem(string name, long recordBookId, int? rate, int maxRate)
-		{
-			Name = name;
-			RecordBookId = recordBookId;
-			Rate = rate;
-			MaxRate = maxRate;
-		}
-
-		public string Name { get; set; }
-		public long RecordBookId { get; set; }
-		public int? Rate { get; set; }
-		public int MaxRate { get; set; }
+        public string Name { get; set; } = name;
+        public static IList<DisGroup> All { private set; get; }
 	}
-	public class SubModulePickerItem
-	{
-		public SubModulePickerItem(string name, long moduleID, long iD, int maxRate, ModuleType moduleType)
-		{
-			Name = name;
-			ModuleID = moduleID;
-			ID = iD;
-			MaxRate = maxRate;
-			this.moduleType = moduleType;
-		}
+	public class StudentJournalItem(string name, long recordBookId, bool? attendance)
+    {
+        public string Name { get; set; } = name;
+        public long RecordBookId { get; set; } = recordBookId;
+        public bool? Attendance { get; set; } = attendance;
+    }
 
-		public string Name { get; set; }
-		public long ModuleID { get; set; }
-		public long ID { get; set; }
-		public int MaxRate { get; set; }
-		public ModuleType moduleType { get; set; }
-	}
-	public class DisGroup : List<StudentSubmoduleItem>
-	{
-		public string Name { get; set; }
-		public DisGroup(string name)
-		{
-			Name = name;
-		}
-		public static IList<DisGroup> All { private set; get; }
-	}
-	public class StudentJournalItem
-	{
-		public StudentJournalItem(string name, long recordBookId, bool? attendance)
-		{
-			Name = name;
-			RecordBookId = recordBookId;
-			Attendance = attendance;
-		}
+	public class LessonPickerItem(string name, string type, long iD, DateTime date)
+    {
+        public string Name { get; set; } = name;
+        public string Type { get; set; } = type;
+        public long ID { get; set; } = iD;
+        public DateTime Date { get; set; } = date;
+    }
 
-		public string Name { get; set; }
-		public long RecordBookId { get; set; }
-		public bool? Attendance { get; set; }
-	}
-
-	public class LessonPickerItem
+	public class DisJourGroup(string name) : List<StudentJournalItem>
 	{
-		public LessonPickerItem(string name, string type, long iD, DateTime date)
-		{
-			Name = name;
-			Type = type;
-			ID = iD;
-			Date = date;
-		}
-
-		public string Name { get; set; }
-		public string Type { get; set; }
-		public long ID { get; set; }
-		public DateTime Date { get; set; }
-	}
-
-	public class DisJourGroup : List<StudentJournalItem>
-	{
-		public string Name { get; set; }
-		public DisJourGroup(string name)
-		{
-			Name = name;
-		}
-		public static IList<DisJourGroup> All { private set; get; }
+        public string Name { get; set; } = name;
+        public static IList<DisJourGroup> All { private set; get; }
 	}
 }

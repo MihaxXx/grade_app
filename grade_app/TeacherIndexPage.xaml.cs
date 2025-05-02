@@ -16,11 +16,11 @@ namespace grade_app
 {
 	public partial class TeacherIndexPage : ContentPage
 	{
-		TeacherIndex teacherIndex;
-		public static List<Semester> SemesterList { get; set; }
+		TeacherIndex teacherIndex = new();
+		public static List<Semester> SemesterList { get; set; } = [];
 
 		public long CurrentSemID { get; set; }
-		public ObservableCollection<SubjectGroup> GroupedDisciplineItems1 { get; private set; } = new ObservableCollection<SubjectGroup>();
+		public ObservableCollection<SubjectGroup> GroupedDisciplineItems1 { get; private set; } = [];
 
 		public TeacherIndexPage()
 		{
@@ -41,12 +41,14 @@ namespace grade_app
 
 		private async Task LoadSemesters()
 		{
-			SemesterList = await App.API.GetSemesterList();
+			SemesterList.Clear();
+			SemesterList.AddRange(await App.API.GetSemesterList());
 		}
 
 		private async Task LoadDisciplines(long SemesterID)
 		{
-			GroupedDisciplineItems1.Clear();
+			EmptyListText.IsVisible = false;
+            GroupedDisciplineItems1.Clear();
 			activityIndicator.IsRunning = activityIndicator.IsVisible = true;
 			CurrentSemID = SemesterID;
 			Title = $"БРС - {SemesterList.Find(s => s.Id == CurrentSemID)}";
@@ -60,7 +62,6 @@ namespace grade_app
 				if (GlobalDiscsIDs.Count > 0)
 					MaxGroupNameLenght = MaxGroupNameLenght > GlobalDiscText.Length ? MaxGroupNameLenght : GlobalDiscText.Length;
 
-                EmptyListText.IsVisible = false;
 				foreach (var s in teacherIndex.Subjects)
 				{
 					var group = new SubjectGroup($"{s.Value.SubjectName}",s.Value.GradeNum == null ? "" : $"{s.Value.ShortDegree()}\n{s.Value.GradeNum} курс");
@@ -71,7 +72,7 @@ namespace grade_app
 						var NoStudText = "Нет студентов";
 						var NormolizedNoStudText = 
 							string.Concat(Enumerable.Repeat(" ", (int)((MaxGroupNameLenght - NoStudText.Length)*0.8))) + NoStudText + string.Concat(Enumerable.Repeat(" ", (int)((MaxGroupNameLenght - NoStudText.Length) * 0.8)));
-                        string[] NormolizedGroupNames = new string[0];
+                        string[] NormolizedGroupNames = [];
                         if (teacherIndex.Groups.ContainsKey(d.Id.ToString()))
 							NormolizedGroupNames = teacherIndex.Groups[d.Id.ToString()].
 								Select(g => string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length)) + g + string.Concat(Enumerable.Repeat(" ", MaxGroupNameLenght - g.Length))).ToArray();
@@ -115,7 +116,7 @@ namespace grade_app
 			try
 			{
 				var item = sender as ToolbarItem;
-				if (item.AutomationId == "change_semester")
+				if (item?.AutomationId == "change_semester")
 				{
 					if (!App.IsInternetConnected())
 					{
@@ -131,7 +132,7 @@ namespace grade_app
 							_ = LoadDisciplines(res.Id);
 					}
 				}
-				else if (item.AutomationId == "logout")
+				else if (item?.AutomationId == "logout")
 				{
 					App.WipeUser();
 					Navigation.InsertPageBefore(new MainPage(), this);
@@ -143,33 +144,18 @@ namespace grade_app
 				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
-		public class DisciplineItem
+		public class DisciplineItem(string name, long id, string groups, string type, string teachers)
+        {
+            public string Name { get; set; } = name;
+            public long ID { get; set; } = id;
+            public string Groups { get; set; } = groups;
+            public string Type { get; set; } = type;
+            public string Teachers { get; set; } = teachers;
+        }
+		public class SubjectGroup(string name, string degreeCourse) : List<DisciplineItem>
 		{
-			public DisciplineItem(string name, long id, string groups, string type, string teachers)
-			{
-				Name = name;
-				ID = id;
-				Groups = groups;
-				Type = type;
-				Teachers = teachers;
-			}
-
-			public string Name { get; set; }
-			public long ID { get; set; }
-			public string Groups { get; set; }
-			public string Type { get; set; }
-			public string Teachers { get; set; }
-		}
-		public class SubjectGroup :List<DisciplineItem>
-		{
-			public string Name { get; set; }
-			public string DegreeCourse { get; set; }
-
-            public SubjectGroup(string name, string degreeCourse)
-            {
-                Name = name;
-                DegreeCourse = degreeCourse;
-            }
+            public string Name { get; set; } = name;
+            public string DegreeCourse { get; set; } = degreeCourse;
 
             public static IList<SubjectGroup> All { private set; get; }
 		}

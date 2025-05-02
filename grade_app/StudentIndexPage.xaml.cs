@@ -17,7 +17,7 @@ namespace grade_app
 
 		public long CurrentSemID { get; set; }
 
-		public ObservableCollection<DisciplineItem> DisciplineItems { get; private set; } = new ObservableCollection<DisciplineItem>();
+		public ObservableCollection<DisciplineItem> DisciplineItems { get; private set; } = [];
 		public StudentIndexPage()
 		{
 			InitializeComponent();
@@ -115,18 +115,11 @@ namespace grade_app
 			}
 		}
 	}
-	public class DisciplineItem
-	{
-		public long ID { get; set; }
-		public string Percent { get; set; }
-		public string Name { get; set; }
-		public string Rate { get; set; }
-		public DisciplineItem(long id, string percent, string name, string rate)
-		{
-			ID = id;
-			Percent = percent;
-			Name = name;
-			Rate = rate;
-		}
-	}
+	public class DisciplineItem(long id, string percent, string name, string rate)
+    {
+        public long ID { get; set; } = id;
+        public string Percent { get; set; } = percent;
+        public string Name { get; set; } = name;
+        public string Rate { get; set; } = rate;
+    }
 }
