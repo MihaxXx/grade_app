@@ -24,6 +24,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug prod|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+  </PropertyGroup>
   
 	<ItemGroup>
 		<!-- Images -->
