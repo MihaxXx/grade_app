@@ -55,4 +55,8 @@
 	  <Folder Include="Resources\Images\" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <MauiSplashScreen Include="Resources\Splash\logo.svg" Color="#00000000" BaseSize="128,128" />
+  </ItemGroup>
+
 </Project>
