@@ -39,7 +39,7 @@ namespace grade_app
 			activityIndicator.IsRunning = activityIndicator.IsVisible = false;
 		}
 
-		private async Task LoadSemesters()
+		private static async Task LoadSemesters()
 		{
 			SemesterList.Clear();
 			SemesterList.AddRange(await App.API.GetSemesterList());
@@ -156,8 +156,6 @@ namespace grade_app
 		{
             public string Name { get; set; } = name;
             public string DegreeCourse { get; set; } = degreeCourse;
-
-            public static IList<SubjectGroup> All { private set; get; }
 		}
 	}
 }
