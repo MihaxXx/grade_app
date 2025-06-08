@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            x:Class="grade_app.StudentDisciplinePage"
             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
             xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-            xmlns:grade_app="clr-namespace:grade_app" xmlns:Grade="clr-namespace:Grade;assembly=GradeAPI"
+            xmlns:grade_app="clr-namespace:grade_app" 
+            xmlns:Grade="clr-namespace:Grade;assembly=GradeAPI"
+            x:Class="grade_app.StudentDisciplinePage"
             x:DataType="grade_app:StudentDisciplinePage"
             android:TabbedPage.ToolbarPlacement="Bottom">
     <ContentPage Title="Баллы"
@@ -114,11 +115,10 @@
                 <ListView.GroupHeaderTemplate>
                     <DataTemplate x:DataType="{x:Null}">
                         <ViewCell>
-                            <StackLayout VerticalOptions="FillAndExpand"
-                                         Padding="5"
-                                         BackgroundColor="#0183ce">
+                            <Grid Padding="5"
+                                  BackgroundColor="#0183ce">
                                 <Label Text="{Binding Key}" TextColor="White" HorizontalTextAlignment="Center"/>
-                            </StackLayout>
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.GroupHeaderTemplate>

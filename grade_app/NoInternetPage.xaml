@@ -3,13 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="grade_app.NoInternetPage">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand">
-            <Label Text="К сожалению, интернет недоступен."
-                   HorizontalOptions="CenterAndExpand" 
+        <Grid VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0"
+                   HorizontalOptions="Center"
+                   Padding="5"
+                   Text="К сожалению, интернет недоступен."
                    FontSize="{StaticResource MyTitle}"/>
-            <Button Text="Повторить проверку"
-                    HorizontalOptions="Center"
+            <Button Grid.Row="1"
+                    HorizontalOptions="Center" 
+                    Text="Повторить проверку"
                     Pressed="Button_Pressed"/>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
