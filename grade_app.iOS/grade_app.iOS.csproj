@@ -10,6 +10,11 @@
 		<UseMaui>true</UseMaui>
 		<Configurations>Debug;Release;Debug prod;Debug dev.rating;Release dev.rating</Configurations>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+	  <CodesignKey>Apple Development: Created via API (77YD8MNH9R)</CodesignKey>
+	  <CodesignProvision>VS: ru.mihaxxx.grade Development</CodesignProvision>
+	</PropertyGroup>
   
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
