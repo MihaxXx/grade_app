@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="grade_app.MainPage"
              Title="Сервис БРС">
-    <StackLayout Spacing="0">
+    <StackLayout Spacing="5"
+                 Padding="5">
         <Label Text="Роль"
                FontSize="Medium">
         </Label>
@@ -19,7 +20,7 @@
                x:Name="EmailLabel"
                FontSize="Medium">
         </Label>
-        <Entry Placeholder="Логин@sfedu.ru" 
+        <Entry Placeholder="Логин@sfedu.ru"
                x:Name="login"
                Keyboard="Email"/>
         <Label Text="Пароль"
@@ -30,10 +31,10 @@
         <Entry x:Name="pass"
                IsPassword="True"
                IsVisible="false"/>
-        <Button Text="Войти через сервис Microsoft" 
+        <Button Text="Войти через сервис Microsoft"
                 x:Name="Enter_btn"
                 Clicked="Enter_btnClicked"/>
-        <Label x:Name="SignInLocalLabel" 
+        <Label x:Name="SignInLocalLabel"
                HorizontalOptions="Center"
                Text="Вход через локальную учетную запись"
                FontSize="{StaticResource MyDefault}"

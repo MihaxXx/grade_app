@@ -18,10 +18,11 @@
                   HasUnevenRows="True"
                   SelectionMode="None"
                   ItemTapped="OnListItemTapped"
-                  ios:ListView.GroupHeaderStyle="Grouped">
+                  ios:ListView.GroupHeaderStyle="Grouped"
+                  BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="grade_app:DisciplineItemT">
-                    <ViewCell>
+                    <ViewCell ios:Cell.DefaultBackgroundColor="Transparent">
                         <Grid Padding="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -46,7 +47,7 @@
             <ListView.GroupHeaderTemplate>
                 <DataTemplate x:DataType="grade_app:SubjectGroup">
                     <ViewCell>
-                        <Grid Padding="2">
+                        <Grid Padding="5,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -62,7 +63,7 @@
                                    MaxLines="2"
                                    LineBreakMode="TailTruncation"/>
                             <Label Text="{Binding DegreeCourse}"
-                                   HorizontalTextAlignment="Center"
+                                   HorizontalTextAlignment="Start"
                                    FontSize="{StaticResource MyTitle}"
                                    Grid.Column="1"
                                    Grid.Row="0"/>
