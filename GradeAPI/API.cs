@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Globalization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Threading.Tasks;
 using System.Web;
+using System.Net.Http.Headers;
 
 namespace Grade
 {
@@ -25,29 +26,9 @@ namespace Grade
         public const string Host = @"grade.sfedu.ru";
         public const string PathToAPI = @"api/v1/";
 #endif
-        readonly string PathBase = PathToAPI;
-        readonly string Token;
-
-        static readonly string trustedThumbprint = "35889ED18D9C97DCE7ADF779F7BBF600CB687DDEB00B3854D25CD74D5D736678";
-
-        static readonly HttpClient client = new HttpClient(new HttpClientHandler()
-        {
-            ServerCertificateCustomValidationCallback = (request, cert, chain, errors) =>
-            {
-                if (errors == System.Net.Security.SslPolicyErrors.None)
-                    return true;
-
-                if (cert?.GetCertHashString(System.Security.Cryptography.HashAlgorithmName.SHA256) == trustedThumbprint)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        })
-        {
-            Timeout = TimeSpan.FromSeconds(10),
-        };
+		readonly string PathBase = PathToAPI;
+		readonly string Token;
+        static readonly HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
 
         public API(string token, Role _role)
         {
@@ -82,9 +63,9 @@ namespace Grade
             }
             catch (Exception e) when (e is HttpRequestException || /*e is TaskCanceledException ||*/ e is InvalidOperationException || e is UriFormatException || e is AggregateException)
             {
-                // TODO: пробрасывать провалы запроса и исключения в функции, инициировавшие запрос
-            }
-            return response;
+				// TODO: пробрасывать провалы запроса и исключения в функции, инициировавшие запрос
+			}
+			return response;
         }
 
         public (bool, string) Post(Dictionary<string, string> args, string relPath)
@@ -117,49 +98,49 @@ namespace Grade
                 result = response.Content.ReadAsStringAsync().Result;
                 success = response.IsSuccessStatusCode;
             }
-            catch (Exception e) when (e is HttpRequestException || e is TaskCanceledException || e is InvalidOperationException || e is UriFormatException || e is AggregateException)
-            {
+			catch (Exception e) when (e is HttpRequestException || e is TaskCanceledException || e is InvalidOperationException || e is UriFormatException || e is AggregateException)
+			{
                 return (false, e.Message);
-            }
-            return (success, result);
+			}
+			return (success, result);
         }
 
-        public static (bool, string) PostNoUser(Dictionary<string, string> query_args, Dictionary<string, string> form_urlencoded_args, string relPath)
-        {
-            var newuriB = new UriBuilder(
+		public static (bool, string) PostNoUser(Dictionary<string, string> query_args, Dictionary<string, string> form_urlencoded_args, string relPath)
+		{
+			var newuriB = new UriBuilder(
 #if LOCAL
 				"http"
 #else
                 "https"
 #endif
-                , Host)
-            {
-                Path = PathToAPI + relPath
-            };
-            var query = HttpUtility.ParseQueryString(string.Empty);
-            foreach (var arg in query_args)
+				, Host)
+			{
+				Path = PathToAPI + relPath
+			};
+			var query = HttpUtility.ParseQueryString(string.Empty);
+			foreach (var arg in query_args)
                 query.Set(arg.Key, arg.Value);
-            newuriB.Query = query.ToString();
-            var content = new FormUrlEncodedContent(form_urlencoded_args);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-            /*content.Headers.*/
-            var Uri = newuriB.Uri;
+			newuriB.Query = query.ToString();
+			var content = new FormUrlEncodedContent(form_urlencoded_args);
+			content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+			/*content.Headers.*/
+			var Uri = newuriB.Uri;
 
-            bool success = false;
-            string result = "";
-            try
-            {
-                var response = client.PostAsync(Uri, content).Result;
-                result = response.Content.ReadAsStringAsync().Result;
-                success = response.IsSuccessStatusCode;
-            }
-            catch (Exception e) when (e is HttpRequestException || e is TaskCanceledException || e is InvalidOperationException || e is UriFormatException || e is AggregateException)
-            {
-                return (false, e.Message);
-            }
-            return (success, result);
-        }
-        public async Task<StudentIndex> StudentGetIndex(long SemesterID = -1)
+			bool success = false;
+			string result = "";
+			try
+			{
+				var response = client.PostAsync(Uri, content).Result;
+				result = response.Content.ReadAsStringAsync().Result;
+				success = response.IsSuccessStatusCode;
+			}
+			catch (Exception e) when (e is HttpRequestException || e is TaskCanceledException || e is InvalidOperationException || e is UriFormatException || e is AggregateException)
+			{
+				return (false, e.Message);
+			}
+			return (success, result);
+		}
+		public async Task<StudentIndex> StudentGetIndex(long SemesterID = -1)
         {
             var args = new Dictionary<string, string>();
             if (SemesterID != -1)
@@ -225,7 +206,7 @@ namespace Grade
             var rawRes = Post(args, "set_rate");
             if (!rawRes.Item1)
                 return rawRes;
-            var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
             return (res.Success, res.Message);
         }
 
@@ -238,9 +219,9 @@ namespace Grade
                 { nameof(attendance), (attendance? 1 : 0).ToString() }
             };
             var rawRes = Post(args, "set_attendance");
-            if (!rawRes.Item1)
-                return rawRes;
-            var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
             return (res.Success, res.Message);
         }
 
@@ -255,39 +236,39 @@ namespace Grade
             if (lessonSubgroup != null)
                 args.Add(nameof(lessonSubgroup), lessonSubgroup.Id.ToString());
             var rawRes = Post(args, "create_lesson");
-            if (!rawRes.Item1)
-                return rawRes;
-            var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
             return (res.Success, res.Message);
         }
 
-        public (bool, string) TeacherPostDeleteLesson(long disciplineID, long lessonID)
-        {
-            var args = new Dictionary<string, string>
-            {
-                { nameof(disciplineID), disciplineID.ToString() },
-                { nameof(lessonID), lessonID.ToString() }
-            };
+		public (bool, string) TeacherPostDeleteLesson(long disciplineID, long lessonID)
+		{
+			var args = new Dictionary<string, string>
+			{
+				{ nameof(disciplineID), disciplineID.ToString() },
+				{ nameof(lessonID), lessonID.ToString() }
+			};
             var rawRes = Post(args, "delete_lesson");
-            if (!rawRes.Item1)
-                return rawRes;
-            var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
-            return (res.Success, res.Message);
-        }
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = PostRequestResponse.FromJson(rawRes.Item2).Response;
+			return (res.Success, res.Message);
+		}
         public static (bool, string) PostGetToken(string login, string password)
         {
-            var args = new Dictionary<string, string>
-            {
-                { nameof(login), login },
-                { nameof(password), password }
-            };
+			var args = new Dictionary<string, string>
+			{
+				{ nameof(login), login },
+				{ nameof(password), password }
+			};
             var rawRes = PostNoUser(new Dictionary<string, string>(), args, "auth/get_token");
-            if (!rawRes.Item1)
-                return rawRes;
-            var res = GetTokenResponse.FromJson(rawRes.Item2).Response;
-            return (res.Success, res.Success ? res.Token : res.Message);
-        }
-    }
+			if (!rawRes.Item1)
+				return rawRes;
+			var res = GetTokenResponse.FromJson(rawRes.Item2).Response;
+			return (res.Success, res.Success? res.Token : res.Message);
+		}
+	}
 
     public partial class StudentIndexResponse
     {
@@ -309,11 +290,11 @@ namespace Grade
         [JsonProperty("EMailChanged")]
         public bool EMailChanged { get; set; }
 
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-    }
+		public override string ToString()
+		{
+			return JsonConvert.SerializeObject(this, Formatting.Indented);
+		}
+	}
 
     public partial class StudentDisciplineResponse
     {
@@ -481,25 +462,25 @@ namespace Grade
         [JsonProperty("message")]
         public string Message { get; set; }
     }
-    public partial class GetTokenResponse
-    {
-        [JsonProperty("response")]
-        public GetToken Response { get; set; }
-    }
+	public partial class GetTokenResponse
+	{
+		[JsonProperty("response")]
+		public GetToken Response { get; set; }
+	}
 
-    public partial class GetToken
-    {
-        [JsonProperty("success")]
-        public bool Success { get; set; }
+	public partial class GetToken
+	{
+		[JsonProperty("success")]
+		public bool Success { get; set; }
 
-        [JsonProperty("token")]
-        public string Token { get; set; }
+		[JsonProperty("token")]
+		public string Token { get; set; }
 
-        [JsonProperty("message")]
-        public string Message { get; set; }
-    }
+		[JsonProperty("message")]
+		public string Message { get; set; }
+	}
 
-    public partial class Subject
+	public partial class Subject
     {
         [JsonProperty("SubjectName")]
         public string SubjectName { get; set; }
@@ -512,14 +493,14 @@ namespace Grade
 
         public string ShortDegree()
         {
-            switch (this.Degree)
+            switch(this.Degree)
             {
                 case Degree.Bachelor: return "бак";
                 case Degree.Master: return "маг";
                 case Degree.Postgraduate: return "асп";
                 case Degree.Specialist: return "спец";
                 default: return Degree.ToString();
-            }
+			}
         }
 
         [JsonProperty("Disciplines")]
@@ -541,10 +522,10 @@ namespace Grade
         public string Season { get; set; }
 
         public override string ToString()
-        {
-            return $"{(Num == 1 ? "Осень" : "Весна")} {(Num == 1 ? Year : Year + 1)}";
-        }
-    }
+		{
+			return $"{(Num == 1 ? "Осень" : "Весна")} {(Num == 1 ? Year : Year + 1)}";
+		}
+	}
 
     public partial class Discipline
     {
@@ -562,10 +543,10 @@ namespace Grade
 
         public string TypeToString() => Type switch
         {
-            "exam" => "Экзамен",
-            "credit" => "Зачет",
-            "grading_credit" => "Дифф. зачет",
-            _ => Type,
+            "exam"              => "Экзамен",
+            "credit"            => "Зачет",
+            "grading_credit"    => "Дифф. зачет",
+            _                   => Type,
         };
 
         [JsonProperty("Subtype")]
@@ -830,7 +811,7 @@ namespace Grade
         public string ShortName() => $"{LastName} {FirstName[0]}. {SecondName[0]}.";
         public string FullName() => $"{LastName} {FirstName} {SecondName}";
 
-        [JsonProperty("JobPositionID")]
+		[JsonProperty("JobPositionID")]
         public long JobPositionId { get; set; }
 
         [JsonProperty("JobPositionName")]
@@ -906,20 +887,20 @@ namespace Grade
         public string SpecFaculty { get; set; }
 
         [JsonProperty("FormID")]
-        public string FormId { get; set; }
+		public string FormId { get; set; }
 
         public string Name()
         {
             string res;
             if (Degree == "master")
-                res = $"Магистратура, {GradeNum} год";
+                res = $"Магистратура, { GradeNum } год";
             else if (Degree == "specialist")
-                res = $"Специалитет, {GradeNum} курс";
+                res = $"Специалитет, { GradeNum  } курс";
             else if (Degree == "postgraduate")
-                res = $"Аспирантура, {GradeNum} год";
+                res = $"Аспирантура, {  GradeNum  } год";
             else
-                res = $"{GradeNum} курс";
-            res += $" {GroupNum} группа";
+                res =  $"{ GradeNum } курс";
+            res += $" { GroupNum } группа";
             return res;
         }
     }
@@ -1060,12 +1041,12 @@ namespace Grade
     {
         public static PostRequestResponse FromJson(string json) => JsonConvert.DeserializeObject<PostRequestResponse>(json, Grade.Converter.Settings);
     }
-    public partial class GetTokenResponse
-    {
-        public static GetTokenResponse FromJson(string json) => JsonConvert.DeserializeObject<GetTokenResponse>(json, Grade.Converter.Settings);
-    }
+	public partial class GetTokenResponse
+	{
+		public static GetTokenResponse FromJson(string json) => JsonConvert.DeserializeObject<GetTokenResponse>(json, Grade.Converter.Settings);
+	}
 
-    public static class Serialize
+	public static class Serialize
     {
         public static string ToJson(this StudentIndexResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this StudentDisciplineResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
@@ -1075,8 +1056,8 @@ namespace Grade
         public static string ToJson(this StudentJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this TeacherJournalResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
         public static string ToJson(this PostRequestResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
-        public static string ToJson(this GetTokenResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
-    }
+		public static string ToJson(this GetTokenResponse self) => JsonConvert.SerializeObject(self, Grade.Converter.Settings);
+	}
 
     internal static class Converter
     {
@@ -1102,11 +1083,11 @@ namespace Grade
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null) return null;
-            if (long.TryParse(serializer.Deserialize<string>(reader), out long l))
-            {
-                return l;
-            }
-            throw new Exception("Cannot unmarshal type long");
+			if (long.TryParse(serializer.Deserialize<string>(reader), out long l))
+			{
+				return l;
+			}
+			throw new Exception("Cannot unmarshal type long");
         }
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
@@ -1168,15 +1149,15 @@ namespace Grade
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            return value switch
-            {
-                "bachelor" => Degree.Bachelor,
-                "master" => Degree.Master,
-                "specialist" => Degree.Specialist,
-                "postgraduate" => Degree.Postgraduate,
-                _ => throw new Exception("Cannot unmarshal type Degree"),
-            };
-        }
+			return value switch
+			{
+				"bachelor" => Degree.Bachelor,
+				"master" => Degree.Master,
+				"specialist" => Degree.Specialist,
+				"postgraduate" => Degree.Postgraduate,
+				_ => throw new Exception("Cannot unmarshal type Degree"),
+			};
+		}
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
@@ -1215,13 +1196,13 @@ namespace Grade
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            return value switch
-            {
-                "CurrentControl" => SubModuleType.CurrentControl,
-                "LandmarkControl" => SubModuleType.LandmarkControl,
-                _ => throw new Exception("Cannot unmarshal type SubModuleType"),
-            };
-        }
+			return value switch
+			{
+				"CurrentControl" => SubModuleType.CurrentControl,
+				"LandmarkControl" => SubModuleType.LandmarkControl,
+				_ => throw new Exception("Cannot unmarshal type SubModuleType"),
+			};
+		}
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
@@ -1254,15 +1235,15 @@ namespace Grade
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            return value switch
-            {
-                "exam" => ModuleType.Exam,
-                "extra" => ModuleType.Extra,
-                "bonus" => ModuleType.Bonus,
-                "regular" => ModuleType.Regular,
-                _ => throw new Exception("Cannot unmarshal type ModuleType"),
-            };
-        }
+			return value switch
+			{
+				"exam" => ModuleType.Exam,
+				"extra" => ModuleType.Extra,
+				"bonus" => ModuleType.Bonus,
+				"regular" => ModuleType.Regular,
+				_ => throw new Exception("Cannot unmarshal type ModuleType"),
+			};
+		}
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
