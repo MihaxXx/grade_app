@@ -37,8 +37,7 @@ namespace Grade
                 if (errors == System.Net.Security.SslPolicyErrors.None)
                     return true;
 
-                if (errors == System.Net.Security.SslPolicyErrors.RemoteCertificateChainErrors &&
-                cert?.GetCertHashString(System.Security.Cryptography.HashAlgorithmName.SHA256) == trustedThumbprint)
+                if (cert?.GetCertHashString(System.Security.Cryptography.HashAlgorithmName.SHA256) == trustedThumbprint)
                 {
                     return true;
                 }
